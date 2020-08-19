@@ -1,0 +1,201 @@
+<template>
+	<view>
+		<view style="margin-bottom: 10px;">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item @click="updateAvatar()" :textStyle="textStyle" title="头像" :containerStyle="containerStyle">
+					<template slot="right">
+						<image class="slot-image" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+					</template>
+				</uni-list-item> 
+				<uni-list-item @click="formPage('nickname',user.nickname,'设置昵称')" :textStyle="textStyle" title="名字" :rightText="user.nickname"
+				 :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
+				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="账号" :rightText="user.username" :containerStyle="containerStyle"
+				 :rightTextStyle="rightTextStyle" :showArrow="false" />
+
+				<uni-list-item @click="previewImage()" :borderWidth="720" :textStyle="textStyle" title="二维码" :containerStyle="containerStyle">
+					<template slot="right">
+						<uni-icons type="scan" size="32" style="color:#999"></uni-icons>
+					</template>
+				</uni-list-item>
+				<uni-list-item @click="formPage('autograph',user.autograph,'设置签名')" :borderWidth="720" :textStyle="textStyle" title="个性签名"
+				 :rightText="user.autograph" :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
+
+			</uni-list>
+		</view>
+		<view>
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item @click="formPage('password','','修改密码')" :textStyle="textStyle" title="修改密码" :containerStyle="containerStyle" />
+			</uni-list>
+		</view>
+
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	import md5 from "@/common/md5.js"
+	export default {
+		data() {
+			return {
+				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
+				rightTextStyle: 'font-size:34rpx;font-weight:400;',
+				textStyle: 'font-weight:400'
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket,
+			})
+		},
+		methods: {
+			formPage: function(type, data, title) {
+				uni.navigateTo({
+					url: './form?type=' + type + '&data=' + data + '&title=' + title
+				})
+			},
+			updateAvatar: function() {
+				var that = this;
+				uni.chooseImage({
+					count: 1,
+					sizeType: ['original', 'compressed'],
+					sourceType: ['album'],
+					success: function(res) {
+						var tempFile = res.tempFilePaths[0];
+						new Promise((resolve, reject) => {
+							const path = tempFile
+							const options = {
+								filePath: path,
+								cloudPath: Date.now() + '.jpg'
+							}
+							resolve(options)
+						}).then((options) => {
+							uni.showLoading({
+								title: '头像上传中...'
+							})
+							return uniCloud.uploadFile({
+								...options,
+								onUploadProgress(e) {
+									console.log(e)
+								}
+							})
+						}).then(res => {
+							uni.hideLoading()
+							
+							
+							if(res.fileID.indexOf("cloud://") != -1){
+								uniCloud.getTempFileURL({
+								    fileList: [res.fileID],
+								    success(res) {
+										if(res.fileList != undefined && res.fileList[0] != undefined){
+											uniCloud.callFunction({
+												name: 'user',
+												data: {
+													$url: "updateUserById",
+													token: that.$store.state.user.user_token,
+													data: {
+														uid: that.user._id,
+														avatar: res.fileList[0].tempFileURL
+													}
+												},
+											}).then((res) => {
+												that.$store.dispatch('getUserInfo')
+											}).catch((err) => {
+											
+											})
+											uni.showToast({
+												title: '头像上传成功',
+												duration: 2000
+											})
+											
+										}
+									},
+								    fail() {},
+								    complete() {}
+								});
+							}else{
+								uniCloud.callFunction({
+									name: 'user',
+									data: {
+										$url: "updateUserById",
+										token: that.$store.state.user.user_token,
+										data: {
+											uid: that.user._id,
+											avatar: res.fileID
+										}
+									},
+								}).then((res) => {
+									that.$store.dispatch('getUserInfo')
+								}).catch((err) => {
+								
+								})
+								uni.showToast({
+									title: '头像上传成功',
+									duration: 2000
+								})
+								
+							 
+							}
+							  
+						}).catch((err) => {
+							uni.hideLoading()
+							if (err.message !== 'Fail_Cancel') {
+								uni.showToast({
+									title: '头像上传失败',
+									duration: 2000,
+									icon: 'none'
+								})
+							}
+						})
+					}
+				});
+			},
+			previewImage: function() {
+				var qrcode = 'http://qr.topscan.com/api.php?text=uniChat-uid-' + this.user._id;
+				var saveName = md5(qrcode);
+				uni.previewImage({
+					urls: [qrcode],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							var device = getApp().globalData.systemInfo.platform;
+							if (data.tapIndex == 1) {
+								var downLoader = plus.downloader.createDownload(qrcode, {
+									method: 'GET',
+									filename: '_downloads/images/' + saveName + '.jpg'
+								}, function(download, status) {
+									var fileName = download.filename;
+									uni.saveImageToPhotosAlbum({
+										filePath: fileName,
+										success: function() {
+											uni.showModal({
+												title: '提示',
+												content: '保存成功'
+											});
+										}
+									});
+
+								});
+								downLoader.start();
+							}
+						}
+					}
+				});
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.slot-image {
+		/* #ifndef APP-NVUE */
+		display: block;
+		/* #endif */
+		margin-right: 10px;
+		width: 50px;
+		height: 50px;
+		border-radius: 5px;
+	}
+</style>

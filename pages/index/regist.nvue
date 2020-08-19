@@ -1,0 +1,416 @@
+<template>
+	<view class="nvue-page-root">
+
+		<view class="upload">
+			<view class="upload-box" v-if="!uploadImage" @click="onChooseImage()">
+				<uni-icons class="upload-box-icon" size="50" type="plusempty"></uni-icons>
+				<text class="upload-box-text">选择头像</text>
+			</view>
+			<image @click="onChooseImage()" class="upload-image-box" v-else :src="avatar" mode="aspectFill"></image>
+		</view>
+		<view class="uni-common-mt"> 
+			<view class="uni-form-item uni-column">
+				<view class="" style="padding-left: 26rpx;"><text class="uni-form-item__title">国家/地区</text></view>
+				<view class="uni-input-wrapper">
+					<text class="uni-form-item__title" style="color:#4CAF50;font-weight: bold;">中国大陆（+086）</text>
+				</view>
+			</view>
+			<view class="uni-form-item uni-column border">
+				<view class="title"><text class="uni-form-item__title">昵称</text></view>
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" v-model="nickname" placeholder="请输入您的昵称" />
+				</view>
+			</view>
+			<view class="uni-form-item uni-column border">
+				<view class="title"><text class="uni-form-item__title">账号</text></view>
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" v-model="username" placeholder="请输入您的登录账号" />
+				</view>
+			</view>
+			<view class="uni-form-item uni-column border">
+				<view class="title"><text class="uni-form-item__title">密码</text></view>
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" v-model="password" placeholder="请输入您的密码" :password="showPassword" />
+					<text class="uni-icon" :class="[!showPassword ? 'uni-eye-active' : '']" @click="changePassword">&#xe568;</text>
+				</view>
+			</view>
+			<view class="service">
+				<checkbox-group @change="checkboxChange">
+					<checkbox value="service" color="#4CAF50" :checked="false" />
+				</checkbox-group>
+
+				<view class="service-text-box">
+					<text class="service-text">勾选代表同意本软件的</text><text @click="serviceBox" class="service-text" style="color: #2979FF;">版权协议及服务协议</text>
+				</view>
+			</view> 
+		</view>
+		<view class="button" @click="submit()">
+			<view class="submit" @click="submit()">
+				<text class="submit-text">注册</text>
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				username: '',
+				password: '',
+				showPassword: true,
+				uploadImage: false,
+				avatar: '/static/images/default_avatar.jpg',
+				nickname: '',
+				service:false,
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+			})
+		},
+		methods: {
+			onChooseImage: function() {
+				var that = this;
+				uni.chooseImage({
+					count: 1,
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function(res) {
+						var file = res.tempFilePaths[0];
+						new Promise((resolve, reject) => {
+							const path = file
+							const options = {
+								filePath: path,
+								cloudPath: Date.now() + '.jpg'
+							}
+							resolve(options)
+						}).then((options) => {
+							uni.showLoading({
+								title: '头像上传中...'
+							})
+							return uniCloud.uploadFile({
+								...options,
+								onUploadProgress(e) {
+									console.log(e)
+								}
+							})
+						}).then(res => {
+							uni.hideLoading()
+							console.log(res);
+							
+							if(res.fileID.indexOf("cloud://") != -1){
+								uniCloud.getTempFileURL({
+								    fileList: [res.fileID],
+								    success(res) {
+										if(res.fileList != undefined && res.fileList[0] != undefined){
+											that.uploadImage = true;
+											that.avatar = res.fileList[0].tempFileURL;
+										}
+									},
+								    fail() {},
+								    complete() {}
+								});
+							}else{
+								that.avatar = res.fileID;
+							}
+							uni.showToast({
+								title: "头像上传成功",
+								icon: 'success',
+								duration: 2000
+							})
+						}).catch((err) => {
+							uni.hideLoading()
+							console.log(err);
+							if (err.message !== 'Fail_Cancel') {
+								uni.showToast({
+									title: "头像上传失败",
+									icon: 'none',
+									duration: 2000
+								})
+							}
+						})
+					}
+				});
+			},
+			submit: function() {
+				if (!this.username || !this.password || !this.nickname) {
+					uni.showToast({
+						title: "请输入账号、密码、昵称",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				} 
+				
+				if (!this.service) {
+					uni.showToast({
+						title: "请阅读服务协议并确认勾选",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				}
+				
+				uni.showLoading({
+					title: '注册中...'
+				})
+				var that = this;
+				uniCloud.callFunction({
+					name: 'login',
+					data: {
+						$url: "regist",
+						data: {
+							nickname: that.nickname,
+							username: that.username,
+							password: that.password,
+							avatar: that.avatar
+						}
+					}
+				}).then((res) => {
+					uni.hideLoading() 
+					console.log(res)
+					if (res.result.code == 0) {
+						 
+						uni.showToast({
+							title: '注册成功',
+							icon: 'none',
+							duration: 2000,
+							success() {
+								uni.redirectTo({url: './login'})
+							},
+						})
+					} else {
+						uni.showToast({
+							title: res.result.msg,
+							icon: 'none',
+							duration: 2000
+						})
+					}
+				}).catch((err) => {
+					uni.hideLoading()
+					uni.showToast({
+						title: err.message,
+						icon: 'none',
+						duration: 2000
+					})
+					console.error(err)
+				})
+				 
+			},
+			getUserInfo: function(uid) {
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "getUserByUid",
+						data: {
+							uid: uid
+						}
+					},
+				}).then((res) => {
+					uni.hideLoading()
+					this.$store.dispatch('login', res.result.data[0])
+					uni.switchTab({
+						url: '../tabbar/session'
+					})
+				}).catch((err) => {
+					uni.hideLoading()
+					uni.showToast({
+						title: err.message,
+						icon: 'none',
+						duration: 2000
+					})
+				});
+			},
+			regist: function() {
+				uni.navigateTo({
+					url: './regist'
+				})
+			},
+			checkboxChange: function(e) {
+				let values = e.detail.value;
+				if (values.includes('service')) {
+					this.service = true;
+				}else{
+					this.service = false;
+				}
+			},
+			serviceBox: function() {
+				uni.showModal({
+					showCancel: false,
+					content: '此项目仅供技术学习交流使用，禁止将其用于违法犯罪活动，如作它用所承受的法律责任一概与作者无关'
+				});
+			},
+			changePassword: function() {
+				this.showPassword = !this.showPassword;
+			},
+		},
+		onShow() {
+			if (this.user) {
+				uni.switchTab({
+					url: '../tabbar/session'
+				})
+				return;
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.nvue-page-root {
+		background-color: #fffffe;
+		padding-bottom: 40rpx;
+	}
+
+	.upload {
+		flex-direction: row;
+		justify-content: center;
+		padding: 35rpx;
+	}
+
+	.upload-box {
+		height: 160rpx;
+		width: 160rpx;
+		border-radius: 10rpx;
+		background-color: #ededed;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.upload-image-box {
+		height: 160rpx;
+		width: 160rpx;
+		border-radius: 10rpx;
+	}
+
+	.upload-box-icon {}
+
+	.upload-box-text {
+		font-size: 28rpx;
+		padding: 10rpx;
+
+	}
+
+	.page-title {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 35rpx;
+	}
+
+	.page-title__wrapper {
+		/* padding: 30rpx 26rpx; */
+		padding: 0rpx 50rpx 40rpx 50rpx;
+	}
+
+	.page-title__text {
+		font-size: 58rpx;
+		height: 96rpx;
+		line-height: 96rpx;
+		font-weight: bold;
+		color: black;
+	}
+
+	.title {
+		padding: 10rpx 26rpx 10rpx 26rpx;
+		flex: 1
+	}
+
+	.border {
+		border-bottom-width: 1px;
+		border-bottom-color: #ededed;
+	}
+
+	.uni-common-mt {
+		padding: 0rpx 26rpx 0rpx 26rpx;
+
+	}
+
+	.uni-form-item {
+		flex-direction: row;
+		align-items: center;
+		padding: 20rpx 0rpx 20rpx 0rpx;
+	}
+
+	.uni-form-item__title {
+		font-size: 32rpx;
+		line-height: 48rpx;
+	}
+
+	.uni-input-wrapper {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		padding: 16rpx 26rpx;
+		border-radius: 10rpx;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		/* background-color: #FFFFFF; */
+		flex: 4
+	}
+
+	.uni-input {
+		height: 56rpx;
+		line-height: 56rpx;
+		font-size: 30rpx;
+		padding: 0px;
+		flex: 1;
+		/*  background-color: #FFFFFF; */
+	}
+
+	.uni-icon {
+		font-family: uniicons;
+		font-size: 48rpx;
+		font-weight: normal;
+		font-style: normal;
+		width: 48rpx;
+		height: 48rpx;
+		line-height: 48rpx;
+		color: #999999;
+	}
+	.uni-eye-active {
+		color: #007AFF;
+	}
+
+	.service {
+		flex-direction: row;
+		padding: 66rpx 26rpx 26rpx 26rpx;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	} 
+	.service-text {
+		font-size: 28rpx;
+	}
+	.service-text-box {
+		flex-direction: row;
+		flex: 5
+	}
+	.button{
+		margin-top: 40rpx;
+		justify-content: center;
+		align-items: center
+	}
+	.submit{
+		width: 700rpx;
+		background-color: #4CAF50;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+	.submit-text{
+		color: white;
+		padding: 30rpx;
+	}
+	.submit:active {
+		background-color: green;
+		opacity: 0.5;
+	}
+</style>

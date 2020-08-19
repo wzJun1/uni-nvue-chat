@@ -1,0 +1,235 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"^uni-(.*)": "@/components/uni-$1/uni-$1.vue",
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+			"path": "pages/tabbar/session",
+			"style": {
+
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/index/login",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#fffffe",
+				"navigationBarTitleText": "",
+				"backgroundColor": "#fffffe",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/my",
+			"style": {
+				"navigationBarBackgroundColor": "#4CAF50",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"navigationBarTextStyle": "white",
+				"disableScroll": true
+			}
+		},
+		{
+			"path": "pages/contact/card",
+			"style": {
+				"navigationBarBackgroundColor": "white",
+				"backgroundColor": "#ededed",
+
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/contact/queryUsers",
+			"style": {
+				"navigationBarTitleText": "添加朋友",
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#e3e3e3",
+				"backgroundColor": "#e3e3e3",
+				"disableScroll": true,
+				"app-plus": {
+					"animationType": "pop-in",
+					"animationDuration": 300,
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/chat/chatGroup",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed"
+			}
+		},
+		{
+			"path": "pages/index/regist",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#fffffe",
+				"navigationBarTitleText": "账号注册",
+				"backgroundColor": "#fffffe",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/contact",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		}, {
+			"path": "pages/contact/applyList",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"backgroundColor": "#ebebeb",
+				"backgroundColorTop": "#ebebeb",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		}, {
+			"path": "pages/chat/createGroup",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"animationType": "slide-in-bottom",
+					"animationDuration": 300
+				}
+			}
+		}, {
+			"path": "pages/contact/groupList",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"backgroundColor": "#ebebeb",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "个人信息",
+				"navigationBarTextStyle": "black",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "34rpx"
+					}
+				}
+			}
+		}, {
+			"path": "pages/user/form",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"navigationBarTextStyle": "black",
+				"disableScroll": true,
+				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 300
+				}
+			}
+		}, {
+			"path": "pages/extend/webview",
+			"style": {
+
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": ""
+				
+			} 
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "white"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	},
+
+	"tabBar": {
+		"blurEffect": "extralight",
+		"color": "#333333",
+		"selectedColor": "#04BE02",
+		"borderStyle": "white",
+		"list": [{
+				"pagePath": "pages/tabbar/session",
+				"iconPath": "static/images/chat.png",
+				"selectedIconPath": "static/images/chat_on.png",
+				"text": "消息"
+			}, {
+				"pagePath": "pages/tabbar/contact",
+				"iconPath": "static/images/contact.png",
+				"selectedIconPath": "static/images/contact_on.png",
+				"text": "好友"
+			},
+			{
+				"pagePath": "pages/tabbar/my",
+				"iconPath": "static/images/my.png",
+				"selectedIconPath": "static/images/my_on.png",
+				"text": "我"
+			}
+		]
+	}
+
+}

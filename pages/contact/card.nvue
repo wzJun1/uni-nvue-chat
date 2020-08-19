@@ -1,0 +1,217 @@
+<template>
+	<view>
+		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" title=""
+		 background-color="white"></uni-nav-bar>
+
+		<view class="header">
+			<view class="userinfo">
+				<image class="avatar" :src="webSocket.getImageCache(adduser.avatar)" mode="aspectFill"></image>
+				<view class="userinfo-box">
+					<text class="nickname">{{adduser.nickname}}</text>
+					<text class="username">账号：{{adduser.username}}</text>
+				</view>
+			</view>
+			<view class="">
+				<uni-list :bounce="false" :border="false">
+					<uni-list-item :textStyle="textStyle" title="备注和标签" :containerStyle="containerStyle" />
+				</uni-list>
+			</view>
+		</view>
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item :textStyle="textStyle" title="个性签名" :rightText="adduser.autograph ? adduser.autograph : '他还没有签名呢～'" :containerStyle="containerStyle"
+				 :rightTextStyle="rightTextStyle" :showArrow="false" />
+				<uni-list-item :textStyle="textStyle" title="来源" :rightText="rightText" :containerStyle="containerStyle"
+				 :rightTextStyle="rightTextStyle" :showArrow="false" />
+				<uni-list-item :textStyle="textStyle" title="更多信息" :containerStyle="containerStyle" :rightTextStyle="rightTextStyle"
+				 :showArrow="true" />
+			</uni-list>
+		</view>
+
+		<view v-if="!me">
+			<view @click="sendApply" v-if="!isFriend" class="addfriend">
+				<view class="button">
+					<text class="button-text">添加到通讯录</text>
+				</view>
+			</view>
+			<view @click="webSocket.chatWindow(adduser._id,adduser.nickname)" v-if="isFriend" class="send">
+				<view class="button">
+					<text class="button-text">发消息</text>
+				</view>
+			</view>
+			<view @click="webSocket.chatWindow(adduser._id,adduser.nickname)" v-if="isFriend" class="audio">
+
+				<view class="button">
+					<text class="button-text">音视频通话</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				me:false,
+				adduser: '',
+				isFriend: false,
+				containerStyle: 'margin-top:12rpx;margin-bottom:12rpx;margin-left:8rpx;',
+				rightTextStyle: 'font-size:34rpx;font-weight:400;width: 480rpx;',
+				textStyle:'font-weight:400',
+				rightText:'来自账号搜索'
+			}
+		},
+		onLoad(option) {
+			var willAddUser = uni.getStorageSync('willAddUser');
+			if (!willAddUser) {
+				uni.navigateBack({
+					delta: 1
+				})
+				return;
+			}
+			if(option.type == "qrcode"){
+				this.rightText = "来自扫描二维码"
+			}
+			this.adduser = willAddUser;
+			this.isFriend = false;
+			if(this.adduser._id == this.user._id){this.me = true;}
+			if (this.friendList) {
+				this.friendList.forEach((friendItem, friendIndex) => {
+					if (friendItem._id == this.adduser._id) {
+						this.isFriend = true;
+					}
+				})
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket,
+				friendList: state => state.user.friendList
+			})
+		},
+		methods: {
+			back: function() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			sendApply: function() {
+				try {
+					let message = this.webSocket.formatSendData({
+						type: 'addfriend',
+						data: '',
+						to_id: this.adduser._id, // 接收人/群 id
+						to_name: this.adduser.nickname, // 接收人/群 名称
+						to_avatar: this.adduser.avatar, // 接收人/群 头像
+						chat_type: 'user', // 接收类型
+					})
+					this.webSocket.send(message);
+					uni.showToast({
+						title: '已发送申请',
+						duration: 3000
+					});
+				} catch (e) {
+					uni.showToast({
+						title: e,
+						duration: 3000,
+						icon: 'none'
+					});
+				}
+			},
+			 
+		}
+	}
+</script>
+
+<style>
+	
+	/* #ifndef APP-NVUE */
+	page {
+		background-color: #ededed !important;
+	}
+	/* #endif */
+	
+	 
+
+	.header {
+		background-color: white;
+
+		margin-bottom: 20rpx;
+	}
+
+	.userinfo {
+		padding-top: 20rpx;
+		flex-direction: row;
+		margin-left: 50rpx;
+		margin-bottom: 80rpx;
+		align-items: center;
+	}
+
+	.avatar {
+		width: 130rpx;
+		height: 130rpx;
+		border-radius: 10rpx;
+	}
+
+	.userinfo-box {
+		flex-direction: column;
+		margin-left: 30rpx;
+	}
+
+	.nickname {
+		font-family: sans-serif;
+		font-size: 40rpx;
+		font-weight: bold;
+		padding-bottom: 10rpx;
+	}
+
+	.username {
+		font-size: 30rpx;
+		color: gray;
+		padding: 4rpx;
+	}
+
+	.margin-bottom {
+		margin-bottom: 20rpx;
+	}
+
+	.send {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.audio {
+		margin-bottom: 20rpx;
+		justify-content: center;
+		align-items: center;
+		border-top-width: 1rpx;
+		border-top-color: #f8f8f8;
+	}
+
+	.addFriend {
+		margin-bottom: 20rpx;
+		justify-content: center;
+		align-items: center
+	}
+
+	.button {
+		width: 750rpx;
+		background-color: white;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+
+	.button-text {
+		color: #366092;
+		padding: 36rpx;
+		font-size: 34rpx;
+		font-weight: bold;
+	}
+</style>

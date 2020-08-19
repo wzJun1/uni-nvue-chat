@@ -1,0 +1,186 @@
+<template>
+	<view>
+		<view class="header">
+			<view class="userinfo">
+				<image class="avatar" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+				<view class="userinfo-box">
+					<text class="nickname">{{user.nickname}}</text>
+					<view class="qrcode-box" @click="previewImage()">
+						<text class="username">账号：{{user.username}}</text>
+						<uni-icons type="scan" class="scan" size="32"></uni-icons>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item @click="userinfo" textStyle="font-weight:400" thumb="../../static/images/safe.png" title="账号与安全"
+				 :containerStyle="lineContainerStyle" />
+			</uni-list>
+		</view>
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item @click="about" thumb="../../static/images/help.png" :textStyle="textStyle" title="帮助与反馈"
+				 :containerStyle="lineContainerStyle" />
+				<uni-list-item class="border-top" @click="about" thumb="../../static/images/about.png" :textStyle="textStyle" title="关于本APP"
+				 :containerStyle="lineContainerStyle" />
+			</uni-list> 
+		</view>
+		<view class="margin-bottom" @click="logout">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item @click="logout" class="logout" :textStyle="textStyle" title="退出登录" :containerStyle="logoutContainerStyle"
+				 :showArrow="false" link />
+			</uni-list>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	import md5 from "@/common/md5.js"
+	export default {
+		data() {
+			return {
+				tabbarHeight: 0,
+				textStyle: 'font-weight:400',
+				lineContainerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
+				logoutContainerStyle: 'margin-top:6px;margin-bottom:6px;justify-content: center;align-items: center;text-align:center'
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket,
+				sessionList: state => state.user.sessionList,
+			})
+		},
+		onShow() {
+			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom + 15;
+		},
+		methods: {
+			userinfo: function() {
+				uni.navigateTo({
+					url: '../user/user'
+				})
+			},
+			previewImage: function() {
+				var qrcode = 'http://qr.topscan.com/api.php?text=uniChat-uid-' + this.user._id;
+				var saveName = md5(qrcode);
+				uni.previewImage({
+					urls: [qrcode],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							var device = getApp().globalData.systemInfo.platform;
+							if (data.tapIndex == 1) {
+								var downLoader = plus.downloader.createDownload(qrcode, {
+									method: 'GET',
+									filename: '_downloads/images/' + saveName + '.jpg'
+								}, function(download, status) {
+									var fileName = download.filename;
+									uni.saveImageToPhotosAlbum({
+										filePath: fileName,
+										success: function() {
+											uni.showModal({
+												title: '提示',
+												content: '保存成功'
+											});
+										}
+									});
+
+								});
+								downLoader.start();
+							}
+						}
+					}
+				});
+			},
+			about: function() {
+				uni.showModal({
+					title: '提示',
+					content: '暂未开发'
+				});
+			},
+			logout: function() {
+				var that = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定要退出登录吗？',
+					success: function(res) {
+						if (res.confirm) {
+							that.$store.dispatch('logout')
+						}
+					}
+				});
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.header {
+		background-color: #4CAF50;
+		margin-bottom: 20rpx;
+	}
+
+	.userinfo {
+		padding: 20rpx;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.avatar {
+		margin-bottom: 20rpx;
+		width: 130rpx;
+		height: 130rpx;
+		border-radius: 10rpx;
+	}
+
+	.nickname {
+		font-family: sans-serif;
+		font-size: 40rpx;
+		font-weight: bold;
+		margin-bottom: 20rpx;
+		color: white
+	}
+
+	.userinfo-box {
+		margin-bottom: 20rpx;
+		flex-direction: column;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.qrcode-box {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.username {
+		font-size: 30rpx;
+		color: white;
+		margin-right: 10rpx;
+	}
+
+	.scan {
+		color: white;
+	}
+
+	.margin-bottom {
+		margin-bottom: 10px;
+	}
+
+	.logout {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.border-top {
+		border-top-width: 0.1rpx;
+		border-top-color: #ebebeb
+	}
+</style>

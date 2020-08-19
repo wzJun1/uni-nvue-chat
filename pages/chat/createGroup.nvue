@@ -1,0 +1,100 @@
+<template>
+	<view>
+		<uni-nav-bar @clickLeft="back" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" rightText="开始" @clickRight="create" title="发起群聊"
+		 background-color="#ebebeb" titleStyle="font-size: 17px; font-weight: 500;"></uni-nav-bar>
+		<uni-create-indexed-list :style="top" :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex' 
+	export default {
+		data() {
+			return {
+				selected:[],
+				token:''
+			}
+		},
+		computed: {
+			...mapState({
+				webSocket: state => state.user.webSocket,
+				user: state => state.user.user,
+				friendApply: state => state.user.friendApply,
+				friendListLetterSort: state => state.user.friendListLetterSort
+			}),
+			top(){
+				let top = getApp().globalData.systemInfo.statusBarHeight + 44;
+				return "top:"+top+"px;height:100%";
+			}
+		},
+		onShow() {
+			this.token = (new Date()).getTime();
+		},
+		methods: {
+			back:function(){
+				uni.navigateBack({
+					delta:1
+				})
+			},
+			bindClick:function(e){
+				if(e.select != undefined){
+					this.selected = e.select;
+				}
+			},
+			create:function(){
+				var selected = [];
+				var avatarList = [];
+				var title = '';
+				if(this.selected.length == 1){
+					this.webSocket.chatWindow(this.selected[0].name._id,this.selected[0].name.nickname)
+					return;
+				}
+				if(this.selected.length < 1){
+					uni.showModal({
+					    title: '提示',
+					    content: "请选择要发起群聊的好友"
+					});
+					return;
+				}
+				this.selected.forEach((item,index)=>{
+					selected.push(item.name)
+					title += item.name.nickname + "，"
+					avatarList.push(item.name.avatar)
+				})
+				var me = {
+					_id:this.user._id,
+					username:this.user.username,
+					nickname:this.user.nickname,
+					avatar:this.user.avatar,
+				}
+				avatarList.push(this.user.avatar);
+				selected.push(me);
+				title += this.user.username
+				if(selected.length > 200){
+					uni.showModal({
+					    title: '提示',
+					    content: "单个群聊人数不能超过200人"
+					});
+					return;
+				}
+				var group = {
+					admin_id:this.user._id,
+					admin:this.user,
+					create_time:this.token,
+					title:title,
+					users:selected,
+					avatarList:avatarList
+				};
+				this.webSocket.addChatGroup(group);
+				 
+			}
+		}
+	}
+</script>
+
+<style scoped>
+
+</style>

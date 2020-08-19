@@ -1,0 +1,65 @@
+<template>
+	<view>
+		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" @clickRight="addFriend" right-text=""
+		 title="群聊" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<uni-list :border="false">
+		 
+			<!-- #ifdef APP-NVUE -->
+			<cell>
+				<!-- #endif -->
+				<view class="search">
+					<uni-search-bar placeholder="账号/手机号" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
+				</view>
+				<!-- #ifdef APP-NVUE -->
+			</cell>
+			<!-- #endif -->
+	   
+			<cell v-for="(item,index) in groupList">
+				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="item.avatarList" :clickable="true"
+				 badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
+					 
+				</uni-list-chat>
+			</cell>
+			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
+		
+			</cell>
+		</uni-list>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket,
+				groupList: state => state.user.groupList
+			})
+		},
+		onShow(){
+			 
+		},
+		onReady() {
+			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom * 2; 
+		},
+		methods: {
+			back: function(){
+				uni.navigateBack({
+					delta:1
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+
+</style>

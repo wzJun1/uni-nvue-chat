@@ -1,0 +1,123 @@
+// 在本文件中可配置云数据库初始化，数据格式见：https://uniapp.dcloud.io/uniCloud/cf-database?id=db_init
+// 编写完毕后对本文件点右键，可按配置规则创建表和添加数据
+{
+    "uni-chat-session": {
+		"data": [],
+		"index":[]
+	},
+	"uni-chat-group-users": {
+		"data": [],
+		"index":[]
+	},
+	"uni-chat-group-detail-ids": {
+		"data": [],
+		"index":[]
+	},
+	"uni-chat-group-detail": {
+		"data": [],
+		"index":[]
+	},
+	"uni-chat-group": {
+		"data": [],
+		"index":[]
+	},
+	"uni-chat-detail": {
+		"data": [],
+		"index":[]
+	},
+	"uni-id-users": {
+			"data": [],
+			"index": [{
+				"IndexName": "username",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "username",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "mobile",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "mobile",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "email",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "email",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "wx_openid.app-plus",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "wx_openid.app-plus",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "wx_openid.mp-weixin",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "wx_openid.mp-weixin",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "wx_unionid",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "wx_unionid",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "ali_openid",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "ali_openid",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}]
+		},
+		"uni-verify": {
+			"data": [],
+			"index": [{
+				"IndexName": "mobile",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "mobile",
+						"Direction": "1"
+					}, {
+						"Name": "code",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}, {
+				"IndexName": "email",
+				"MgoKeySchema": {
+					"MgoIndexKeys": [{
+						"Name": "email",
+						"Direction": "1"
+					}, {
+						"Name": "code",
+						"Direction": "1"
+					}],
+					"MgoIsUnique": false
+				}
+			}]
+		}
+}

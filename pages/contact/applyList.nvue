@@ -1,0 +1,211 @@
+<template>
+	<view class="main">
+
+		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" @clickRight="queryUsers"
+		 right-text="添加朋友" title="新的朋友" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<uni-list>
+			<!-- #ifdef APP-NVUE -->
+			<cell>
+				<!-- #endif -->
+				<view class="search">
+					<uni-search-bar placeholder="账号/手机号" @confirm="search" @input="input" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
+					<button type="default" @click="clearApplyList">清空申请列表</button>
+				</view>
+				<!-- #ifdef APP-NVUE -->
+			</cell>
+			<!-- #endif -->
+			<!-- #ifdef APP-NVUE -->
+			<cell class="line">
+			</cell>
+			<!-- #endif -->
+			<uni-apply-list-item :disabled="true" v-for="(item,index) in friendApply" :key="index" :showArrow="false" :title="item.from_name"
+			 :thumb="webSocket.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black"
+			 :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
+			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
+
+			</cell>
+		</uni-list>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				tabbarHeight: 0,
+			}
+		},
+		computed: {
+			...mapState({
+				friendApply: state => state.user.friendApply,
+				webSocket: state => state.user.webSocket,
+			})
+		},
+		onReady() {
+			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom * 2;
+		},
+		created() {
+
+		},
+		methods: {
+			queryUsers: function() {
+				uni.navigateTo({
+					url: '/pages/contact/queryUsers',
+				})
+			},
+			back: function() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			clickApply: function(e) {
+				uni.showLoading({
+					title: '加载中'
+				});
+				try {
+					var fromUser = this.friendApply[e.listIndex];
+					var friendIds = [1, 2, 3];
+					uniCloud.callFunction({
+						name: 'user',
+						data: {
+							$url: "getFriendIds",
+							token: this.$store.state.user.user_token,
+							data: {
+								ids: [fromUser.to_id, fromUser.from_id]
+							}
+						},
+					}).then((res) => {
+						if (res.result.data) {
+							var list = res.result.data;
+							list = list ? list : [];
+							var from_friendIds = [];
+							var to_friendIds = [];
+							list.forEach((item, index) => {
+								if (item._id == fromUser.from_id) {
+									if (item.friendIds !== undefined) {
+										from_friendIds = item.friendIds;
+									}
+								}
+								if (item._id == fromUser.to_id) {
+									if (item.friendIds !== undefined) {
+										to_friendIds = item.friendIds;
+									}
+								}
+							})
+							let from_index = from_friendIds.findIndex(item => item === fromUser.to_id);
+							let to_index = to_friendIds.findIndex(item => item === fromUser.from_id);
+							if (from_index === -1) {
+								from_friendIds.push(fromUser.to_id);
+							}
+							if (to_index === -1) {
+								to_friendIds.push(fromUser.from_id);
+							}
+							uniCloud.callFunction({
+								name: 'user',
+								data: {
+									$url: "addFriend",
+									token: this.$store.state.user.user_token,
+									data: {
+										from_id: fromUser.from_id,
+										to_id: fromUser.to_id,
+										from_friendIds: from_friendIds,
+										to_friendIds: to_friendIds,
+									}
+								},
+							}).then((res) => {
+								uni.hideLoading();
+								console.log(res)
+								if (res.result.success) {
+									try {
+										let message = this.webSocket.formatSendData({
+											type: 'say',
+											data: '我们已经是好友啦，一起来聊天吧',
+											to_id: fromUser.from_id, // 接收人/群 id
+											to_name: fromUser.from_name, // 接收人/群 名称
+											to_avatar: fromUser.from_avatar, // 接收人/群 头像
+											chat_type: 'user', // 接收类型
+											msg_type: 'systen_agree_user'
+										})
+										this.webSocket.send(message);
+										this.webSocket.updateFriendApplyStatus(e.status, fromUser.from_id)
+										this.$store.dispatch('getFriendIds')
+										uni.hideLoading();
+										uni.showToast({
+											title: '已同意申请',
+											duration: 3000
+										});
+									} catch (e) {
+										uni.showModal({
+											title: '提示',
+											content: e
+										});
+									}
+								} else {
+									uni.showModal({
+										title: '提示',
+										content: res.result.msg
+									});
+								}
+							}).catch((err) => {
+								uni.hideLoading();
+								uni.showModal({
+									title: '提示',
+									content: err
+								});
+							})
+						}
+					}).catch((err) => {
+						uni.hideLoading();
+						uni.showModal({
+							title: '提示',
+							content: err
+						});
+					})
+				} catch (e) {
+					uni.hideLoading();
+					uni.showModal({
+						title: '提示',
+						content: e
+					});
+				}
+
+
+
+			},
+			clearApplyList: function() {
+				var that = this;
+				uni.showModal({
+					title: '提示',
+					content: '确认清空好友申请列表吗？',
+					success: function(res) {
+						if (res.confirm) {
+							that.webSocket.clearFriendApply();
+							uni.showToast({
+								title: '清空成功',
+								duration: 3000
+							});
+						}
+					}
+				});
+			},
+
+		}
+	}
+</script>
+
+<style scoped>
+	.fixedView {
+		position: fixed;
+		width: 750rpx;
+		height: 60rpx;
+		background-color: transparent;
+	}
+	.line{
+		height: 16rpx;
+		width:750rpx;
+		background-color: #ebebeb;
+	}
+</style>

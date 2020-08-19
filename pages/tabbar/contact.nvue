@@ -1,0 +1,195 @@
+<template>
+	<view class="">
+		<view class="nvue-page-head" ref="pagehead" id="pagehead">
+			<view class="navbar" ref="navbar">
+				<uni-nav-bar :fixed="false" :rightIconBool="true" :status-bar="true" right-icon="plus" @clickRight="webSocket.queryUsers"
+				 title="好友列表" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+			</view>
+			<view class="navbar" ref="searchbar">
+				<uni-search-bar @input="searchInput(friendList,groupList,$event)" :searchTranslateX="searchTranslateX" :radius="6"
+				 placeholder="搜索" class="navbar" bgColor="white" @searchBarClick="searchBarClick" @cancel="searchBarCancel"></uni-search-bar>
+			</view>
+		</view>
+		<uni-list v-if="!showSearch" :border="false" :style="{'margin-bottom':tabbarHeight+'rpx'}">
+			<uni-list-item @click="toNewFriendPage" :showArrow="false" title="新的朋友" thumb="../../static/images/new_f.png"
+			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" :badgeText="computedApplyCount"
+			 :showBadge="computedApplyCount" badgeType="error" />
+			<uni-list-item @click="toGroupListPage" :borderWidth="630" :showArrow="false" title="我的群聊" thumb="../../static/images/group.png"
+			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" />
+			<uni-list-item :borderWidth="630" :showArrow="false">
+				<view class="user-box">
+					<view class="slot-box">
+						<image class="slot-image" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+					</view>
+					<text class="slot-text">{{user.nickname}}</text>
+				</view>
+			</uni-list-item>
+			<cell class="line"></cell>
+			<uni-list-item :borderWidth="630" v-for="(item,index) in friendList" :key="index" :showArrow="false" @click="webSocket.showCard(item._id)">
+				<view class="user-box">
+					<view class="slot-box">
+						<image class="slot-image" :src="webSocket.getImageCache(item.avatar)" mode="aspectFill"></image>
+					</view>
+					<text class="slot-text">{{item.nickname}}</text>
+				</view>
+			</uni-list-item>
+		</uni-list>
+		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchPanelH +'rpx;background-color:#ededed;'">
+			<view class="search-label" v-if="friendSearchResult.length">
+				<text class="search-label-text">好友</text>
+			</view>
+			<uni-list :border="false" v-if="friendSearchResult.length">
+				<cell v-for="(item,index) in friendSearchResult">
+					<uni-list-chat :arrayIndex="index" :border="true" :title="item.nickname" :avatar="webSocket.getImageCache(item.avatar)" :clickable="true"
+					 badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
+					</uni-list-chat>
+				</cell>
+			</uni-list>
+			<view class="search-label" v-if="groupSearchResult.length">
+				<text class="search-label-text">群聊</text>
+			</view>
+			<uni-list :border="false" v-if="groupSearchResult.length">
+				<cell v-for="(item,index) in groupSearchResult">
+					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="item.avatarList"
+					 :clickable="true" badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
+					</uni-list-chat>
+				</cell>
+			</uni-list>
+		</view>
+
+	</view>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
+	import searchAnimation from './searchAnimation.js'
+	export default {
+		data() {
+			return {
+				tabbarHeight: 0,
+				applyCount: 0,
+			}
+		},
+		mixins: [searchAnimation],
+		computed: {
+			...mapState({
+				webSocket: state => state.user.webSocket,
+				user: state => state.user.user,
+				friendApply: state => state.user.friendApply,
+				friendList: state => state.user.friendList,
+				groupList: state => state.user.groupList,
+			}),
+			computedApplyCount(){
+				let applyCount = 0;
+				this.friendApply.forEach((item, index) => {
+					if (item.status === 0) {
+						applyCount++;
+					}
+				})
+				return applyCount;
+			}
+		},
+		onLoad() {
+		 
+		},
+		onShow() {
+			uni.hideTabBarRedDot({
+				index: 1
+			});
+			
+		},
+		onReady() {
+			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12 - 45 - this.systemInfo.safeAreaInsets.bottom) * 2;
+			this.tabbarHeight = this.systemInfo.windowBottom * 2;
+		},
+		onHide() {
+			uni.hideKeyboard();
+		},
+		methods: {
+			toNewFriendPage: function() {
+				uni.navigateTo({
+					url: '/pages/contact/applyList',
+				})
+			},
+			toGroupListPage: function() {
+				uni.navigateTo({
+					url: '/pages/contact/groupList',
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.fixedView {
+		position: fixed;
+		width: 750rpx;
+		height: 60rpx;
+		background-color: transparent;
+	}
+
+	.line {
+		height: 40rpx;
+		background-color: #ededed;
+		width: 750rpx;
+	}
+
+	.nvue-page-head {
+		background-color: #ededed;
+	}
+
+	.nvue-page-search {
+		width: 750rpx;
+	}
+
+	.navbar {
+		background-color: #ededed;
+	}
+
+	.user-box {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.search-label {
+		padding: 20rpx;
+		background-color: #ededed;
+	}
+
+	.search-label-text {
+		font-size: 30rpx;
+	}
+
+	.slot-box {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.slot-image {
+		/* #ifndef APP-NVUE */
+		display: block;
+		/* #endif */
+		margin-right: 20rpx;
+		width: 80rpx;
+		height: 80rpx;
+		border-radius: 10rpx;
+	}
+
+	.slot-text {
+		flex: 1;
+		font-size: 34rpx;
+		color: black;
+		lines: 3;
+		width: 500rpx;
+		overflow: hidden;
+		/* #ifndef APP-NVUE */
+		word-wrap: break-word;
+		/* #endif */
+	}
+</style>

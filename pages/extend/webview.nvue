@@ -1,0 +1,55 @@
+<template>
+	<view>
+		<web-view :webview-styles="webviewStyles" :src="url" :style="'width: '+width+'rpx;height: '+height+'rpx;'"></web-view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				url: '',
+				width: '750',
+				height: '',
+				webviewStyles: {
+					progress: {
+						color: '#4CAF50'
+					}
+				}
+			}
+		},
+		onLoad(option) {
+			this.url = option.url;
+			this.height = getApp().globalData.systemInfo.windowHeight * 2;
+		},
+		onReady() {
+			uni.request({
+			    url: this.url,
+			    success: (res) => {
+					var data = res.data;
+					var title = data.match(/<title>(.+)<\/title>/g);
+					console.log(data)
+					if(title !== null){
+						title = title[0].replace("<title>","");
+						title = title.replace("</title>","");
+						 
+						uni.setNavigationBarTitle({
+						    title: title
+						});
+					}else{
+						uni.setNavigationBarTitle({
+						    title: "网页"
+						});
+					}
+			    }
+			});
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

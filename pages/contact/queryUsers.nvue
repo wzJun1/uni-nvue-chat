@@ -1,0 +1,211 @@
+<template>
+	<view class="nvue-page-root">
+
+		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" title="添加朋友"
+		 background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+
+		<view class="uni-common-mt">
+			<view class="uni-form-item uni-column">
+
+				<view class="uni-input-wrapper">
+					<icon type="search" size="15" style="margin-right: 20rpx;" />
+
+					<input @confirm="search" class="uni-input" type="text" confirm-type="search" placeholder-class="placeholder-style"
+					 placeholder="账号/手机号" />
+				</view>
+			</view>
+
+			<view class="text-box">
+
+				<view class="previewImage" @click="previewImage()">
+					<text class="username">我的账号：{{user.username}}</text>
+					<uni-icons type="scan" size="30" style="color: green;"></uni-icons>
+				</view>
+			</view>
+
+		</view>
+		<!-- <view class="" style="justify-content: center;text-align: center;align-items: center;">
+			<image :src="'http://qr.topscan.com/api.php?text=uniChat-uid-'+user._id" style="width: 300px;height: 300px;"
+			 @click="previewImage()"></image>
+		</view> -->
+		<uni-list :border="false">
+			<uni-list-item title="摇一摇加朋友" note="添加身边的朋友" link thumb="../../static/images/ld.png" thumb-size="lg" />
+			<uni-list-item title="创建群聊" note="与身边的朋友进入一个群聊" link thumb="../../static/images/qun.png" thumb-size="lg" />
+			<uni-list-item title="扫一扫" note="扫描二维码名片" link thumb="../../static/images/scan.png" thumb-size="lg" />
+			<uni-list-item title="通讯录" note="添加通讯录中的朋友" link thumb="../../static/images/lxr.png" thumb-size="lg" />
+			<uni-list-item title="资讯" note="获取更多的资讯和服务" link thumb="../../static/images/gzh.png" thumb-size="lg" />
+			<uni-list-item title="其他联系人" note="通过手机号搜索其他用户" link thumb="../../static/images/last.png" thumb-size="lg" />
+		</uni-list>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	import md5 from "@/common/md5.js"
+	export default {
+
+		data() {
+			return {
+
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket
+			})
+		},
+		onLoad() {
+
+		},
+		methods: {
+			previewImage: function() {
+				var qrcode = 'http://qr.topscan.com/api.php?text=uniChat-uid-' + this.user._id;
+				var saveName = md5(qrcode);
+				uni.previewImage({
+					urls: [qrcode],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							var device = getApp().globalData.systemInfo.platform;
+							if (data.tapIndex == 1) {
+								var downLoader = plus.downloader.createDownload(qrcode, {
+									method: 'GET',
+									filename: '_downloads/images/' + saveName + '.jpg'
+								}, function(download, status) {
+									var fileName = download.filename;
+									uni.saveImageToPhotosAlbum({
+										filePath: fileName,
+										success: function() {
+											uni.showModal({
+												title: '提示',
+												content: '保存成功'
+											});
+										}
+									});
+								});
+								downLoader.start();
+
+							}
+						}
+					}
+				});
+			},
+			back: function() {
+				console.log("backback")
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			search: function(e) {
+				var that = this;
+				if (e.detail.value) {
+					uni.showLoading({
+						title: '搜索中...'
+					})
+					uniCloud.callFunction({
+						name: 'user',
+						data: {
+							$url: "getByUserName",
+							token: this.$store.state.user.user_token,
+							data: {
+								username: e.detail.value
+							}
+						},
+					}).then((res) => {
+						uni.hideLoading()
+						if (this.webSocket.checkResultData(res)) {
+							uni.hideKeyboard();
+							uni.setStorageSync("willAddUser", res.result.data[0]);
+							uni.navigateTo({
+								url: '/pages/contact/card',
+							})
+						} else {
+							uni.showToast({
+								title: res.result.msg,
+								duration: 2000,
+								icon: 'none'
+							});
+						}
+
+					}).catch((err) => {
+						uni.hideLoading()
+						console.log(err);
+						uni.showModal({
+							title: '提示',
+							content: err
+						});
+					})
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.nvue-page-root {
+		padding-bottom: 40rpx;
+	}
+
+	.uni-input-wrapper {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		padding: 16rpx 26rpx;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		background-color: #FFFFFF;
+		margin: 20rpx;
+		border-radius: 10rpx;
+		align-items: center;
+	}
+
+	.uni-input {
+		height: 56rpx;
+		line-height: 56rpx;
+		font-size: 30rpx;
+		padding: 0px;
+		flex: 1;
+		background-color: #FFFFFF;
+	}
+
+	.placeholder-style {
+		margin-left: 40rpx;
+	}
+
+	.uni-icon {
+		font-family: uniicons;
+		font-size: 28rpx;
+		font-weight: normal;
+		font-style: normal;
+		width: 28rpx;
+		height: 28rpx;
+		line-height: 28rpx;
+		color: #999999;
+	}
+
+	.uni-eye-active {
+		color: #007AFF;
+	}
+
+	.text-box {
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+		margin-top: 10rpx;
+		margin-bottom: 60rpx;
+	}
+
+	.previewImage {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.username {
+		font-size: 28rpx;
+		margin-right: 10rpx;
+	}
+</style>

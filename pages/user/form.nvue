@@ -1,0 +1,272 @@
+<template>
+	<view class="nvue-page-root">
+		<view class="uni-common-mt" v-if="type != 'password'">
+			<view class="uni-form-item uni-column">
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" :focus="focus" placeholder="" v-model="formdata[type]" />
+				</view>
+			</view>
+		</view>
+		<view class="uni-common-mt" v-else>
+			<view class="uni-form-item uni-column">
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" :focus="focus" confirm-type="done" placeholder="原密码" v-model="oldPassword" />
+				</view>
+			</view>
+			<view class="uni-form-item uni-column">
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" confirm-type="done" placeholder="新的密码" v-model="newPassword" />
+				</view>
+			</view>
+			<view class="uni-form-item uni-column">
+				<view class="uni-input-wrapper">
+					<input class="uni-input" type="text" confirm-type="done" placeholder="再次输入新密码" v-model="passwordConfirmation" />
+				</view>
+			</view>
+			<view class="" style="height: 20rpx;background-color: #ededed;width: 750rpx;">
+			</view>
+			<view class="button" @click="submit()">
+				<view class="submit">
+					<text class="submit-text">登录</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				formdata: [],
+				type: '',
+				passwordConfirmation: '',
+				newPassword: '',
+				oldPassword: '',
+				focus:false
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user
+			})
+		},
+		onLoad(option) {
+			this.type = option.type;
+			if (option.data == undefined || option.data == 'undefined') {
+				option.data = "";
+			}
+			this.formdata[this.type] = option.data ? option.data : '';
+			this.setNavigationTitie(option.title);
+			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
+		},
+		methods: {
+			setNavigationTitie: function(str) {
+				uni.setNavigationBarTitle({
+					title: str
+				})
+			},
+			updatePassword: function() {
+				if (!this.newPassword || !this.oldPassword || !this.passwordConfirmation) {
+					uni.showModal({
+						title: '提示',
+						content: '请输入完整'
+
+					});
+					return;
+				}
+				if (this.newPassword != this.passwordConfirmation) {
+					uni.showModal({
+						title: '提示',
+						content: '两次输入的新密码不相同，请检查'
+
+					});
+					return;
+				}
+				var that = this;
+				uni.showLoading();
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "updateUserPass",
+						token: this.$store.state.user.user_token,
+						data: {
+							uid: this.user._id,
+							oldPassword: this.oldPassword,
+							newPassword: this.newPassword,
+							passwordConfirmation: this.passwordConfirmation
+						}
+					},
+				}).then((res) => {
+					uni.hideLoading();
+					console.log(res)
+					if (res.result.code === 0) {
+						uni.showToast({
+							title: res.result.msg,
+							duration: 2000
+						})
+						that.$store.dispatch('logout')
+
+					} else {
+						uni.showToast({
+							title: res.result.msg,
+							duration: 2000,
+							icon: 'none'
+						})
+					}
+				}).catch((err) => {
+
+					uni.hideLoading()
+					uni.showModal({
+						title: '提示',
+						content: err
+
+					});
+				})
+			},
+			submit: function() {
+				var that = this;
+				var data = {};
+				data['uid'] = this.user._id;
+				data[this.type] = this.formdata[this.type];
+				uni.showLoading();
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "updateUserById",
+						token: this.$store.state.user.user_token,
+						data: data
+					},
+				}).then((res) => {
+					uni.hideLoading();
+					console.log(res)
+					if (res.result.code === 0) {
+						uni.showToast({
+							title: res.result.msg,
+							duration: 2000
+						})
+
+						that.$store.dispatch('getUserInfo')
+					} else {
+						uni.showToast({
+							title: res.result.msg,
+							duration: 2000,
+							icon: 'none'
+						})
+					}
+				}).catch((err) => {
+					uni.hideLoading()
+					uni.showModal({
+						title: '提示',
+						content: err
+					});
+				})
+			}
+
+		}
+	}
+</script>
+
+<style scoped>
+	.nvue-page-root {
+		padding-bottom: 40rpx;
+	}
+
+	.page-title {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 35rpx;
+	}
+
+	.page-title__wrapper {
+		padding: 0px 40rpx;
+		border-bottom-color: #D8D8D8;
+		border-bottom-width: 2rpx;
+	}
+
+	.page-title__text {
+		font-size: 32rpx;
+		height: 96rpx;
+		line-height: 96rpx;
+		color: #BEBEBE;
+	}
+
+	.title {
+		padding: 10rpx 26rpx;
+	}
+
+	.uni-form-item__title {
+		font-size: 32rpx;
+		line-height: 48rpx;
+	}
+
+	.uni-input-wrapper {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		padding: 10rpx 26rpx;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		background-color: #FFFFFF;
+	}
+
+	.uni-input {
+		height: 56px;
+		line-height: 56px;
+		font-size: 34rpx;
+		padding: 0px;
+		flex: 1;
+		background-color: #FFFFFF;
+	}
+
+	.uni-icon {
+		font-family: uniicons;
+		font-size: 48rpx;
+		font-weight: normal;
+		font-style: normal;
+		width: 48rpx;
+		height: 48rpx;
+		line-height: 48rpx;
+		color: #999999;
+	}
+
+	.uni-eye-active {
+		color: #007AFF;
+	}
+
+	.passwordHover:active {
+		background-color: green;
+		opacity: 0.5;
+	}
+
+	.button {
+		margin-top: 40rpx;
+		justify-content: center;
+		align-items: center
+	}
+
+	.submit {
+		width: 700rpx;
+		background-color: #4CAF50;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+
+	.submit-text {
+		color: white;
+		padding: 30rpx;
+	}
+
+	.submit:active {
+		background-color: green;
+		opacity: 0.5;
+	}
+</style>

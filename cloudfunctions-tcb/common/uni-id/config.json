@@ -1,0 +1,40 @@
+{
+	"passwordSecret": "c5c900dd3518f436009ad2b9ec4de76a",
+	"tokenSecret": "513d8babb7e1da5696a74ae99c387295",
+	"tokenExpiresIn": 259200000,
+	"passwordErrorLimit": 6,
+	"passwordErrorRetryTime": 3600,
+	"app-plus": {
+		"tokenExpiresIn": 259200000,
+		"oauth": {
+			"weixin": {
+				"appid": "weixin appid",
+				"appsecret": "weixin appsecret"
+			}
+		}
+	},
+	"mp-weixin": {
+		"oauth": {
+			"weixin": {
+				"appid": "weixin appid",
+				"appsecret": "weixin appsecret"
+			}
+		}
+	},
+	"mp-alipay": {
+		"oauth": {
+			"alipay": {
+				"appid": "alipay appid",
+				"privateKey": "alipay privateKey"
+			}
+		}
+	},
+	"service": {
+		"sms": {
+			"name": "your app name",
+			"codeExpiresIn": 180,
+			"smsKey": "your sms key",
+			"smsSecret": "your sms secret"
+		}
+	}
+}
