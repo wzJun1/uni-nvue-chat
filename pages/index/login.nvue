@@ -58,6 +58,7 @@
 		},
 		methods: {
 			submit: function() {
+				uni.hideKeyboard();
 				if (!this.username || !this.password) {
 					uni.showToast({
 						title: "请输入账号和密码",

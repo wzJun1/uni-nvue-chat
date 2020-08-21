@@ -118,7 +118,49 @@
 				this.$refs.popup.close()
 			},
 			del: function(){
-				
+				var that = this;
+				uni.showLoading();
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "deleteFriend",
+						token: this.$store.state.user.user_token,
+						data: {
+							user_id:this.user._id,
+							friend_id:this.uid
+						}
+						
+					},
+				}).then((res) => {
+					uni.hideLoading();
+					uni.showModal({
+						title: '提示',
+						content: "删除成功"
+					});
+					that.$store.dispatch('getFriendIds')
+					let key = `chat_sessions_${this.user._id}`
+					var chat_sessions = uni.getStorageSync(key);
+					if(chat_sessions){
+						chat_sessions.forEach((item,index)=>{
+							if(item.id == this.uid){
+								chat_sessions.splice(index, 1);
+							}
+						})
+					}
+					uni.setStorageSync(key, chat_sessions);
+					let chatDetailKey = `chatDetail_${this.user._id}_${this.uid}`
+					uni.setStorageSync(chatDetailKey, []);
+					this.$store.dispatch('getSessionList')
+					uni.reLaunch({
+						url:"/pages/tabbar/session"
+					})
+				}).catch((err) => {
+					uni.hideLoading()
+					uni.showModal({
+						title: '提示',
+						content: err
+					});
+				})
 			},
 			back: function(){
 				uni.navigateBack({

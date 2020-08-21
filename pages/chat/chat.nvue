@@ -751,10 +751,21 @@
 						}
 					})
 				}).then(res => {
-					uni.hideLoading()
-					console.log(res);
+					
+					
+					uniCloud.getTempFileURL({
+						fileList: [res.fileID],
+						success(res) {
+							if(res.fileList != undefined && res.fileList[0] != undefined){
+								that.sendImage(res.fileList[0].tempFileURL)
+							}
+						},
+						fail() {},
+						complete() {uni.hideLoading()}
+					});
+					 
 
-					that.sendImage(res.fileID)
+					 
 
 				}).catch((err) => {
 					uni.hideLoading()
@@ -770,7 +781,7 @@
 					const path = data.tempFilePath
 					const options = {
 						filePath: path,
-						cloudPath: Date.now() + '.jpg'
+						cloudPath: Date.now() + '.mp3'
 					}
 					resolve(options)
 				}).then((options) => {
@@ -784,11 +795,19 @@
 						}
 					})
 				}).then(res => {
-					uni.hideLoading()
-					console.log(res);
-					data.file = res.fileID;
-					that.sendAudio(data)
 
+					uniCloud.getTempFileURL({
+						fileList: [res.fileID],
+						success(res) {
+							if(res.fileList != undefined && res.fileList[0] != undefined){
+								data.file = res.fileList[0].tempFileURL;
+								that.sendAudio(data);
+							}
+						},
+						fail() {},
+						complete() {uni.hideLoading()}
+					});
+					
 				}).catch((err) => {
 					uni.hideLoading()
 					console.log(err);
@@ -818,6 +837,7 @@
 				}
 			},
 			sendAudio: function(file) {
+				console.log(file)
 				if (file) {
 					let message = this.webSocket.formatSendData({
 						type: 'say',

@@ -953,7 +953,6 @@ class common {
 		var friendIds = $store.state.user.friendIds;
 		if(friendIds){
 			friendIds.forEach((item)=>{
-				console.log(item.pet_name)
 				if(friend_id == item.friend_id){
 					if(item.pet_name != undefined){
 						nickname = item.pet_name;

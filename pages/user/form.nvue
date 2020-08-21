@@ -27,7 +27,7 @@
 			</view>
 			<view class="button" @click="submit()">
 				<view class="submit">
-					<text class="submit-text">登录</text>
+					<text class="submit-text">确认</text>
 				</view>
 			</view>
 		</view>

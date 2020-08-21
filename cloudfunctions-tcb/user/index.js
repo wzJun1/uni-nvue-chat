@@ -79,7 +79,6 @@ exports.main = async (event, context) => {
 			friend_id: event.data.friend_id,
 		};
 		let uGet = await user_chat_friends_collection.limit(1).where(uParam).get();
-
 		if(uGet.data[0]){
 			ctx.body = await user_chat_friends_collection.where(uParam).update({
 				pet_name: event.data.pet_name
@@ -90,7 +89,22 @@ exports.main = async (event, context) => {
 				msg:'设置失败'
 			}
 		}
+		await next();
+	});
+	
+	/*删除好友，双向删除*/
+	app.router('deleteFriend', async (ctx, next) => {
+		let uParam = {
+			user_id: event.data.user_id,
+			friend_id: event.data.friend_id,
+		};
+		let fParam = {
+			user_id: event.data.friend_id,
+			friend_id: event.data.user_id
+		};
 		
+		await user_chat_friends_collection.where(uParam).remove();
+		await user_chat_friends_collection.where(fParam).remove();
 		
 		await next();
 	});
