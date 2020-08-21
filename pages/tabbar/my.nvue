@@ -121,7 +121,7 @@
 
 <style scoped lang="scss">
 	.header {
-		background-color: #4CAF50;
+		background-color: #29c160;
 		margin-bottom: 20rpx;
 	}
 

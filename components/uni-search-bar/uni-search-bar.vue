@@ -1,8 +1,6 @@
 <template>
 	<view class="uni-searchbar">
 		<view :style="{borderRadius:radius+'rpx',backgroundColor: bgColor}" class="uni-searchbar__box" @click="searchClick">
-			
-			
 			<!-- #ifdef MP-ALIPAY -->
 			<view class="uni-searchbar__box-icon-search">
 				<uni-icons color="#a8a8a8" size="36" type="search" />
@@ -12,14 +10,12 @@
 			<view class="" ref="iconRef" :style="'margin-left:'+searchTranslateX+'rpx'">
 				<uni-icons color="#a8a8a8" class="uni-searchbar__box-icon-search" size="36" type="search" />
 			</view>
-			 
 			<!-- #endif -->
-			
-			<input :focus="showSync" @input="searchInput" @focus="searchClick" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"  ref="inputRef"
+			<input :focus="showSync" @click="searchClick" @input="searchInput" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"  ref="inputRef"
 			 confirm-type="search" type="text" v-model="searchVal" />
 			  
 			<view v-if="show && (clearButton==='always'||clearButton==='auto'&&searchVal!=='')" class="uni-searchbar__box-icon-clear" @click="clear">
-				<uni-icons color="#a8a8a8" class="" size="48" type="clear" />
+				<uni-icons @click="clear" color="#a8a8a8" class="" size="48" type="clear" />
 			</view>
 		</view> 
 		
@@ -140,7 +136,9 @@
 				}
 			},
 			clear() {
+				console.log("cla")
 				this.searchVal = ""
+				
 			},
 			cancel() {
 				this.$emit("cancel", {

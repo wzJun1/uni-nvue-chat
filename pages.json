@@ -33,7 +33,7 @@
 		{
 			"path": "pages/tabbar/my",
 			"style": {
-				"navigationBarBackgroundColor": "#4CAF50",
+				"navigationBarBackgroundColor": "#29c160",
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"navigationBarTextStyle": "white",
@@ -62,6 +62,34 @@
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/contact/more",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "资料设置",
+				"navigationBarTextStyle": "black",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/contact/form",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "资料设置",
+				"navigationBarTextStyle": "black",
+				"disableScroll": true,
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom",
+					"animationDuration": 300
 				}
 			}
 		},

@@ -7,11 +7,17 @@ exports.main = async (event, context) => {
 		event
 	});
 	const users_collection = db.collection('uni-id-users');
+	
+	
+	const user_chat_friends_collection = db.collection('uni-chat-friends');
 	const user_chat_detail_collection = db.collection('uni-chat-detail');
 	const user_chat_group_collection = db.collection('uni-chat-group');
 	const user_chat_group_users_collection = db.collection('uni-chat-group-users');
 	const user_chat_group_detail_collection = db.collection('uni-chat-group-detail');
 	const user_chat_group_detail_ids_collection = db.collection('uni-chat-group-detail-ids');
+	
+	
+	
 	const dbCmd = db.command;
 	
 	const auth = {"code":1 , "msg":"登录失效，请重新登录"};
@@ -34,37 +40,67 @@ exports.main = async (event, context) => {
 	/*添加好友*/
 	app.router('addFriend', async (ctx, next) => {
 		try {
-			const updateFrom_friends = await uniID.updateUser({
-				uid: event.data.from_id,
-				friendIds: event.data.from_friendIds
-			})
-			const updateTo_friends = await uniID.updateUser({
-				uid: event.data.to_id,
-				friendIds: event.data.to_friendIds
-			})
+			let uParam = {
+				user_id: event.data.user_id,
+				friend_id: event.data.friend_id
+			};
+			let uGet = await user_chat_friends_collection.limit(1).where(uParam).get();
+			if(!uGet.data[0]){
+				await user_chat_friends_collection.add(uParam);
+			}
+			let fParam = {
+				user_id: event.data.friend_id,
+				friend_id: event.data.user_id
+			};
+			let fGet = await user_chat_friends_collection.limit(1).where(fParam).get();
+			if(!fGet.data[0]){
+				await user_chat_friends_collection.add(fParam);
+			}
 			ctx.body = {
 				success: true,
-				fromData: updateFrom_friends,
-				toData: updateTo_friends
+				data:{
+					uGet,
+					fGet
+				}
 			}
 		} catch (e) {
 			ctx.body = {
 				success: false,
-				fromData: updateFrom_friends,
-				toData: updateTo_friends,
 				error: e
 			}
 		}
 		await next();
 	});
+	/* 设置好友备注 */
+	app.router('updateFriendPetName', async (ctx, next) => {
+	
+		let uParam = {
+			user_id: event.data.user_id,
+			friend_id: event.data.friend_id,
+		};
+		let uGet = await user_chat_friends_collection.limit(1).where(uParam).get();
+
+		if(uGet.data[0]){
+			ctx.body = await user_chat_friends_collection.where(uParam).update({
+				pet_name: event.data.pet_name
+			});
+		}else{
+			ctx.body = {
+				code:1,
+				msg:'设置失败'
+			}
+		}
+		
+		
+		await next();
+	});
 
 	/*获取用户的所有好友id*/
 	app.router('getFriendIds', async (ctx, next) => {
-		//ctx.body = await uniID.login(event.data)
-		ctx.body = await users_collection.field({
-			'friendIds': true
-		}).where({
-			_id: dbCmd.in(event.data.ids)
+
+		let field = (event.data.field != undefined) ? event.data.field : {};
+		ctx.body = await user_chat_friends_collection.field(field).where({
+			user_id: dbCmd.in(event.data.ids)
 		}).get();
 		await next();
 	});

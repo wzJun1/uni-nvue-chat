@@ -13,7 +13,7 @@
 				height: '',
 				webviewStyles: {
 					progress: {
-						color: '#4CAF50'
+						color: '#29c160'
 					}
 				}
 			}

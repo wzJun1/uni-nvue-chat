@@ -6,14 +6,9 @@
 		 class="uni-list-item" @click="onClick">
 		 
 		 <view class="line" v-if="!isFirstChild && border" :style="{'width':borderWidth+'rpx'}">
-		 
+		
 		 </view>
-		 
-		 
 			<view class="uni-list-item__container" :style="containerStyle" :class="{'uni-list-item--first':isFirstChild}">
-				
-				 
-				
 				<view v-if="thumb" class="uni-list-item__icon">
 					<image :src="thumb" class="uni-list-item__icon-img" :style="thumbStyle" />
 				</view>
@@ -29,7 +24,7 @@
 				<view class="uni-list-item__extra">
 					<text v-if="rightText" class="uni-list-item__extra-text" :style="rightTextStyle">{{rightText}}</text>
 					<uni-badge v-if="showBadge" :type="badgeType" :text="badgeText" />
-					<switch v-if="showSwitch" :disabled="disabled" :checked="switchChecked" @change="onSwitchChange" />
+					<switch color="#29c160" v-if="showSwitch" :disabled="disabled" :checked="switchChecked" @change="onSwitchChange" />
 					<slot name="right"></slot>
 					<uni-icons v-if="showArrow" :size="40" class="uni-icon-wrapper" color="#bbb" type="arrowright" />
 				</view>

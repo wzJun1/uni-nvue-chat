@@ -10,7 +10,7 @@
 					</view>
 					<view :class="{ 'uni-navbar-btn-icon-left': !leftIcon.length }" class="uni-navbar-btn-text uni-navbar__content_view"
 					 v-if="leftText.length">
-						<text :style="{ color: color, fontSize: '28rpx' }">{{ leftText }}</text>
+						<text @tap="onClickLeft" :style="{ color: color, fontSize: '34rpx' }">{{ leftText }}</text>
 					</view>
 					<slot name="left" />
 				</view>
@@ -21,7 +21,7 @@
 					</view>
 					<view :class="{ 'uni-navbar-btn-icon-left': !leftIcon.length }" class="uni-navbar-btn-text uni-navbar__content_view"
 					 v-if="leftText.length">
-						<text :style="{ color: color, fontSize: '28rpx' }">{{ leftText }}</text>
+						<text @tap="onClickLeft" :style="{ color: color, fontSize: '34rpx' }">{{ leftText }}</text>
 					</view>
 					<slot name="left" />
 				</view>
@@ -49,26 +49,39 @@
 					<!-- 标题插槽 -->
 					<slot />
 				</view>
+
+
 				<view v-if="rightIconBool" :class="title.length ? 'uni-navbar__header-btns-right' : ''" class="uni-navbar__header-btns uni-navbar__content_view">
 					<view class="uni-navbar__content_view" v-if="rightIcon.length">
 						<uni-icons @click="onClickRight" :color="color" :type="rightIcon" size="48" />
 					</view>
 					<!-- 优先显示图标 -->
 					<view class="uni-navbar-btn-text uni-navbar__content_view" v-if="rightText.length && !rightIcon.length">
-						<text class="uni-nav-bar-right-text">{{ rightText }}</text>
+						<text @click="onClickRight" class="uni-nav-bar-right-text">{{ rightText }}</text>
 					</view>
 					<slot name="right" />
 				</view>
-				<view v-else @click="onClickRight" :class="title.length ? 'uni-navbar__header-btns-right' : ''" class="uni-navbar__header-btns uni-navbar__content_view">
+
+				<!-- <view v-else @click="onClickRight" :class="title.length ? 'uni-navbar__header-btns-right' : ''" class="uni-navbar__header-btns uni-navbar__content_view">
 					<view class="uni-navbar__content_view" v-if="rightIcon.length">
 						<uni-icons :color="color" :type="rightIcon" size="48" />
 					</view>
-					<!-- 优先显示图标 -->
+				 
 					<view class="uni-navbar-btn-text uni-navbar__content_view" v-if="rightText.length && !rightIcon.length">
 						<text class="uni-nav-bar-right-text">{{ rightText }}</text>
 					</view>
-					<slot name="right" />
-				</view>
+					<slot name="right" /> 
+				</view> -->
+
+
+				<view v-if="rightButton" class="uni-navbar__header-right-utton">
+					<view class="rightButton" @click="onClickRight" :style="rightButtonDisable ? 'background-color: #d8d8d8;' : 'background-color: #29c160;'">
+						<text class="rightButton-text" :style="rightButtonDisable ? 'color: #b3b2b2;' : 'color: white;'">完成</text>
+					</view>
+				</view> 
+				
+				
+				
 			</view>
 		</view>
 		<view class="uni-navbar__placeholder" v-if="fixed">
@@ -118,6 +131,14 @@
 				type: [Boolean, String],
 				default: false
 			},
+			rightButton: {
+				type: [Boolean, String],
+				default: false
+			},
+			rightButtonDisable: {
+				type: [Boolean, String],
+				default: false
+			},
 			rightIconBool: {
 				type: [Boolean, String],
 				default: false
@@ -136,7 +157,7 @@
 			},
 			backgroundColor: {
 				type: String,
-				default: "#FFFFFF"
+				default: "#ebebeb"
 			},
 			statusBar: {
 				type: [Boolean, String],
@@ -152,7 +173,7 @@
 			},
 			titleStyle: {
 				type: String,
-				default: ""
+				default: "font-size: 34rpx; font-weight: 500;"
 			}
 		},
 		watch: {
@@ -374,5 +395,27 @@
 		100% {
 			transform: rotate(360deg);
 		}
+	}
+	.uni-navbar__header-right-utton{
+		justify-content: center;
+		align-items: center;
+		margin-right: 20rpx;
+	}
+	.rightButton{
+		border-radius: 10rpx;
+		width: 120rpx;
+		background-color: #29c160;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+	.rightButton-text{
+		padding: 16rpx;
+		font-size: 34rpx;
+		font-weight: bold;
+		color: white;
+	}
+	.uni-navbar-btn-icon-left{
+		margin-left: 20rpx;
 	}
 </style>

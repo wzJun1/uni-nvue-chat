@@ -1,0 +1,188 @@
+<template>
+	<view>
+		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" title="资料设置" :rightIconBool="true"></uni-nav-bar>
+		 
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				
+				<uni-list-item :textStyle="textStyle" @click="setNickName" title="设置备注昵称" :rightText="petName"
+				 :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
+				 
+				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="好友权限" :containerStyle="containerStyle"
+				 />
+			</uni-list>
+		</view>
+		
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item :textStyle="textStyle" title="推荐给朋友" :containerStyle="containerStyle" />
+			</uni-list>
+		</view>
+		
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item :textStyle="textStyle" title="设为特别关注" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
+			</uni-list>
+		</view>
+		
+		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item :textStyle="textStyle" title="拉入黑名单" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
+			</uni-list>
+		</view>
+		
+		<view>
+			<view class="delete">
+				<view class="button" @click="showPopup()">
+					<text class="button-text">删除</text>
+				</view>
+			</view>
+		</view>
+		
+		<uni-popup ref="popup" type="bottom">
+			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
+
+
+				<view class="delPanel">
+					<text class="deleted-text">将好友"{{petName ? petName : nickname}}"删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
+				</view>
+				
+				<view class="delete">
+					<view class="button" @click="del()">
+						<text class="button-text">删除好友</text>
+					</view>
+				</view>
+				
+				<view class="line">
+					
+				</view>
+				
+				<view class="delete">
+					<view class="button" @click="hidePopup()">
+						<text class="button-text" style="color: black;">取消</text>
+					</view>
+				</view>
+				
+			</view>
+		</uni-popup>
+
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	import md5 from "@/common/md5.js"
+	export default {
+		data() {
+			return {
+				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
+				rightTextStyle: 'font-size:34rpx;font-weight:400;',
+				textStyle: 'font-weight:400',
+				systemInfo: getApp().globalData.systemInfo,
+				safeBottom:0,
+				uid:'',
+				nickname:'',
+				petName:'',
+			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user.user,
+				webSocket: state => state.user.webSocket,
+			})
+		},
+		onLoad() {
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom * 2;
+			var cardUser = uni.getStorageSync('cardUser');
+			this.uid = cardUser._id;
+			this.nickname = cardUser.nickname;
+			var petName = this.webSocket.getNickName(cardUser._id,cardUser.nickname);
+			if(petName == cardUser.nickname){
+				this.petName = "";
+			}else{
+				this.petName = petName;
+			}
+		},
+		methods: {
+			setNickName: function(){
+				uni.navigateTo({
+					url: './form?id='+this.uid+'&petName='+(this.petName != this.nickname ? this.petName : "")
+				})
+			},
+			showPopup: function(){
+				this.$refs.popup.open()
+			},
+			hidePopup: function(){
+				this.$refs.popup.close()
+			},
+			del: function(){
+				
+			},
+			back: function(){
+				uni.navigateBack({
+					delta:1
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.slot-image {
+		/* #ifndef APP-NVUE */
+		display: block;
+		/* #endif */
+		margin-right: 10px;
+		width: 50px;
+		height: 50px;
+		border-radius: 5px;
+	}
+	.delete {
+		
+		justify-content: center;
+		align-items: center
+	}
+	.button:active{
+		background-color: #f8f8f8;
+	}
+	.button {
+		width: 750rpx;
+		background-color: white;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+	
+	.button-text {
+		color: #fa5151;
+		padding: 36rpx;
+		font-size: 34rpx;
+		font-weight: bold;
+	}
+	
+	.margin-bottom{
+		margin-bottom:10px;
+	}
+	
+	.popup{
+		width: 750rpx;
+		background-color: white;
+		border-top-left-radius:30rpx;
+		border-top-right-radius:30rpx;
+	}
+	
+	.delPanel{
+		padding: 30rpx;
+		justify-content: center;
+		text-align: center;
+		align-items: center;
+		border-bottom-width: 1px;
+		border-bottom-color: #f8f8f8;
+	}
+	.deleted-text{
+		color: gray;
+		font-size: 28rpx;
+	}
+</style>

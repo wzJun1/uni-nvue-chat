@@ -118,7 +118,7 @@
 						uni.hideLoading()
 						if (this.webSocket.checkResultData(res)) {
 							uni.hideKeyboard();
-							uni.setStorageSync("willAddUser", res.result.data[0]);
+							uni.setStorageSync("cardUser", res.result.data[0]);
 							uni.navigateTo({
 								url: '/pages/contact/card',
 							})

@@ -7,6 +7,7 @@ export default {
 		sessionList: [],
 		friendApply: [],
 		friendList: [],
+		friendIds:[],
 		friendListLetterSort: [],
 		groupList:[],
 		tabBarBadge:0,
@@ -187,41 +188,35 @@ export default {
 				console.log(err);
 			})
 		},
-		
 		getFriendListByIds({
 			state
 		}, res) {
- 
 			if(state.webSocket.checkResultData(res)){
-				
-				if (res.result.data[0].friendIds !== undefined) {
-					
-					uniCloud.callFunction({
-						name: 'user',
-						
+				state.friendIds = res.result.data;
+				let friendIds = [];
+				res.result.data.forEach((item) => {
+					friendIds.push(item.friend_id);
+				})
+				if(!friendIds){return;}
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "getFriendListByIds",
+						token: state.user_token,
 						data: {
-							$url: "getFriendListByIds",
-							token: state.user_token,
-							data: {
-								ids: res.result.data[0].friendIds
-							}
-						},
-					}).then((res) => {
-						if(res.result.data){
-							state.friendList = res.result.data;
-							uni.hideLoading();
-							state.friendListLetterSort = state.webSocket.sortFriendList(res.result.data)
+							ids: friendIds
 						}
-					}).catch((err) => {
-						console.log(err);
+					},
+				}).then((res) => {
+					if(res.result.data){
+						state.friendList = res.result.data;
 						uni.hideLoading();
-					})
-					
-				}else{
+						state.friendListLetterSort = state.webSocket.sortFriendList(res.result.data)
+					}
+				}).catch((err) => {
+					console.log(err);
 					uni.hideLoading();
-				}
-				
-				 
+				})
 			}else{
 				uni.hideLoading();
 			}

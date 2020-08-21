@@ -4,8 +4,7 @@
 		<view class="nvue-page-head" ref="pagehead" id="pagehead">
 			<view class="navbar" ref="navbar">
 				<uni-nav-bar :fixed="false" :rightIconBool="true" :status-bar="true" right-icon="plus" @clickRight="showMenu"
-				 :loading="!webSocket.loadFinish" :title="webSocket.loadFinish ? '聊天' : '加载中'" background-color="#ebebeb"
-				 titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+				 :loading="!webSocket.loadFinish" :title="webSocket.loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 			</view>
 			<view class="navbar" ref="searchbar">
 				<uni-search-bar class="navbar" @input="searchInput(friendList,groupList,$event)" :searchTranslateX="searchTranslateX"
@@ -152,8 +151,8 @@
 			});
 		},
 		onReady() {
-			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12 - 45 - this.systemInfo.safeAreaInsets.bottom) * 2;
-			 
+			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
+			
 			this.tabbarHeight = this.systemInfo.windowBottom * 2;
 		},
 		methods: {

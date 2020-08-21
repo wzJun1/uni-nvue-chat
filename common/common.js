@@ -948,6 +948,23 @@ class common {
 	// 		return cache.cache;
 	// 	}
 	// }
+	
+	getNickName(friend_id,nickname){
+		var friendIds = $store.state.user.friendIds;
+		if(friendIds){
+			friendIds.forEach((item)=>{
+				console.log(item.pet_name)
+				if(friend_id == item.friend_id){
+					if(item.pet_name != undefined){
+						nickname = item.pet_name;
+					}
+				}
+			})
+			return nickname;
+		}else{
+			return nickname;
+		}
+	}
 	//好友列表按首字母排序
 	sortFriendList(data) {
 		var friendList = data;
@@ -1054,7 +1071,7 @@ class common {
 		}).then((res) => {
 			uni.hideLoading();
 			if (this.checkResultData(res)) {
-				uni.setStorageSync("willAddUser", res.result.data[0]);
+				uni.setStorageSync("cardUser", res.result.data[0]);
 				uni.navigateTo({
 					url:'/pages/contact/card?type='+type
 				})

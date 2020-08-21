@@ -30,4 +30,9 @@
 	// image {
 	// 	will-change: transform
 	// }
+	.line{
+		height: 20rpx;
+		width: 750rpx;
+		background-color: #ededed;
+	}
 </style>

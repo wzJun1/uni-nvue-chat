@@ -16,7 +16,7 @@
 
 此APP需搭配websocket端使用
 
-GitHub：https://github.com/wzJun1/uni-nvue-chat-websocket
+GitHub：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/wzJun1/uni-nvue-chat-websocket)
 
 
 

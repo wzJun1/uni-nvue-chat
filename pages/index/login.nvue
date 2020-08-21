@@ -9,7 +9,7 @@
 			<view class="uni-form-item uni-column">
 				<view class="" style="padding-left: 26rpx;"><text class="uni-form-item__title">国家/地区</text></view>
 				<view class="uni-input-wrapper" style="justify-content: flex-start;">
-					<text class="uni-form-item__title" style="color:#4CAF50;font-weight: bold;">中国大陆（+086）</text>
+					<text class="uni-form-item__title" style="color:#29c160;font-weight: bold;">中国大陆（+086）</text>
 				</view>
 			</view>
 			<view class="uni-form-item uni-column border">

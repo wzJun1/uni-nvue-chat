@@ -30,7 +30,7 @@
 					<view class="slot-box">
 						<image class="slot-image" :src="webSocket.getImageCache(item.avatar)" mode="aspectFill"></image>
 					</view>
-					<text class="slot-text">{{item.nickname}}</text>
+					<text class="slot-text">{{webSocket.getNickName(item._id,item.nickname)}}</text>
 				</view>
 			</uni-list-item>
 		</uni-list>
@@ -102,7 +102,7 @@
 			
 		},
 		onReady() {
-			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12 - 45 - this.systemInfo.safeAreaInsets.bottom) * 2;
+			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
 			this.tabbarHeight = this.systemInfo.windowBottom * 2;
 		},
 		onHide() {

@@ -64,8 +64,9 @@ export default {
 			 
 			var that = this;
 			this.showSearch = true;
-			 
+			
 			setTimeout(function(){
+				uni.hideTabBar();
 				let navbar = that.getEl(that.$refs.navbar);
 				let searchbar = that.getEl(that.$refs.searchbar);
 				let pagehead = that.getEl(that.$refs.pagehead);
@@ -136,6 +137,7 @@ export default {
 
 			var that = this;
 			setTimeout(function(){
+				
 				let navbar = that.getEl(that.$refs.navbar);
 				let searchbar = that.getEl(that.$refs.searchbar);
 				let pagehead = that.getEl(that.$refs.pagehead);
@@ -172,6 +174,7 @@ export default {
 					delay: 0 //ms
 				}, function() {
 					that.showSearch = false;
+					uni.showTabBar();
 				})
 				var statusBarHeight = that.systemInfo.statusBarHeight;
 				var navBarHeight = 44;

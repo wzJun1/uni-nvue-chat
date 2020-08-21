@@ -19,8 +19,8 @@
 			</cell>
 			<!-- #endif -->
 			<uni-apply-list-item :disabled="true" v-for="(item,index) in friendApply" :key="index" :showArrow="false" :title="item.from_name"
-			 :thumb="webSocket.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black"
-			 :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
+			 :thumb="webSocket.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx"
+			 textStyle="font-weight:400;color:black" :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
 			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
 
 			</cell>
@@ -62,6 +62,63 @@
 				});
 			},
 			clickApply: function(e) {
+				
+				var fromUser = this.friendApply[e.listIndex];
+				uni.showLoading({
+					title: '加载中'
+				});
+				
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "addFriend",
+						token: this.$store.state.user.user_token,
+						data: {
+							user_id: fromUser.to_id,
+							friend_id: fromUser.from_id
+						}
+					},
+				}).then((res) => {
+					if (res.result.success) {
+						try {
+							let message = this.webSocket.formatSendData({
+								type: 'say',
+								data: '我们已经是好友啦，一起来聊天吧',
+								to_id: fromUser.from_id, // 接收人/群 id
+								to_name: fromUser.from_name, // 接收人/群 名称
+								to_avatar: fromUser.from_avatar, // 接收人/群 头像
+								chat_type: 'user', // 接收类型
+								msg_type: 'systen_agree_user'
+							})
+							this.webSocket.send(message);
+							this.webSocket.updateFriendApplyStatus(e.status, fromUser.from_id)
+							this.$store.dispatch('getFriendIds')
+							uni.hideLoading();
+							uni.showToast({
+								title: '已同意申请',
+								duration: 3000
+							});
+						} catch (e) {
+							uni.showModal({
+								title: '提示',
+								content: e
+							});
+						}
+					}
+				}).catch((err) => {
+					uni.hideLoading();
+					uni.showModal({
+						title: '提示',
+						content: err
+					});
+				})
+
+
+			},
+
+
+
+			clickApply2: function(e) {
 				uni.showLoading({
 					title: '加载中'
 				});
@@ -203,9 +260,10 @@
 		height: 60rpx;
 		background-color: transparent;
 	}
-	.line{
+
+	.line {
 		height: 16rpx;
-		width:750rpx;
+		width: 750rpx;
 		background-color: #ebebeb;
 	}
 </style>

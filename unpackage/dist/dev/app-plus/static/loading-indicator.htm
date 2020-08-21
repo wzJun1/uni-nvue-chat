@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://uniapp.dcloud.io/component/README -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title>uni-app官网</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="description" content="uni-app：一个使用 Vue.js 开发跨平台应用的前端框架">
+		<meta name="keywords" content="uni-app,uniapp,小程序,微信小程序,小程序解决方案,微信小程序解决方案,快应用,DCloud,混合app,app开发,hbuilder,hybrid,native,webview">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<link rel="shortcut icon" type="image/x-icon" href="https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/icon.png?v=1556263038786">
+		<link rel="stylesheet" href="./loading-indicator_files/vue.css">
+		<link rel="stylesheet" href="./loading-indicator_files/index.min.css">
+	</head>
+
+	<body data-page="/component/README.md" class="ready sticky">
+		<nav class="app-nav pc no-badge"><div class="logo"><a href="https://www.dcloud.io/" target="__blank" class="dcloud-logo"></a>
+  <a href="https://uniapp.dcloud.io/" class="uniapp-logo"></a></div><div class="search nav-search"><div class="input-wrap">
+      <input type="search" value="" placeholder="搜索">
+      <div class="clear-button show">
+        <svg width="26" height="24">
+          <circle cx="12" cy="12" r="11" fill="#ccc"></circle>
+          <path stroke="white" stroke-width="2" d="M8.25,8.25,15.75,15.75"></path>
+          <path stroke="white" stroke-width="2" d="M8.25,15.75,15.75,8.25"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="results-panel"></div>
+    </div><ul>
+<li><a href="https://uniapp.dcloud.io/README">介绍</a></li>
+<li><a href="https://uniapp.dcloud.io/collocation/pages">框架</a></li>
+<li><a href="https://uniapp.dcloud.io/component/README" class="active">组件</a></li>
+<li><a href="https://uniapp.dcloud.io/api/README">API</a></li>
+<li><a href="https://uniapp.dcloud.io/uniCloud/README">uniCloud</a></li>
+<li><a href="javascript:;" target="_blank">其它规范</a><ul>
+<li><a href="http://www.html5plus.org/doc/h5p.html" target="_blank">App扩展规范HTML5 Plus</a></li>
+<li><a href="https://developers.weixin.qq.com/miniprogram/dev/framework/" target="_blank">微信小程序</a></li>
+<li><a href="https://docs.alipay.com/mini/developer/getting-started" target="_blank">支付宝小程序</a></li>
+<li><a href="https://smartprogram.baidu.com/docs/develop/tutorial/codedir/" target="_blank">百度小程序</a></li>
+<li><a href="https://developer.toutiao.com/dev/cn/mini-app/develop/component/introduction/basic-component" target="_blank">字节跳动小程序</a></li>
+<li><a href="https://q.qq.com/wiki/develop/miniprogram/frame/" target="_blank">QQ小程序</a></li>
+<li><a href="https://developer.huawei.com/consumer/cn/doc/development/quickApp-References/webview-component-view" target="_blank">华为快应用</a></li>
+<li><a href="https://mp.360.cn/doc/miniprogram/dev/#/view" target="_blank">360小程序</a></li>
+<li><a href="https://weex.apache.org/cn/guide/" target="_blank">Weex</a></li>
+</ul>
+</li>
+</ul>
+<ul class="nav-href">
+    <li class="ext-link"><a href="https://ext.dcloud.net.cn/" target="__blank">插件市场</a></li>
+    <li><a href="https://dev.dcloud.net.cn/wish/?channel=uniapp" target="__blank">需求墙</a></li>
+    <li><a href="https://dev.dcloud.net.cn/sponsor/?channel=uniapp" target="__blank" style="color:#FF6600!important;"><img src="./loading-indicator_files/heart.png" class="heart">赞助我们</a></li>
+</ul>
+
+<div class="github">
+    <a href="https://github.com/dcloudio/uni-app" target="_blank">
+        <img src="./loading-indicator_files/github.svg">
+    </a>
+</div>
+</nav><main><button class="sidebar-toggle hide"><div class="sidebar-toggle-button"><span></span><span></span><span></span></div></button><aside class="sidebar pc"><h1 class="hide"><a class="app-name-link" data-nosearch="" href="https://uniapp.dcloud.io/">uni-app</a></h1><div class="sidebar-nav"><ul class="sidebar-nav-ul">
+<li class="sidebar-nav-li" data-level="1.2.0"><span class="chapter">视图容器</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/view">view</a></li>
+<li><a href="https://uniapp.dcloud.io/component/scroll-view">scroll-view</a></li>
+<li><a href="https://uniapp.dcloud.io/component/swiper">swiper</a></li>
+<li><a href="https://uniapp.dcloud.io/component/movable-view?id=movable-area">movable-area</a></li>
+<li><a href="https://uniapp.dcloud.io/component/movable-view?id=movable-view">movable-view</a></li>
+<li><a href="https://uniapp.dcloud.io/component/cover-view?id=cover-view">cover-view</a></li>
+<li><a href="https://uniapp.dcloud.io/component/cover-view?id=cover-image">cover-image</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.1"><span class="chapter">基础内容</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/icon">icon</a></li>
+<li><a href="https://uniapp.dcloud.io/component/text">text</a></li>
+<li><a href="https://uniapp.dcloud.io/component/rich-text">rich-text</a></li>
+<li><a href="https://uniapp.dcloud.io/component/progress">progress</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.2"><span class="chapter">表单组件</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/button">button</a></li>
+<li><a href="https://uniapp.dcloud.io/component/checkbox">checkbox</a></li>
+<li><a href="https://uniapp.dcloud.io/component/editor">editor</a></li>
+<li><a href="https://uniapp.dcloud.io/component/form">form</a></li>
+<li><a href="https://uniapp.dcloud.io/component/input">input</a></li>
+<li><a href="https://uniapp.dcloud.io/component/label">label</a></li>
+<li><a href="https://uniapp.dcloud.io/component/picker">picker</a></li>
+<li><a href="https://uniapp.dcloud.io/component/picker-view">picker-view</a></li>
+<li><a href="https://uniapp.dcloud.io/component/radio">radio</a></li>
+<li><a href="https://uniapp.dcloud.io/component/slider">slider</a></li>
+<li><a href="https://uniapp.dcloud.io/component/switch">switch</a></li>
+<li><a href="https://uniapp.dcloud.io/component/textarea">textarea</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.3"><span class="chapter">导航</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/navigator">navigator</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.4"><span class="chapter">媒体组件</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/audio">audio</a></li>
+<li><a href="https://uniapp.dcloud.io/component/camera">camera</a></li>
+<li><a href="https://uniapp.dcloud.io/component/image">image</a></li>
+<li><a href="https://uniapp.dcloud.io/component/video">video</a></li>
+<li><a href="https://uniapp.dcloud.io/component/live-player">live-player</a></li>
+<li><a href="https://uniapp.dcloud.io/component/live-pusher">live-pusher</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.5"><span class="chapter">地图</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/map">map</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.6"><span class="chapter">画布</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/canvas">canvas</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.7"><span class="chapter">webview</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/web-view">web-view</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.8"><span class="chapter">广告</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/ad">ad</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.9"><span class="chapter">小程序开放能力组件</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/official-account">official-account</a></li>
+<li><a href="https://uniapp.dcloud.io/component/open-data">open-data</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.10"><span class="chapter">App nvue专用组件</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/barcode">barcode</a></li>
+<li><a href="https://uniapp.dcloud.io/component/list">list</a></li>
+<li><a href="https://uniapp.dcloud.io/component/cell">cell</a></li>
+<li><a href="https://uniapp.dcloud.io/component/recycle-list">recycle-list</a></li>
+<li><a href="https://uniapp.dcloud.io/component/waterfall">waterfall</a></li>
+<li><a href="https://uniapp.dcloud.io/component/refresh">refresh</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.11"><span class="chapter">扩展组件（uni ui）</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/README?id=uniui">uni-ui整体介绍</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=21" target="_blank">Badge 数字角标</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=56" target="_blank">Calendar 日历</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=22" target="_blank">Card 卡片</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=23" target="_blank">Collapse 折叠面板</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=1261" target="_blank">Combox 可选择输入框</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=25" target="_blank">CountDown 倒计时</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=26" target="_blank">Drawer 抽屉</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=144" target="_blank">Fab 悬浮按钮</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=864" target="_blank">Fav 收藏按钮</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=865" target="_blank">GoodsNav 商品导航</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=27" target="_blank">Grid 宫格</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=28" target="_blank">Icons 图标</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=375" target="_blank">IndexedList 索引列表</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=24" target="_blank">List 列表</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=29" target="_blank">LoadMore 加载更多</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=52" target="_blank">NavBar 自定义导航栏</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=30" target="_blank">NoticeBar 通告栏</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=31" target="_blank">NumberBox 数字输入框</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=32" target="_blank">Pagination 分页器</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=329" target="_blank">PopUp 弹出层</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=33" target="_blank">Rate 评分</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=866" target="_blank">SearchBar 搜索栏</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=54" target="_blank">SegmentedControl 分段器</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=34" target="_blank">Steps 步骤条</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=181" target="_blank">SwipeAction 滑动操作</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=284" target="_blank">SwiperDot 轮播图指示点</a></li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=35" target="_blank">Tag 标签</a></li>
+<li><a href="https://ext.dcloud.net.cn/?cat1=2" target="_blank">更多插件市场的组件</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.12"><span class="chapter">导航栏</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/navigation-bar">navigation-bar</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.13"><span class="chapter">页面属性配置节点</span><ul>
+<li><a href="https://uniapp.dcloud.io/component/page-meta">page-meta</a></li>
+</ul>
+</li>
+<li class="sidebar-nav-li" data-level="1.2.14"><a href="https://uniapp.dcloud.io/component/mp-weixin-plugin">配置小程序插件</a></li>
+<li class="sidebar-nav-li" data-level="1.2.15"><a href="https://uniapp.dcloud.io/component/native-component">原生组件说明</a>
+</li><li class="sidebar-nav-li" data-level="1.2.16"></li>
+
+<div class="contact-box">
+<a href="https://unicloud.dcloud.net.cn/" target="_blank" class="contact-item">
+    <img src="./loading-indicator_files/cloud@2x.jpg" width="20" height="20">
+    <div class="contact-smg">
+        <div>uniCloud Web控制台</div>
+    </div>
+</a>
+<a href="https://ask.dcloud.net.cn/explore/" target="_blank" class="contact-item">
+    <img src="./loading-indicator_files/d@2x.png" width="20" height="20">
+    <div class="contact-smg">
+        <div>论坛</div>
+    </div>
+</a>
+<a href="https://uniad.dcloud.net.cn/" target="_blank" class="contact-item">
+  <img src="./loading-indicator_files/uniad-520.png" width="20" height="20">
+  <div class="contact-smg">
+    <div>uniAD</div>
+  </div>
+</a>
+<a href="https://tongji.dcloud.net.cn/" target="_blank" class="contact-item">
+  <img src="./loading-indicator_files/uni-tongji-icon.png" width="20" height="20">
+  <div class="contact-smg">
+    <div>uni统计</div>
+  </div>
+</a>
+  <div class="contact-item">
+      <img src="./loading-indicator_files/git-1.png" width="20" height="20">
+      <div class="contact-smg">
+          <div>
+        代码仓库：<a href="https://gitee.com/dcloud/uni-app" target="_blank">码云</a>、<a href="http://github.com/dcloudio/uni-app" target="_blank">GitHub</a>
+      </div>
+      </div>
+  </div>
+  <div class="contact-item">
+    <img src="./loading-indicator_files/qq@2x.png" width="20" height="20">
+    <div class="contact-smg">
+       <div>官方QQ交流群</div>
+    <div>群33：498071674 &nbsp;<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=_I92eKMoCSlGNrNMV-8Do8Uy7pi0CQSj&amp;jump_from=webapi">点此加入</a></div>
+      <div>群35：713420817（2000人已满）</div>
+      <div>群34：530305531（2000人已满）</div>
+      <!-- <div>群33：498071674（2000人已满）</div> -->
+      <div>群32：166188631（2000人已满）</div>
+      <div>群31：567471669（2000人已满）</div>
+      <div>群30：371046920（2000人已满）</div>
+      <div>群29：202965481（2000人已满）</div>
+      <div>群28：166188776（2000人已满）</div>
+      <div>群27：811363410（2000人已满）</div>
+      <div>群26：147867597（2000人已满）</div>
+      <div>群25：165297000（2000人已满）</div>
+      <div>群24：672494800（2000人已满）</div>
+      <div>群23：599958679（2000人已满）</div>
+      <div>群22：687186952（2000人已满）</div>
+      <div>群21：717019120（2000人已满）</div>
+      <div>群20：165796402（2000人已满）</div>
+      <div>群19：165657124（2000人已满）</div>
+      <div>群18：698592271（2000人已满）</div>
+      <div>群17：951348804（2000人已满）</div>
+      <div>群16：719211033（2000人已满）</div>
+      <div>群15：516984120（2000人已满）</div>
+      <div>群14：465953250（2000人已满）</div>
+      <div>群13：699478442（2000人已满）</div>
+      <div>群12：884860657（2000人已满）</div>
+      <div>群11：296811328（2000人已满）</div>
+      <div>群10：959059626（2000人已满）</div>
+      <div>群9：775128777（2000人已满）</div>
+      <div>群8：695442854（2000人已满）</div>
+      <div>群7：942061423（2000人已满）</div>
+      <div>群6：697264024（2000人已满）</div>
+      <div>群5：731951419（2000人已满）</div>
+      <div>群4：942702595（2000人已满）</div>
+      <div>群3：773794803（2000人已满） </div>
+      <div>群2：901474938（2000人已满） </div>
+      <div>群1：531031261（2000人已满）</div>
+    </div>
+  </div>
+<div class="contact-item">
+    <img src="./loading-indicator_files/weixin@2x.png" width="20" height="20">
+    <div class="contact-smg">
+        <div>关注微信公众号</div>
+        <img src="./loading-indicator_files/weixin.jpg" width="90" height="90">
+    </div>
+</div>
+</div></ul></div></aside><section class="content"><article class="markdown-section hide" id="main"><h3 id="基础组件"><a href="https://uniapp.dcloud.io/component/README?id=%e5%9f%ba%e7%a1%80%e7%bb%84%e4%bb%b6" data-id="基础组件" class="anchor"><span>基础组件</span></a></h3><p>uni-app为开发者提供了一系列基础组件，类似HTML里的基础标签元素。</p><p>但uni-app的组件与HTML不同，而是与小程序相同，更适合手机端使用。</p><p>虽然不推荐使用HTML标签，但实际上如果开发者写了<code>div</code>等标签，在编译到非H5平台时也会被编译器转换为<code>view</code>标签，类似的还有<code>span</code>转<code>text</code>、<code>a</code>转<code>navigator</code>等，包括css里的元素选择器也会转。但为了管理方便、策略统一，新写代码时仍然建议使用view等组件。</p><p>开发者可以通过组合这些基础组件进行快速开发。
+基于内置的基础组件，可以开发各种扩展组件，组件规范与vue组件相同。</p><p>什么是组件：</p><ul>
+<li>组件是视图层的基本组成单元。</li>
+<li>一个组件包括开始标签和结束标签，标签上可以写属性，并对属性赋值。内容则写在两个标签之内。</li>
+</ul>
+<pre v-pre="" data-lang="html"><code class="lang-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>view</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tagname</span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>value<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+            content
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tagname</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>view</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span></code></pre><p><strong>Tips</strong></p><ul>
+<li>所有组件与属性名都是小写，单词之间以连字符<code>-</code>连接。</li>
+<li>根节点为 <code>&lt;template&gt;</code>，这个 <code>&lt;template&gt;</code> 下只能且必须有一个根<code>&lt;view&gt;</code>组件。这是vue单文件组件规范。</li>
+<li><strong>平台差异说明</strong>若无特殊说明，则表示所有平台均支持。</li>
+</ul>
+<h3 id="属性类型"><a href="https://uniapp.dcloud.io/component/README?id=%e5%b1%9e%e6%80%a7%e7%b1%bb%e5%9e%8b" data-id="属性类型" class="anchor"><span>属性类型</span></a></h3><table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">注解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Boolean</td>
+<td style="text-align:left">布尔值</td>
+<td style="text-align:left">组件写上该属性，不管该属性等于什么，其值都为 <code>true</code>，只有组件上没有写该属性时，属性值才为 <code>false</code>。如果属性值为变量，变量的值会被转换为 <code>Boolean</code> 类型。</td>
+</tr>
+<tr>
+<td style="text-align:left">Number</td>
+<td style="text-align:left">数字</td>
+<td style="text-align:left">1, 2.5</td>
+</tr>
+<tr>
+<td style="text-align:left">String</td>
+<td style="text-align:left">字符串</td>
+<td style="text-align:left">"string"</td>
+</tr>
+<tr>
+<td style="text-align:left">Array</td>
+<td style="text-align:left">数组</td>
+<td style="text-align:left">[ 1, "string" ]</td>
+</tr>
+<tr>
+<td style="text-align:left">Object</td>
+<td style="text-align:left">对象</td>
+<td style="text-align:left">{ key: value }</td>
+</tr>
+<tr>
+<td style="text-align:left">EventHandler</td>
+<td style="text-align:left">事件处理函数名</td>
+<td style="text-align:left"><code>handlerName</code> 是 methods 中定义的事件处理函数名</td>
+</tr>
+<tr>
+<td style="text-align:left">Any</td>
+<td style="text-align:left">任意属性</td>
+<td style="text-align:left">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="共同属性类型"><a href="https://uniapp.dcloud.io/component/README?id=%e5%85%b1%e5%90%8c%e5%b1%9e%e6%80%a7%e7%b1%bb%e5%9e%8b" data-id="共同属性类型" class="anchor"><span>共同属性类型</span></a></h3><p>所有组件都有的属性：</p><table>
+<thead>
+<tr>
+<th style="text-align:left">属性名</th>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">注解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">id</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">组件的唯一标示</td>
+<td style="text-align:left">保持整个页面唯一</td>
+</tr>
+<tr>
+<td style="text-align:left">class</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">组件的样式类</td>
+<td style="text-align:left">在对应的 css 中定义的样式类</td>
+</tr>
+<tr>
+<td style="text-align:left">style</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">组件的内联样式</td>
+<td style="text-align:left">可以动态设置的内联样式</td>
+</tr>
+<tr>
+<td style="text-align:left">hidden</td>
+<td style="text-align:left">Boolean</td>
+<td style="text-align:left">组件是否隐藏</td>
+<td style="text-align:left">所有组件默认是显示的</td>
+</tr>
+<tr>
+<td style="text-align:left">data-*</td>
+<td style="text-align:left">Any</td>
+<td style="text-align:left">自定义属性</td>
+<td style="text-align:left">组件上触发的事件时，会发送给事件处理函数</td>
+</tr>
+<tr>
+<td style="text-align:left">@*</td>
+<td style="text-align:left">EventHandler</td>
+<td style="text-align:left">组件的事件</td>
+<td style="text-align:left">详见各组件详细文档，事件绑定参考 <a href="https://uniapp.dcloud.io/use?id=%e4%ba%8b%e4%bb%b6%e5%a4%84%e7%90%86%e5%99%a8">事件处理器</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="特殊属性"><a href="https://uniapp.dcloud.io/component/README?id=%e7%89%b9%e6%ae%8a%e5%b1%9e%e6%80%a7" data-id="特殊属性" class="anchor"><span>特殊属性</span></a></h3><p>几乎所有组件都有各自自定义的属性，可以对该组件的功能或样式进行修饰，请参考各个组件的定义。</p><h3 id="组件列表"><a href="https://uniapp.dcloud.io/component/README?id=%e7%bb%84%e4%bb%b6%e5%88%97%e8%a1%a8" data-id="组件列表" class="anchor"><span>组件列表</span></a></h3><p>基础组件分为以下八大类：</p><p><strong>视图容器（View Container）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/view">view</a></td>
+<td style="text-align:left">视图容器，类似于HTML中的div</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/scroll-view">scroll-view</a></td>
+<td style="text-align:left">可滚动视图容器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/swiper">swiper</a></td>
+<td style="text-align:left">滑块视图容器</td>
+</tr>
+</tbody>
+</table>
+<p><strong>基础内容（Basic Content）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/icon">icon</a></td>
+<td style="text-align:left">图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/text">text</a></td>
+<td style="text-align:left">文字</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/rich-text">rich-text</a></td>
+<td style="text-align:left">富文本</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/progress">progress</a></td>
+<td style="text-align:left">进度条</td>
+</tr>
+</tbody>
+</table>
+<p><strong>表单组件（Form）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">标签名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/button">button</a></td>
+<td style="text-align:left">按钮</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/form">form</a></td>
+<td style="text-align:left">表单</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/input">input</a></td>
+<td style="text-align:left">输入框</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/checkbox">checkbox</a></td>
+<td style="text-align:left">多项选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/radio">radio</a></td>
+<td style="text-align:left">单项选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/picker">picker</a></td>
+<td style="text-align:left">弹出式列表选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/picker-view">picker-view</a></td>
+<td style="text-align:left">窗体内嵌式列表选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/slider">slider</a></td>
+<td style="text-align:left">滑动选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/switch">switch</a></td>
+<td style="text-align:left">开关选择器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/label">label</a></td>
+<td style="text-align:left">标签</td>
+</tr>
+</tbody>
+</table>
+<p><strong>导航（Navigation）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/navigator">navigator</a></td>
+<td style="text-align:left">页面链接。类似于HTML中的a标签</td>
+</tr>
+</tbody>
+</table>
+<p><strong>媒体组件（Media）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/audio">audio</a></td>
+<td style="text-align:left">音频</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/camera">camera</a></td>
+<td style="text-align:left">相机</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/image">image</a></td>
+<td style="text-align:left">图片</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/video">video</a></td>
+<td style="text-align:left">视频</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/live-player">live-player</a></td>
+<td style="text-align:left">直播播放</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/live-pusher">live-pusher</a></td>
+<td style="text-align:left">实时音视频录制，也称直播推流</td>
+</tr>
+</tbody>
+</table>
+<p><strong>地图（Map）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/map">map</a></td>
+<td style="text-align:left">地图</td>
+</tr>
+</tbody>
+</table>
+<p><strong>画布（Canvas）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/canvas">canvas</a></td>
+<td style="text-align:left">画布</td>
+</tr>
+</tbody>
+</table>
+<p><strong>webview（Web-view）：</strong></p><table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://uniapp.dcloud.io/component/web-view">web-view</a></td>
+<td style="text-align:left">web浏览器组件</td>
+</tr>
+</tbody>
+</table>
+<p><strong>各平台专有组件</strong></p><p>在小程序平台和weex平台，还有一些专有组件，比如open-data，详见左侧导航</p><h3 id="uniui"><a href="https://uniapp.dcloud.io/component/README?id=uniui" data-id="uniui" class="anchor"><span>扩展组件（uni-ui）：</span></a></h3><p>uni-ui是DCloud提供的一个跨端ui库，它是基于vue组件的、flex布局的、无dom的跨全端ui框架。</p><p>uni-ui不包括基础组件，<strong>它是基础组件的补充</strong>。</p><h4 id="uni-ui产品特点"><a href="https://uniapp.dcloud.io/component/README?id=uni-ui%e4%ba%a7%e5%93%81%e7%89%b9%e7%82%b9" data-id="uni-ui产品特点" class="anchor"><span>uni ui产品特点</span></a></h4><p>1、高性能</p><p>目前为止，在小程序和混合app领域，uni ui是性能的标杆。</p><ul>
+<li>自动差量更新数据</li>
+</ul>
+<p>虽然uni-app支持小程序自定义组件，所有小程序的ui库都可以用。但小程序自定义组件的ui库都需要使用setData手动更新数据，在大数据量时、或高频更新数据时，很容易产生性能问题。</p><p>而uni ui属于vue组件，uni-app引擎底层自动diff更新数据。当然其实插件市场里众多vue组件都具备这个特点。</p><ul>
+<li>优化逻辑层和视图层通讯折损</li>
+</ul>
+<p>非H5，不管是小程序还是App，不管是app的webview渲染还是原生渲染，全都是逻辑层和视图层分离的。这里就有一个逻辑层和视图层通讯的折损问题。
+比如在视图层拖动一个可跟手的组件，由于通讯的损耗，用js监听很难做到实时跟手。</p><p>这时就需要使用css动画以及平台底层提供的wxs、bindingx等技术。不过这些技术都比较复杂，所以uni ui里做了封装，在需要跟手式操作的ui组件，比如swiperaction列表项左滑菜单，就在底层使用了这些技术，实现了高性能的交互体验</p><ul>
+<li>背景停止</li>
+</ul>
+<p>很多ui组件是会一直动的，比如轮播图、跑马灯。即便这个窗体被新窗体挡住，它在背景层仍然在消耗着硬件资源。在Android的webview版本为chrome66以上，背景操作ui会引发很严重的性能问题，造成前台界面明显卡顿。</p><p>而uni ui的组件，会自动判断自己的显示状态，在组件不再可见时，不会再消耗硬件资源。</p><p>2、全端</p><p>uni ui的组件都是多端自适应的，底层会抹平很多小程序平台的差异或bug。</p><p>比如导航栏navbar组件，会自动处理不同端的状态栏。
+比如swiperaction组件，在app和微信小程序上会使用交互体验更好的wxs技术，但在不支持wxs的其他小程序端会使用js模拟类似效果。</p><p>uni ui还支持nvue原生渲染，<a href="https://github.com/dcloudio/uni-ui/tree/nvue-uni-ui" target="_blank">详见</a></p><p>未来uni ui还会支持pc等大屏设备。</p><p>3、与uni统计自动集成实现免打点</p><p>uni统计是优秀的多端统计平台，见<a href="https://tongji.dcloud.net.cn/" target="_blank">tongji.dcloud.net.cn</a>。</p><p>除了一张报表看全端，它的另一个重要特点是免打点。
+比如使用uni ui的navbar标题栏、收藏、购物车等组件，均可实现自动打点，统计页面标题等各种行为数据。
+当然你也可以关闭uni统计，这不是强制的。</p><p>4、风格扩展</p><p>uni ui的默认风格是中型的，与uni-app基础组件风格一致。但它支持<a href="https://uniapp.dcloud.io/collocation/uni-scss" target="_blank">uni.scss</a>，可以方便的扩展和切换App的风格。</p><p>ui是一种需求非常发散的产品，DCloud官方也无意用uni ui压制第三方ui插件的空间，但官方有义务在性能和跨端方面提供一个开源的标杆给大家。</p><p>我们欢迎更多优秀的ui组件出现，也欢迎更多人贡献uni ui的主题风格，满足更多用户的需求。</p><h4 id="uni-ui的使用方式"><a href="https://uniapp.dcloud.io/component/README?id=uni-ui%e7%9a%84%e4%bd%bf%e7%94%a8%e6%96%b9%e5%bc%8f" data-id="uni-ui的使用方式" class="anchor"><span>uni ui的使用方式</span></a></h4><p>uni ui支持 HBuilderX直接新建项目模板、npm安装和单独导入个别组件等多种使用方式</p><p><img src="./loading-indicator_files/create-uni-ui-project.jpg" data-origin="https://img.cdn.aliyun.dcloud.net.cn/uni-app/doc/create-uni-ui-project.jpg" alt="HBuilderX内创建uni ui项目"></p><ol>
+<li>在HBuilderX新建uni-app项目的模板中，选择uni ui模板
+由于uni-app独特的<a href="https://uniapp.dcloud.io/collocation/pages?id=easycom" target="_blank">easycom</a>技术，可以免引用、注册，直接使用各种符合规则的vue组件。</li>
+</ol>
+<p>在代码区键入<code>u</code>，拉出各种内置或uni ui的组件列表，选择其中一个，即可使用该组件。</p><p>光标放在组件名称上，按F1，可以查阅组件的文档。</p><p><img src="./loading-indicator_files/uni-ui-snippet.jpg" data-origin="https://img.cdn.aliyun.dcloud.net.cn/uni-app/doc/uni-ui-snippet.jpg" alt="uni ui代码块"></p><ol>
+<li><p>npm安装参考：<a href="https://ext.dcloud.net.cn/plugin?id=55" target="_blank">https://ext.dcloud.net.cn/plugin?id=55</a></p></li>
+<li><p>单独安装组件
+如果你没有创建uni ui项目模板，也可以在你的工程里，单独安装需要的那个组件。下表为uni-ui的扩展组件清单，点击每个组件在详情页面可以导入组件到项目下，导入后直接使用即可，无需import和注册。</p></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">组件名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=21" target="_blank">Badge</a></td>
+<td style="text-align:left">数字角标</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=56" target="_blank">Calendar</a></td>
+<td style="text-align:left">日历</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=22" target="_blank">Card</a></td>
+<td style="text-align:left">卡片</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=23" target="_blank">Collapse</a></td>
+<td style="text-align:left">折叠面板</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=1261" target="_blank">Combox</a></td>
+<td style="text-align:left">可下拉选择的输入框</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=25" target="_blank">CountDown</a></td>
+<td style="text-align:left">倒计时</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=26" target="_blank">Drawer</a></td>
+<td style="text-align:left">抽屉</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=144" target="_blank">Fab</a></td>
+<td style="text-align:left">悬浮按钮</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=864" target="_blank">Fav</a></td>
+<td style="text-align:left">收藏按钮</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=865" target="_blank">GoodsNav</a></td>
+<td style="text-align:left">底部购物导航</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=27" target="_blank">Grid</a></td>
+<td style="text-align:left">宫格</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=28" target="_blank">Icons</a></td>
+<td style="text-align:left">图标</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=375" target="_blank">IndexedList</a></td>
+<td style="text-align:left">字母索引列表</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=24" target="_blank">List</a></td>
+<td style="text-align:left">列表</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=29" target="_blank">LoadMore</a></td>
+<td style="text-align:left">加载更多</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=52" target="_blank">NavBar</a></td>
+<td style="text-align:left">自定义导航栏</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=30" target="_blank">NoticeBar</a></td>
+<td style="text-align:left">通告栏</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=31" target="_blank">NumberBox</a></td>
+<td style="text-align:left">数字输入框</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=32" target="_blank">Pagination</a></td>
+<td style="text-align:left">分页器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=329" target="_blank">PopUp</a></td>
+<td style="text-align:left">弹出层</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=33" target="_blank">Rate</a></td>
+<td style="text-align:left">评分</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=866" target="_blank">SearchBar</a></td>
+<td style="text-align:left">搜索栏</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=54" target="_blank">SegmentedControl</a></td>
+<td style="text-align:left">分段器</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=34" target="_blank">Steps</a></td>
+<td style="text-align:left">步骤条</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=181" target="_blank">SwipeAction</a></td>
+<td style="text-align:left">滑动操作</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=284" target="_blank">SwiperDot</a></td>
+<td style="text-align:left">轮播图指示点</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://ext.dcloud.net.cn/plugin?id=35" target="_blank">Tag</a></td>
+<td style="text-align:left">标签</td>
+</tr>
+</tbody>
+</table>
+<p><strong>更多组件</strong></p><p>除了基础组件、uni-ui，插件市场还有更多扩展组件、模板，包括前端组件和原生扩展组件，具体见<a href="https://ext.dcloud.net.cn/" target="_blank">插件市场</a>。</p><p>关于其他vue的web组件库、小程序组件库是否能在uni-app中使用的问题，参考<a href="https://ask.dcloud.net.cn/article/35489" target="_blank">https://ask.dcloud.net.cn/article/35489</a></p><hr align="center" color="#987cb9" size="1">发现错误？想参与编辑？<a href="https://github.com/dcloudio/uni-app/blob/master/docs/component/README.md" target="_blank">在 GitHub 上编辑此页面！</a></article><article class="markdown-section search show" id="search-results"><p class="empty"></p></article></section></main>
+		<script src="./loading-indicator_files/hm.js"></script><script>
+			console.log("%c诚邀优秀前端加盟，一起打造uni-app框架：https://ask.dcloud.net.cn/article/35098", "color:red")
+			// docsify config start
+			window.$docsify = {
+				alias: {
+					'/.*/_navbar.md': '/_navbar.md',
+					'/(.*)/.*/_sidebar.md': '/$1/_sidebar.md'
+				},
+				name: 'uni-app',
+				// TODO 如需提交,必须改为 history 模式
+				routerMode: 'history',
+				// routerMode: 'hash',
+				repo: false,
+				coverpage: false,
+				loadSidebar: true,
+				loadNavbar: true,
+				auto2top: true,
+				mdCache: 7200000,
+				search: {
+					maxAge: 7200000,
+					paths: ['/','/api/README','/api/ad/rewarded-video-ad','/api/application','/api/arrayBufferToBase64','/api/base64ToArrayBuffer','/api/canvas/CanvasContext','/api/canvas/CanvasGradient','/api/canvas/canvasGetImageData','/api/canvas/canvasPutImageData','/api/canvas/canvasToTempFilePath','/api/canvas/createCanvasContext','/api/canvas/createOffscreenCanvas','/api/extend/native-plugin','/api/file/file','/api/file/getFileSystemManager','/api/key','/api/lifecycle','/api/location/location','/api/location/map','/api/location/open-location','/api/log','/api/media/audio-context','/api/media/background-audio-manager','/api/media/camera-context','/api/media/editor-context','/api/media/image','/api/media/live-player-context','/api/media/live-pusher-context','/api/media/media-container','/api/media/record-manager','/api/media/video-context','/api/media/video','/api/other/advertisement','/api/other/authorize','/api/other/card','/api/other/choose-address','/api/other/get-extconfig','/api/other/getAccountInfoSync','/api/other/invoice-title','/api/other/open-miniprogram','/api/other/report','/api/other/reportAnalytics','/api/other/reportMonitor','/api/other/requestSubscribeMessage','/api/other/set-enable-debug','/api/other/setting','/api/other/sport','/api/other/template','/api/other/update','/api/plugins/login','/api/plugins/payment','/api/plugins/provider','/api/plugins/push','/api/plugins/share','/api/plugins/voice','/api/request/UDP','/api/request/mDNS','/api/request/network-file','/api/request/request','/api/request/socket-task','/api/request/websocket','/api/router','/api/storage/storage','/api/system/accelerometer','/api/system/authentication','/api/system/barcode','/api/system/batteryInfo','/api/system/ble','/api/system/bluetooth','/api/system/brightness','/api/system/capture-screen','/api/system/clipboard','/api/system/compass','/api/system/contact','/api/system/deviceMotion','/api/system/gyroscope','/api/system/ibeacon','/api/system/info','/api/system/memory','/api/system/network','/api/system/nfc','/api/system/phone','/api/system/theme','/api/system/vibrate','/api/system/wifi','/api/timer','/api/ui/animation','/api/ui/bgcolor','/api/ui/font','/api/ui/intersection-observer','/api/ui/menuButton','/api/ui/navigationbar','/api/ui/nextTick','/api/ui/nodes-info','/api/ui/prompt','/api/ui/pulldown','/api/ui/scroll','/api/ui/tabbar','/api/ui/window','/api/window/communication','/api/window/subNVues','/api/window/window','/api/worker','/case','/casecode','/cloud','/collocation/App','/collocation/frame/communication','/collocation/frame/lifecycle','/collocation/frame/log','/collocation/frame/subNVues','/collocation/frame/timer','/collocation/frame/window','/collocation/main','/collocation/manifest','/collocation/package','/collocation/pages','/collocation/uni-scss','/collocation/vue-config','/component/README','/component/ad-rewarded-video','/component/ad','/component/audio','/component/barcode','/component/button','/component/camera','/component/canvas','/component/cell','/component/checkbox','/component/cover-view','/component/editor','/component/form','/component/icon','/component/image','/component/input','/component/label','/component/list','/component/live-player','/component/live-pusher','/component/map','/component/movable-view','/component/mp-weixin-plugin','/component/native-component','/component/navigation-bar','/component/navigator','/component/official-account','/component/open-data','/component/open','/component/page-meta','/component/picker-view','/component/picker','/component/progress','/component/radio','/component/recycle-list','/component/refresh','/component/rich-text','/component/scroll-view','/component/slider','/component/swiper','/component/switch','/component/text','/component/textarea','/component/video','/component/view','/component/waterfall','/component/web-view','/ecosystem','/faq','/frame','/history','/hybrid','/matter','/performance','/platform','/quickstart','/release-note-alpha','/resource','/select','/snippet','/template','/translate','/uniCloud/README','/uniCloud/authentication','/uniCloud/cf-authentication','/uniCloud/cf-common','/uniCloud/cf-database','/uniCloud/cf-functions','/uniCloud/cf-logger','/uniCloud/cf-storage','/uniCloud/concepts/cloudfunction','/uniCloud/concepts/database','/uniCloud/concepts/space','/uniCloud/faq','/uniCloud/functions','/uniCloud/http','/uniCloud/init','/uniCloud/policy-ali','/uniCloud/policy-tcb','/uniCloud/quickstart','/uniCloud/resource','/uniCloud/storage','/uniCloud/trigger','/use-html5plus','/use-weex','/use'],
+					placeholder: '搜索',
+					noData: '没有结果',
+					depth: 4
+				},
+				maxLevel: 4,
+				subMaxLevel: 3,
+				banner: ['/case'],
+				plugins: [
+					function(hook, vm) {
+						hook.beforeEach(function(html){
+							switch (vm.route.path){
+								case '/uniCloud/local':
+									location.href = '/uniCloud/quickstart?id=runlocal'
+									break;
+								default:
+									break;
+							}
+						})
+						hook.afterEach(function(html) {
+							var url = '//github.com/dcloudio/uni-app/blob/master/docs' + vm.route.file
+							return html + '<hr align=center color=#987cb9 size=1>发现错误？想参与编辑？<a href=' + url + ' target=_blank>在 GitHub 上编辑此页面！</a>'
+						})
+					}
+				]
+			}
+			// docsify config end
+		</script>
+		<script src="./loading-indicator_files/docsify.min.js"></script>
+		<script src="./loading-indicator_files/search.min.js"></script>
+		<script src="./loading-indicator_files/preview.min.js"></script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?fe3b7a223fc08c795f0f4b6350703e6f";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(hm, s);
+				//加入广告
+				function creatPop() {
+					var popTime = localStorage.getItem("popTime"),
+						hasClose = localStorage.getItem("hasClose");
+					var nowTime = new Date().getTime();
+					if (popTime && Number(popTime) + 24 * 60 * 60 * 1000 > nowTime && hasClose === "true") {
+						return;
+					} else {
+						localStorage.removeItem("hasClose");
+						localStorage.setItem("popTime", nowTime);
+					}
+					var pop = document.createElement("div");
+					pop.setAttribute("style",
+						"width: 180px;height: 120px;position: fixed;bottom: 30px;right: 30px;z-index: 99;");
+					pop.innerHTML =
+						'<div id="close-pop" style="line-height: 13px;color: #000000;font-size: 28px;position: absolute;right: 0px;top: 6px;cursor:pointer;">×</div><a href="//ask.dcloud.net.cn/question/60729" target="_blank"><img width="100%" src="https://img-cdn-qiniu.dcloud.net.cn/static/images/uniapp_share_promotion.png"></a>';
+					document.body.appendChild(pop);
+					var closePop = document.querySelector("#close-pop");
+					closePop.addEventListener("click", function() {
+						localStorage.setItem("hasClose", "true");
+						document.body.removeChild(pop);
+					});
+				}
+				// creatPop();
+
+				window.addEventListener("click", function(e) {
+					var target = e.target;
+					if (target.id === "zhizhang") { //点击开发者的感谢信--弹窗多的话，可以封成一个组件
+						var preview = new $docsify.Preview('https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/gnaxie.png');
+						preview.show();
+						return
+					}
+					if (target.className === "chapter") { //左侧导航的折叠
+						var chapterParent = target.parentElement;
+						var summary = localStorage.getItem("summary") ? JSON.parse(localStorage.getItem(
+							"summary")) : {};
+						var level = chapterParent.dataset.level;
+						if (chapterParent.classList.contains("close")) {
+							summary[level] = false;
+							chapterParent.classList.remove("close");
+						} else {
+							summary[level] = true;
+							chapterParent.classList.add("close");
+						}
+						localStorage.setItem("summary", JSON.stringify(summary))
+						return;
+					}
+
+					if (target.tagName === "IMG" && target.className !== "preview-img") {
+						var src = target.src,
+							showImg = true;
+						while (target && target !== document) {
+							if (target.tagName == 'A') {
+								showImg = false;
+								break;
+							}
+							target = target.parentNode
+						}
+						if (showImg && src) {
+							var preview = new $docsify.Preview(src);
+							preview.show();
+							return
+						}
+					}
+				}, true)
+
+			})();
+
+			function videoPlay() {
+				var img = new Image();
+				img.src = "http://uniapp.dcloud.io/video/log/play.png";
+			}
+		</script>
+
+	
+
+
+<div class="progress" style="opacity: 0; width: 0%;"></div></body></html>

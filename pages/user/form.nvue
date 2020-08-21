@@ -254,7 +254,7 @@
 
 	.submit {
 		width: 700rpx;
-		background-color: #4CAF50;
+		background-color: #29c160;
 		justify-content: center;
 		align-items: center;
 		border-radius: 10rpx;
