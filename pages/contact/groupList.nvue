@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" @clickRight="addFriend" right-text=""
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" @clickRight="addFriend" right-text=""
 		 title="群聊" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
 		<uni-list :border="false">
 		 
@@ -8,14 +8,14 @@
 			<cell>
 				<!-- #endif -->
 				<view class="search">
-					<uni-search-bar placeholder="账号/手机号" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
+					<uni-search-bar placeholder="名称" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
 				</view>
 				<!-- #ifdef APP-NVUE -->
 			</cell>
 			<!-- #endif -->
 	   
 			<cell v-for="(item,index) in groupList">
-				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="item.avatarList" :clickable="true"
+				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id" :clickable="true"
 				 badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
 					 
 				</uni-list-chat>

@@ -26,7 +26,7 @@
 
  
 
-								<image :src="webSocket.getImageCache(item.name.avatar)" mode="aspectFill" style="width: 40px;height: 40px;border-radius: 5px;margin-right: 10px;"></image>
+								<image :src="$store.state.user.utils.getImageCache(item.name.avatar)" mode="aspectFill" style="width: 40px;height: 40px;border-radius: 5px;margin-right: 10px;"></image>
 								<view class="" style="display: flex;flex-direction: column;">
 									<text class="uni-indexed-list__item-content">{{ item.name.nickname }}</text>
 								</view>

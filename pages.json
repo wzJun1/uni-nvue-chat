@@ -14,7 +14,8 @@
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
-					"bounce": "none"
+					"bounce": "none",
+					"background":"#ffffff"
 				}
 			}
 		},
@@ -103,19 +104,52 @@
 				"app-plus": {
 					"animationType": "pop-in",
 					"animationDuration": 300,
-					"titleNView": {
-						"buttons": [{
-							"type": "menu"
-						}]
-					}
+					"titleNView": false
+					 
 				}
 			}
 		},
 		{
-			"path": "pages/chat/chatGroup",
+			"path": "pages/group/chatGroup",
 			"style": {
 				"navigationBarTextStyle": "black",
-				"navigationBarBackgroundColor": "#ededed"
+				"navigationBarBackgroundColor": "#e3e3e3",
+				"backgroundColor": "#e3e3e3",
+				"disableScroll": true,
+				"app-plus": {
+					"animationType": "pop-in",
+					"animationDuration": 300,
+					"titleNView": false
+					 
+				}
+			}
+		},
+		{
+			"path": "pages/group/groupInfo",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "群信息",
+				"navigationBarTextStyle": "black",
+				 
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/group/form",
+			"style": {
+				"navigationBarBackgroundColor": "#ededed",
+				"backgroundColor": "#ededed",
+				"navigationBarTitleText": "群信息",
+				"navigationBarTextStyle": "black",
+				  
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom",
+					"animationDuration": 300
+				}
 			}
 		},
 		{
@@ -157,7 +191,7 @@
 				}
 			}
 		}, {
-			"path": "pages/chat/createGroup",
+			"path": "pages/group/createGroup",
 			"style": {
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",

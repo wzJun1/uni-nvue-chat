@@ -4,7 +4,7 @@
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item @click="updateAvatar()" :textStyle="textStyle" title="头像" :containerStyle="containerStyle">
 					<template slot="right">
-						<image class="slot-image" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+						<image class="slot-image" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
 					</template>
 				</uni-list-item> 
 				<uni-list-item @click="formPage('nickname',user.nickname,'设置昵称')" :textStyle="textStyle" title="名字" :rightText="user.nickname"

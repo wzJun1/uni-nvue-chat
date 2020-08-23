@@ -27,9 +27,9 @@
 </script>
 
 <style lang="scss">
-	// image {
-	// 	will-change: transform
-	// }
+	image {
+		will-change: transform
+	}
 	.line{
 		height: 20rpx;
 		width: 750rpx;

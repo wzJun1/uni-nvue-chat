@@ -1,77 +1,40 @@
 <template>
 	<view>
-		<scroll-view @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom" :scroll-into-view="scrollIntoID"
-		 :scroll-with-animation="false">
-			<view id="chatDetail" @click="hideKey" ref="chatDetail" class="flex-column-start" :style="{'margin-bottom':safeBottom+'px'}">
-				<view ref="msg">
-				</view>
-				<view style="height: 20rpx;">
-				</view>
-				<view v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index" style="margin-bottom: 30rpx;">
-					<text class="chat-time" v-if="showTime(item.create_time,index)">{{showTime(item.create_time,index)}}</text>
-					<view class="padding-top align-center" :class="item.isSend ? 'nv-rowever padding-right' : 'padding-left nv-row'">
-						<image v-if="item.isSend" class="chat-img" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
-						<image v-else class="chat-img" :src="webSocket.getImageCache(item.from_avatar)" @click="webSocket.showCard(item.from_id)" mode="aspectFill"></image>
-						<view style="flex-direction: row;justify-content: center;align-items: center;">
-							<view class="nv-chat" style="flex-direction: column;flex-wrap:wrap;">
-								<view class="padding-chat" :class="item.isSend?'margin-right nv-rowever':'margin-left nv-row'" :style="'border-radius: 10rpx;align-items: center;margin-left:auto'"
-								 v-if="item.msg_type == 'image'" style="">
 
-									<image :lazy-load="true" :src="webSocket.getImageCache(item.data)" @click="previewImage(item.data)" mode="aspectFill" style="width: 260rpx;height: 260rpx;border-radius: 10rpx;"></image>
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
+		 :status-bar="true" :title="session.name" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled" @clickRight="groupInfo"></uni-nav-bar>
 
-								</view>
+		<scroll-view ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
+		 :scroll-into-view="scrollIntoID" :scroll-with-animation="false">
 
-								<view v-else-if="item.msg_type == 'audio'" :class="item.isSend?'margin-right white-bg nv-rowever':'margin-left gr-bg nv-row'"
-								 class="padding-chat" :style="'border-radius: 10rpx;align-items: center;'" @click="playAudio(item.data,index)">
-									<view class="" :class="item.isSend?'nv-rowever':'nv-row'" :style="computedStyleContentVoiceLength(item.data.duration)">
-										<image :src="computedClassContentVoice(index)" style="width: 60rpx;margin: 4rpx;height: 45rpx;">
-										</image>
+			<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
+				<text class="indicator-text">加载中 ...</text>
+				<loading-indicator class="indicator"></loading-indicator>
+			</refresh>
 
-										<text v-if="item.isSend" :style="'margin-left:2px;margin-right:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
-										<text v-else :style="'margin-left:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
-
-									</view>
-								</view>
-
-								<view v-else :class="item.isSend?'margin-right white-bg nv-rowever':'margin-left gr-bg nv-row'" class="padding-chat"
-								 :style="'border-radius: 10rpx;align-items: center;'">
-
-									<text :style="'font-size: 36rpx;word-wrap: break-word;word-break: break-all;max-width:'+chatDetailBoxMaxWidth+'px'">{{item.data}}</text>
-								</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				<text v-if="!webSocket.isOnline" class="system-msg">服务器已断开,尝试重新连接...</text>
-				<!-- 防止底部遮盖 -->
-				<view style="height: 125rpx;">
-				</view>
+			<view class="" v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index">
+				<uni-chat-detail type="group" :list="msgList" :item="item" :index="index"></uni-chat-detail>
 			</view>
+
+			<text v-if="!webSocket.isOnline" class="system-msg">服务器已断开,尝试重新连接...</text>
+
 		</scroll-view>
 		<view ref="foot" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
 			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu">
 				<image class="tb-nv" :src="voice?'../../static/images/keyboard.png':'../../static/images/voice.png'" mode="aspectFit"
 				 @click="switchVoice" style="margin-left: 20rpx;margin-right: 20rpx;"></image>
-				<input v-model="msg" :focus="focus" @focus="inputFocus" :confirm-hold="true" :adjust-position="adjustPosition"
-				 class="dh-input" type="text" @confirm="sendMsg" confirm-type="send" style="margin-right: 20rpx;" v-if="!voice" />
+
+				<input v-model="msg" :focus="focus" @focus="inputFocus" :confirm-hold="true" :adjust-position="false" class="dh-input"
+				 type="text" @confirm="sendMsg" confirm-type="send" style="margin-right: 20rpx;" v-if="!voice" />
+
 				<text style="margin-right: 20rpx;" @touchstart="voiceBegin" @touchmove.stop.prevent="voiceIng" @touchend="voiceEnd"
 				 @touchcancel="voiceCancel" v-if="voice" class="voice-nv">{{voiceTis}}
 				</text>
-				<image style="margin-right: 20rpx;" @click="showEmojiClick" class="tb-nv" src="../../static/images/bq.png" mode="aspectFill"></image>
 				<image @click="collapse" class="tb-nv" style="margin-right: 10rpx;" src="../../static/images/more.png" mode="aspectFill"></image>
 				<view class="" style="flex-direction: row;margin-left: 50rpx;">
 					<uni-icons @click="chooseImage" type="image" size="50" style="margin-right: 20rpx;"></uni-icons>
 					<uni-icons @click="captureImage" type="camera" size="50"></uni-icons>
 				</view>
-			</view>
-
-			<view class="" style="margin-left: -115rpx;">
-				<scroll-view v-if="defaultShowEmoji" class="scroll-view_H" scroll-y="true">
-					<view class="" style="flex-direction: row;" v-for="(item,index) in emojiList">
-						<text :id="'emoji_' + key" @click="setEmojiMsg(index,key)" class="" style="width: 90rpx;height: 90rpx;font-size: 60rpx;"
-						 v-for="(value,key) in item">{{value}}</text>
-					</view>
-				</scroll-view>
 			</view>
 		</view>
 
@@ -83,12 +46,13 @@
 		</view>
 		<view class="safeArea" :style="{ height: safeBottom + 'px'}">
 		</view>
+
 	</view>
 </template>
 <script>
 	const BindingX = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
-	import emoji from "../../common/emoji.js";
+
 	import {
 		mapState
 	} from 'vuex'
@@ -96,11 +60,13 @@
 		data() {
 			return {
 				systemInfo: getApp().globalData.systemInfo,
+				navBarTitle: '',
 				scrollIntoID: 'chatID_0',
 				toUid: 0,
 				sessionId: '',
 				session: [],
 				nickname: '',
+				petName: '',
 				chatSrcollBottom: 0,
 				KeyboardHeight: 0,
 				safeBottom: 0,
@@ -108,7 +74,6 @@
 				msgList: [],
 				msg: "",
 				scrollTop: 0,
-				emojiList: emoji,
 				srcollHeight: 0,
 				showMore: false,
 				showEmoji: false,
@@ -133,6 +98,7 @@
 				chatDetailBoxMaxWidth: 0,
 				page: 1,
 				focus: false,
+				refreshing: false,
 			}
 		},
 		destroyed() {
@@ -140,16 +106,10 @@
 		},
 		onLoad(option) {
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom;
-			this.KeyboardHeight = this.safeBottom * 2 - 380;
-			uni.setNavigationBarTitle({
-				title: this.nickname
-			});
+			this.KeyboardHeight = this.safeBottom * 2;
 			this.sessionId = option.id;
-			this.nickname = option.name;
 			this.chatDetailBoxMaxWidth = this.systemInfo.screenWidth - 110;
-			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45;
-			// 监听键盘高度变化
-
+			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
 			this.recorderManager.onStart((e) => {
 				this.recordBegin(e);
 			})
@@ -160,26 +120,21 @@
 		onShow() {
 			this.onKeyboardHeight();
 			uni.$on('onMessage', this.onMessage)
-			var that = this;
 			let getSystemInfo = getApp().globalData.systemInfo;
 			this.safeBottom = getSystemInfo.safeAreaInsets.bottom;
-			this.KeyboardHeight = this.safeBottom * 2 - 380;
-			uni.setNavigationBarTitle({
-				title: this.nickname
-			});
-			let msgList = this.webSocket.getChatDetail(false, this.sessionId);
+			this.KeyboardHeight = this.safeBottom * 2;
 			this.webSocket.readChatItem(this.sessionId);
+		},
+		onReady() {
+			let msgList = this.webSocket.getChatDetail(false, this.sessionId);
+			this.getSession();
 			if (!msgList) {
 				this.msgList = [];
 			} else {
 				this.msgList = msgList;
 			}
-
-			this.$nextTick(function() {
-				that.getSession();
-				that.scrollBottom();
-				that.defaultShowEmoji = true;
-			})
+			this.scrollBottom();
+			this.defaultShowEmoji = true;
 		},
 		onNavigationBarButtonTap(e) {
 			console.log(e)
@@ -232,6 +187,16 @@
 
 		},
 		methods: {
+			onrefresh(event) {
+
+				this.refreshing = true
+				setTimeout(() => {
+					this.refreshing = false
+				}, 2000)
+			},
+			onpullingdown(event) {
+
+			},
 			onMessage: function(message) {
 				console.log('[群聊页面] 接收到聊天信息', message);
 				if ((message.from_id === this.session.id && message.chat_type === 'user') || (message.chat_type === 'group' &&
@@ -244,11 +209,12 @@
 			},
 			onKeyboardHeight: function() {
 				uni.onKeyboardHeightChange(res => {
+					this.translatePageTop(res.height);
 					if (this.systemInfo.platform == "android") {
 						if (res.height > 100) {
-
 							this.chatSrcollBottom = res.height - this.safeBottom;
-							this.inputScroll();
+							//this.inputScroll();
+							//this.translatePageTop(res.height);
 						} else {
 							this.chatSrcollBottom = 0;
 						}
@@ -256,17 +222,75 @@
 						if (res.height > 300) {
 
 							this.chatSrcollBottom = res.height - this.safeBottom;
-							this.inputScroll();
+							//this.translatePageTop(res.height);
 						} else {
 							this.chatSrcollBottom = 0;
 						}
 					}
 					if (res.height === 0) {
-
-						this.inputScroll();
+						//this.translatePageBottom();
 						this.focus = false;
 					}
 					this.scrollBottom();
+				})
+			},
+			translatePageTop: function(h) {
+
+				let foot = this.getEl(this.$refs.foot);
+				let scrollview = this.getEl(this.$refs.scrollview);
+				h = h - this.safeBottom;
+				animation.transition(scrollview, {
+					styles: {
+						transform: 'translateY(-' + h + ')',
+					},
+					duration: 220, //ms
+					timingFunction: 'linear',
+					needLayout: false,
+					delay: 0 //ms
+				}, function() {
+
+				})
+				animation.transition(foot, {
+					styles: {
+						transform: 'translateY(-' + h + ')',
+					},
+					duration: 220, //ms
+					timingFunction: 'linear',
+					needLayout: false,
+					delay: 0 //ms
+				}, function() {
+
+				})
+			},
+			onrefresh: function(event) {
+
+				this.refreshing = true
+				var that = this;
+
+				setTimeout(() => {
+					let page = that.page + 1;
+
+					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page, 10);
+					let oldMsgList = that.msgList;
+					if (msgList.length) {
+						that.page = page;
+						that.msgList.unshift(...msgList)
+
+						that.scrollIntoID = "chatId_" + msgList.length;
+					}
+					that.refreshing = false
+				}, 2000)
+
+
+
+			},
+			onpullingdown: function(event) {
+
+			},
+			groupInfo: function() {
+				uni.hideKeyboard();
+				uni.navigateTo({
+					url: '/pages/group/groupInfo?id=' + this.session.id
 				})
 			},
 			showTime: function(time, index) {
@@ -277,10 +301,10 @@
 					if (difference < 60) {
 						return false;
 					} else {
-						return this.webSocket.formatChatTime(time)
+						return this.$store.state.user.utils.formatChatTime(time)
 					}
 				} else {
-					return this.webSocket.formatChatTime(time)
+					return this.$store.state.user.utils.formatChatTime(time)
 				}
 			},
 			getSession: function() {
@@ -308,6 +332,7 @@
 							this.session.user_id = res.result.data[0].admin_id;
 							this.session.users = res.result.data[0].users
 							this.session.avatarList = res.result.data[0].avatarList
+							this.navBarTitle = res.result.data[0].title;
 						} else {
 							uni.showToast({
 								title: '该群组不存在',
@@ -324,8 +349,49 @@
 					})
 				} else {
 					this.session = sessionList[index];
+					
 				}
 				this.webSocket.createChatObject(this.session);
+				this.updateSession();
+			},
+			async updateSession(){
+				let sessionList = this.sessionList;
+				sessionList = sessionList ? sessionList : [];
+				let index = sessionList.findIndex(item => item.id === this.sessionId)
+				if (index !== -1) {
+					var that = this;
+					uniCloud.callFunction({
+						name: 'user',
+						data: {
+							$url: "getGroupById",
+							token: this.$store.state.user.user_token,
+							data: {
+								id: this.sessionId
+							}
+						},
+					}).then((res) => {
+						if (res.result.data.length) {
+
+							let session = sessionList[index];
+							session.name = res.result.data[0].title;
+							session.user_id = res.result.data[0].admin_id;
+							session.avatar = res.result.data[0].avatar;
+							session.users = res.result.data[0].users
+							session.avatarList = res.result.data[0].avatarList
+							let where = {
+								id:that.sessionId,
+								chat_type:'group'
+							};
+							that.webSocket.updateChatItem(where,session)
+						} else {
+						}
+					}).catch((err) => {
+						console.log(err)
+					})
+				}
+				
+				
+				 
 			},
 			inputScroll: function() {
 				let foot = this.getEl(this.$refs.foot);
@@ -343,7 +409,6 @@
 						expression: 'easeInOutSine(t,0,' + translateY + ',1)'
 					}]
 				}, (res) => {
-
 					if (res.state === 'exit') {
 						BindingX.unbind({
 							token: translateFoot
@@ -355,11 +420,17 @@
 				var that = this;
 				setTimeout(() => {
 					if (that.msgList.length) {
-						that.scrollIntoID = "chatId_" + (that.msgList.length - 1);
+						if (that.scrollIntoID == "chatId_" + (that.msgList.length - 1)) {
+							that.scrollIntoID = "chatId_" + (that.msgList.length - 2);
+							that.scrollBottom();
+						} else if (that.scrollIntoID == "chatId_" + (that.msgList.length - 2)) {
+							that.scrollIntoID = "chatId_" + (that.msgList.length - 1);
+						} else {
+							that.scrollIntoID = "chatId_" + (that.msgList.length - 1);
+						}
 					} else {
 						that.scrollIntoID = "chatId_0";
 					}
-
 				}, 50)
 			},
 			switchVoice: function() {
@@ -592,7 +663,6 @@
 				});
 				this.adjustPosition = true;
 				this.showEmoji = false;
-
 			},
 			playAudio: function(data, index) {
 				this.playVoiceAnimationIndex = "";
@@ -662,10 +732,7 @@
 					}
 				);
 			},
-			setEmojiMsg: function(index, key) {
-				var emojiList = emoji;
-				this.msg = this.msg + emoji[index][key];
-			},
+
 			//发文字
 			sendMsg: function() {
 				if (this.msg != "") {
@@ -726,11 +793,22 @@
 						}
 					})
 				}).then(res => {
-					uni.hideLoading()
-					console.log(res);
-
-					that.sendImage(res.fileID)
-
+					if (res.fileID.indexOf("cloud://") != -1) {
+						uniCloud.getTempFileURL({
+							fileList: [res.fileID],
+							success(res) {
+								if (res.fileList != undefined && res.fileList[0] != undefined) {
+									that.sendImage(res.fileList[0].tempFileURL)
+								}
+							},
+							fail() {},
+							complete() {
+								uni.hideLoading()
+							}
+						});
+					} else {
+						that.sendImage(res.fileID)
+					}
 				}).catch((err) => {
 					uni.hideLoading()
 					console.log(err);
@@ -745,7 +823,7 @@
 					const path = data.tempFilePath
 					const options = {
 						filePath: path,
-						cloudPath: Date.now() + '.jpg'
+						cloudPath: Date.now() + '.mp3'
 					}
 					resolve(options)
 				}).then((options) => {
@@ -759,10 +837,27 @@
 						}
 					})
 				}).then(res => {
-					uni.hideLoading()
-					console.log(res);
-					data.file = res.fileID;
-					that.sendAudio(data)
+					if (res.fileID.indexOf("cloud://") != -1) {
+
+						uniCloud.getTempFileURL({
+							fileList: [res.fileID],
+							success(res) {
+								if (res.fileList != undefined && res.fileList[0] != undefined) {
+									data.file = res.fileList[0].tempFileURL;
+									that.sendAudio(data);
+								}
+							},
+							fail() {},
+							complete() {
+								uni.hideLoading()
+							}
+						});
+
+					} else {
+						data.file = res.fileID;
+						that.sendAudio(data);
+					}
+
 
 				}).catch((err) => {
 					uni.hideLoading()
@@ -827,6 +922,7 @@
 	.scroll-view {
 		width: 750rpx;
 		background-color: #e3e3e3;
+
 	}
 
 	.record {
@@ -925,7 +1021,7 @@
 
 	.dh-input {
 		font-size: 30rpx;
-		width: 500rpx;
+		width: 560rpx;
 		height: 70rpx;
 		border-radius: 10rpx;
 		padding-left: 15rpx;
@@ -934,7 +1030,7 @@
 
 	.voice-nv {
 		font-size: 34rpx;
-		width: 500rpx;
+		width: 560rpx;
 		height: 70rpx;
 		font-weight: bold;
 		border-radius: 10rpx;
@@ -1144,5 +1240,25 @@
 		height: 380rpx;
 		width: 750rpx;
 		flex-wrap: wrap;
+	}
+
+	.refresh {
+		width: 750rpx;
+		align-items: center;
+	}
+
+	.indicator-text {
+		color: #888888;
+		text-align: center;
+		font-size: 28rpx;
+		margin-bottom: 10rpx;
+	}
+
+	.indicator {
+		padding-top: 2rpx;
+		padding-bottom: 32rpx;
+		height: 60rpx;
+		width: 60rpx;
+		color: #888888;
 	}
 </style>

@@ -2,7 +2,7 @@
 	<view>
 		<view class="header">
 			<view class="userinfo">
-				<image class="avatar" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+				<image class="avatar" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
 				<view class="userinfo-box">
 					<text class="nickname">{{user.nickname}}</text>
 					<view class="qrcode-box" @click="previewImage()">

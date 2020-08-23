@@ -65,6 +65,7 @@
 				avatar: '/static/images/default_avatar.jpg',
 				nickname: '',
 				service:false,
+				isSubmit:false,
 			}
 		},
 		computed: {
@@ -155,6 +156,9 @@
 					return;
 				}
 				
+				if(this.isSubmit){return;}
+				
+				this.isSubmit = true;
 				uni.showLoading({
 					title: '注册中...'
 				})

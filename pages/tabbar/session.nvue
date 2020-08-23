@@ -17,31 +17,33 @@
 				<uni-swipe-action class="swipe-action">
 					<uni-swipe-action-item :threshold="80" :rightOptions="options" v-for="(item, index) in sessionList" :key="index"
 					 @click="swipeClick($event,index)">
-						<uni-list-chat :arrayIndex="index" v-if="item.chat_type == 'user'" :border="true" :title="item.name" :avatar="webSocket.getImageCache(item.avatar)"
+
+						<uni-list-chat :arrayIndex="index" v-if="item.chat_type == 'user'" :border="true" :title="$store.state.user.utils.getNickName(item.id, item.name)" :avatar="$store.state.user.utils.getImageCache(item.avatar)"
 						 :note="item.data" :clickable="true" badge-positon="left" :badge-text="item.noreadnum" @click="webSocket.chatWindow(item.id,item.name)">
 							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{webSocket.formatChatTime(item.update_time)}}</text>
+								<text class="chat-custom-text">{{$store.state.user.utils.formatChatTime(item.update_time)}}</text>
 							</view>
 						</uni-list-chat>
-						<uni-list-chat :arrayIndex="index" v-else :border="true" :title="item.name" :avatar-list="item.avatarList" :note="item.data"
+
+						<uni-list-chat :arrayIndex="index" v-else :border="true" :title="item.name" :group-id="item.id" :note="item.data"
 						 :clickable="true" badge-positon="left" :badge-text="item.noreadnum" @click="webSocket.chatGroupWindow(item.id,item.name)">
 							<view class="chat-custom-right">
-								<text class="chat-custom-text">{{webSocket.formatChatTime(item.update_time)}}</text>
+								<text class="chat-custom-text">{{$store.state.user.utils.formatChatTime(item.update_time)}}</text>
 							</view>
 						</uni-list-chat>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 			</cell>
 		</uni-list>
-		
+
 		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchPanelH +'rpx;background-color:#ededed;'">
 			<view class="search-label" v-if="friendSearchResult.length">
-				<text class="search-label-text">好友</text> 
+				<text class="search-label-text">好友</text>
 			</view>
 			<uni-list :border="false" v-if="friendSearchResult.length">
 				<cell v-for="(item,index) in friendSearchResult">
-					<uni-list-chat :arrayIndex="index" :border="true" :title="item.nickname" :avatar="webSocket.getImageCache(item.avatar)" :clickable="true"
-					 badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
+					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)" :avatar="$store.state.user.utils.getImageCache(item.avatar)"
+					 :clickable="true" badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
 
 					</uni-list-chat>
 				</cell>
@@ -51,15 +53,15 @@
 			</view>
 			<uni-list :border="false" v-if="groupSearchResult.length">
 				<cell v-for="(item,index) in groupSearchResult">
-					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="item.avatarList"
+					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id"
 					 :clickable="true" badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
 
 					</uni-list-chat>
 				</cell>
 			</uni-list>
 		</view>
-		
-		
+
+
 		<view class="dropdown" v-if="menu">
 			<uni-list :border="false" class="dropdown-list">
 				<uni-list-item @click="createGroup" :disabled="true" style="padding:10rpx" :show-extra-icon="true" :extra-icon="extraIconChat"
@@ -116,7 +118,7 @@
 				uid: "",
 				safeBottom: '',
 				tabbarHeight: '',
-				searchPanelH:'',
+				searchPanelH: '',
 			}
 		},
 		mixins: [searchAnimation],
@@ -130,7 +132,7 @@
 			})
 		},
 		onLoad() {
-			 
+
 		},
 		onHide() {
 			uni.hideKeyboard();
@@ -146,14 +148,13 @@
 				return;
 			}
 			this.loading = true;
-			this.$nextTick(function() {
-				this.preloadPage()
-			});
 		},
 		onReady() {
 			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
-			
 			this.tabbarHeight = this.systemInfo.windowBottom * 2;
+			if(this.systemInfo.platform == "android"){
+				this.preloadPage()
+			}
 		},
 		methods: {
 			scanQrcode: function() {
@@ -168,13 +169,13 @@
 								content = content.split("-");
 								if (content[2] != undefined) {
 									uni.showLoading();
-									that.webSocket.showCard(content[2],'qrcode');
+									that.webSocket.showCard(content[2], 'qrcode');
 								}
-							}else if(content.indexOf("http") != -1){
+							} else if (content.indexOf("http") != -1) {
 								uni.navigateTo({
-									url:'/pages/extend/webview?url='+content
+									url: '/pages/extend/webview?url=' + content
 								})
-							} 
+							}
 						}
 					});
 				} catch (e) {
@@ -219,7 +220,7 @@
 			createGroup: function() {
 				this.menu = false;
 				uni.navigateTo({
-					url: '/pages/chat/createGroup',
+					url: '/pages/group/createGroup',
 				})
 			},
 			async preloadPage() {
@@ -231,15 +232,22 @@
 						url: "/pages/tabbar/my"
 					});
 					this.sessionList.forEach((item) => {
-						uni.preloadPage({
-							url: '/pages/chat/chat?id=' + item.id + "&name=" + item.name
-						});
+						if(item.chat_type == "user"){
+							uni.preloadPage({
+								url: '/pages/chat/chat?id=' + item.id + "&name=" + item.name
+							});
+						}else{
+							uni.preloadPage({
+								url: '/pages/group/chatGroup?id=' + item.id
+							});
+						}
 					})
-					this.groupList.forEach((item) => {
-						uni.preloadPage({
-							url: '/pages/chat/chatGroup?id=' + item._id + "&name=" + item.title
-						});
-					})
+					 
+					// this.groupList.forEach((item) => {
+					// 	uni.preloadPage({
+					// 		url: '/pages/chat/chatGroup?id=' + item._id + "&name=" + item.title
+					// 	});
+					// })
 				} catch (e) {
 
 				}
@@ -256,7 +264,7 @@
 	.nvue-page-search {
 		width: 750rpx;
 		/* margin-top: -88rpx; */
-		 
+
 	}
 
 	.swipe-action {}

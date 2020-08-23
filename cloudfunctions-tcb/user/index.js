@@ -7,36 +7,39 @@ exports.main = async (event, context) => {
 		event
 	});
 	const users_collection = db.collection('uni-id-users');
-	
-	
+
+
 	const user_chat_friends_collection = db.collection('uni-chat-friends');
 	const user_chat_detail_collection = db.collection('uni-chat-detail');
 	const user_chat_group_collection = db.collection('uni-chat-group');
 	const user_chat_group_users_collection = db.collection('uni-chat-group-users');
 	const user_chat_group_detail_collection = db.collection('uni-chat-group-detail');
 	const user_chat_group_detail_ids_collection = db.collection('uni-chat-group-detail-ids');
-	
-	
-	
+
+
+
 	const dbCmd = db.command;
-	
-	const auth = {"code":1 , "msg":"登录失效，请重新登录"};
-	if(event.token){
-		 const payload = await uniID.checkToken(event.token)
-		 console.log(payload)
-		 if(payload.code === 0){
-			 auth.code = 0;
-			 auth.msg = "登录验证成功";
-		 }else{
-			 return payload;
-		 }
-	}else{
+
+	const auth = {
+		"code": 1,
+		"msg": "登录失效，请重新登录"
+	};
+	if (event.token) {
+		const payload = await uniID.checkToken(event.token)
+		console.log(payload)
+		if (payload.code === 0) {
+			auth.code = 0;
+			auth.msg = "登录验证成功";
+		} else {
+			return payload;
+		}
+	} else {
 		return auth;
 	}
 	app.use(async (ctx, next) => {
-		 await next();
+		await next();
 	});
-	
+
 	/*添加好友*/
 	app.router('addFriend', async (ctx, next) => {
 		try {
@@ -45,7 +48,7 @@ exports.main = async (event, context) => {
 				friend_id: event.data.friend_id
 			};
 			let uGet = await user_chat_friends_collection.limit(1).where(uParam).get();
-			if(!uGet.data[0]){
+			if (!uGet.data[0]) {
 				await user_chat_friends_collection.add(uParam);
 			}
 			let fParam = {
@@ -53,12 +56,12 @@ exports.main = async (event, context) => {
 				friend_id: event.data.user_id
 			};
 			let fGet = await user_chat_friends_collection.limit(1).where(fParam).get();
-			if(!fGet.data[0]){
+			if (!fGet.data[0]) {
 				await user_chat_friends_collection.add(fParam);
 			}
 			ctx.body = {
 				success: true,
-				data:{
+				data: {
 					uGet,
 					fGet
 				}
@@ -73,25 +76,25 @@ exports.main = async (event, context) => {
 	});
 	/* 设置好友备注 */
 	app.router('updateFriendPetName', async (ctx, next) => {
-	
+
 		let uParam = {
 			user_id: event.data.user_id,
 			friend_id: event.data.friend_id,
 		};
 		let uGet = await user_chat_friends_collection.limit(1).where(uParam).get();
-		if(uGet.data[0]){
+		if (uGet.data[0]) {
 			ctx.body = await user_chat_friends_collection.where(uParam).update({
 				pet_name: event.data.pet_name
 			});
-		}else{
+		} else {
 			ctx.body = {
-				code:1,
-				msg:'设置失败'
+				code: 1,
+				msg: '设置失败'
 			}
 		}
 		await next();
 	});
-	
+
 	/*删除好友，双向删除*/
 	app.router('deleteFriend', async (ctx, next) => {
 		let uParam = {
@@ -102,10 +105,8 @@ exports.main = async (event, context) => {
 			user_id: event.data.friend_id,
 			friend_id: event.data.user_id
 		};
-		
 		await user_chat_friends_collection.where(uParam).remove();
 		await user_chat_friends_collection.where(fParam).remove();
-		
 		await next();
 	});
 
@@ -118,7 +119,7 @@ exports.main = async (event, context) => {
 		}).get();
 		await next();
 	});
-	
+
 	/*获取用户所有的好友*/
 	app.router('getFriendListByIds', async (ctx, next) => {
 		//ctx.body = await uniID.login(event.data)
@@ -132,32 +133,89 @@ exports.main = async (event, context) => {
 		}).get();
 		await next();
 	});
-	
+
 	/*获取用户所有的群组*/
 	app.router('getGroups', async (ctx, next) => {
-		 
-		var result = await user_chat_group_users_collection.field({
+		let result = await user_chat_group_users_collection.field({
 			'group_id': true
 		}).where({
 			user_id: event.data.id
 		}).get();
-		var groupIds = [];
-		if(result.data[0]){
-			result.data.forEach((item,index)=>{
+		let groupIds = [];
+		if (result.data[0]) {
+			result.data.forEach((item, index) => {
 				groupIds.push(item.group_id)
 			})
 		}
-		if(groupIds){
-			ctx.body = await user_chat_group_collection.where({
+		let groupResult = [];
+		let groupUserIds = [];
+		if (groupIds) {
+			groupResult = await user_chat_group_collection.where({
 				_id: dbCmd.in(groupIds)
 			}).get();
-		}else{
+			if (groupResult.data[0]) {
+				let index = 0;
+				for (let item of groupResult.data) {
+					let groupUsersResult = await user_chat_group_users_collection.where({
+						group_id: item._id
+					}).get()
+					let userIds = [];
+
+					if (groupUsersResult.data[0]) {
+						for (let groupUsersResultItem of groupUsersResult.data) {
+							userIds.push(groupUsersResultItem.user_id)
+						}
+						let groupUsers = await users_collection.field({
+							'_id': true,
+							'username': true,
+							'avatar': true,
+							'nickname': true
+						}).where({
+							_id: dbCmd.in(userIds)
+						}).get()
+						if (groupUsers.data[0]) {
+							groupUsers.data.forEach((groupUsersItem, groupUsersIndex) => {
+								groupUsers.data[groupUsersIndex].pet_name = "";
+								groupUsersResult.data.forEach((groupUsersResultItem, groupUsersResultIndex) => {
+									if (groupUsersResultItem.user_id == groupUsersItem._id) {
+										if (groupUsersResultItem.pet_name) {
+											groupUsers.data[groupUsersIndex].pet_name = groupUsersResultItem.pet_name;
+										}
+									}
+								})
+							})
+							groupResult.data[index].group_users = groupUsers.data;
+						}
+					}
+					index++;
+				}
+			}
+			ctx.body = groupResult;
+		} else {
 			ctx.body = null;
 		}
-		
+
+		await next();
+	});
+
+	 
+	app.router('updateGroupInfo', async (ctx, next) => {
+		//ctx.body = await collection.limit(10).get();
+		ctx.body = await user_chat_group_collection.doc(event.data.group_id).update(event.data.update)
 		await next();
 	});
 	
+	app.router('updateMyPetNameInGroup', async (ctx, next) => {
+		//ctx.body = await collection.limit(10).get();
+		ctx.body = await user_chat_group_users_collection.where({
+			group_id:event.data.group_id,
+			user_id:event.data.user_id
+		}).update({
+			pet_name:event.data.pet_name
+		})
+		await next();
+	});
+
 	/*通过username获取用户*/
 	app.router('getByUserName', async (ctx, next) => {
 		//ctx.body = await collection.limit(10).get();
@@ -170,31 +228,67 @@ exports.main = async (event, context) => {
 	/*通过id获取用户*/
 	app.router('getUserByUid', async (ctx, next) => {
 		//ctx.body = await collection.limit(10).get();
-		 
 		ctx.body = await users_collection.limit(1).where({
 			_id: event.data.uid
 		}).get()
-
-		await next(); 
+		await next();
 	});
-	
+
 	/*修改用户资料*/
 	app.router('updateUserById', async (ctx, next) => {
 		ctx.body = await uniID.updateUser(event.data)
 		await next();
 	});
-	
+
 	/*修改用户密码*/
 	app.router('updateUserPass', async (ctx, next) => {
 		ctx.body = await uniID.updatePwd(event.data);
 		await next();
 	});
-	
+
 	app.router('getGroupById', async (ctx, next) => {
 		//ctx.body = await collection.limit(10).get();
-		ctx.body = await user_chat_group_collection.limit(1).where({
+		let groupResult = await user_chat_group_collection.limit(1).where({
 			_id: event.data.id
 		}).get()
+		if (groupResult.data[0]) {
+			let groupUsersResult = await user_chat_group_users_collection.where({
+				group_id: groupResult.data[0]._id
+			}).get()
+			let userIds = [];
+			if (groupUsersResult.data[0]) {
+				for (let groupUsersResultItem of groupUsersResult.data) {
+					userIds.push(groupUsersResultItem.user_id)
+				}
+				let groupUsers = await users_collection.field({
+					'_id': true,
+					'username': true,
+					'avatar': true,
+					'nickname': true
+				}).where({
+					_id: dbCmd.in(userIds)
+				}).get()
+				if (groupUsers.data[0]) {
+					groupResult.data[0].group_users = groupUsers.data;
+				}
+
+				if (groupUsers.data[0]) {
+					groupUsers.data.forEach((groupUsersItem, groupUsersIndex) => {
+						groupUsers.data[groupUsersIndex].pet_name = "";
+						groupUsersResult.data.forEach((groupUsersResultItem, groupUsersResultIndex) => {
+							if (groupUsersResultItem.user_id == groupUsersItem._id) {
+								if (groupUsersResultItem.pet_name) {
+									groupUsers.data[groupUsersIndex].pet_name = groupUsersResultItem.pet_name;
+								}
+							}
+						})
+					})
+					groupResult.data[0].group_users = groupUsers.data;
+				}
+
+			}
+		}
+		ctx.body = groupResult;
 		await next();
 	});
 
@@ -203,17 +297,17 @@ exports.main = async (event, context) => {
 		ctx.body = await user_chat_detail_collection.add(event.data);
 		await next();
 	});
-	
+
 	app.router('addChatGroupDetail', async (ctx, next) => {
 		ctx.body = await user_chat_group_detail_collection.add(event.data);
 		await next();
 	});
-	
+
 	app.router('addChatGroupDetailIds', async (ctx, next) => {
 		ctx.body = await user_chat_group_detail_ids_collection.add(event.data);
 		await next();
 	});
-	 
+
 	/*更新聊天记录发送状态*/
 	app.router('updateChatDetailStatus', async (ctx, next) => {
 		ctx.body = await user_chat_detail_collection.doc(event.data.messageId).update({
@@ -221,16 +315,17 @@ exports.main = async (event, context) => {
 		});
 		await next();
 	});
+	
 	app.router('updateChatGroupDetailStatus', async (ctx, next) => {
 		ctx.body = await user_chat_group_detail_ids_collection.where({
 			messageId: dbCmd.eq(event.data.messageId),
 			userId: dbCmd.in(event.data.onlineUserId)
-			}).update({
+		}).update({
 			sendStatus: event.data.sendStatus
 		});
 		await next();
 	});
-	
+
 	app.router('getNoReadHistory', async (ctx, next) => {
 		ctx.body = await user_chat_detail_collection.where({
 			to_uid: event.data.uid,
@@ -238,29 +333,31 @@ exports.main = async (event, context) => {
 		}).orderBy("create_time", "asc").get()
 		await next();
 	});
-	
+
 	app.router('getNoReadGroupHistory', async (ctx, next) => {
-		var ids = await user_chat_group_detail_ids_collection.field({ 'messageId': true }).where({
+		var ids = await user_chat_group_detail_ids_collection.field({
+			'messageId': true
+		}).where({
 			userId: event.data.uid,
 			sendStatus: 'pending'
 		}).orderBy("create_time", "asc").get();
 		var noReadIds = [];
-		if(ids.data[0]){
-			ids.data.forEach((item,index)=>{
+		if (ids.data[0]) {
+			ids.data.forEach((item, index) => {
 				noReadIds.push(item.messageId)
-			}) 
+			})
 		}
-		if(noReadIds){
+		if (noReadIds) {
 			ctx.body = await user_chat_group_detail_collection.where({
 				_id: dbCmd.in(noReadIds)
 			}).orderBy("create_time", "asc").get();
-		}else{
+		} else {
 			ctx.body = null;
 		}
 		await next();
-		
+
 	});
-	
+
 	app.router('updateNoReadHistory', async (ctx, next) => {
 		let res = await user_chat_detail_collection.where({
 			_id: dbCmd.in(event.data.ids)
@@ -269,7 +366,7 @@ exports.main = async (event, context) => {
 		})
 		await next();
 	});
-	
+
 	app.router('updateNoReadGroupHistory', async (ctx, next) => {
 		let res = await user_chat_group_detail_ids_collection.where({
 			messageId: dbCmd.in(event.data.ids)
@@ -278,26 +375,26 @@ exports.main = async (event, context) => {
 		})
 		await next();
 	});
-	 
+
 	app.router('addChatGroup', async (ctx, next) => {
 		ctx.body = await user_chat_group_collection.add(event.data);
-		 
+
 		await next();
 	});
-	
+
 	app.router('addChatGroupUsers', async (ctx, next) => {
 		let isExist = await user_chat_group_users_collection.limit(1).where({
-				group_id: event.data.group_id,
-				user_id:event.data.user_id
-			}).get();
-		 
-		if(!isExist.data[0]){
+			group_id: event.data.group_id,
+			user_id: event.data.user_id
+		}).get();
+
+		if (!isExist.data[0]) {
 			ctx.body = await user_chat_group_users_collection.add(event.data);
 		}
-		 
+
 		await next();
 	});
-	
+
 	return app.serve();
 
 };

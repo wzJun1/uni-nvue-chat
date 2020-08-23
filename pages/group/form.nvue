@@ -1,0 +1,312 @@
+<template>
+	<view class="nvue-page-root">
+
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true"
+		 :title="nabar" :rightButton="true" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
+
+		<view class="uni-common-mt">
+
+			<view class="uni-form-item uni-column">
+
+				<view class="uni-input-wrapper" v-if="type=='title'">
+					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus"
+					 placeholder="" v-model="title" />
+				</view>
+				
+				<view class="uni-input-wrapper" v-else-if="type=='petName'">
+					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus"
+					 placeholder="" v-model="petName" />
+				</view>
+
+				<view class="uni-textarea" v-else-if="type=='notice'">
+					<textarea v-model="notice" @confirm="submit" @focus="inputed" :focus="focus" auto-height />
+				</view>
+				 
+				  
+				
+			</view>
+			
+			
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				title: '',
+				notice:'',
+				petName:'',
+				type: '',
+				focus:false,
+				nabar:'',
+				rightButtonDisable:true,
+				groupId:'',
+				groupInfo:[],
+				setData:[]
+			}
+		},
+		computed: { 
+			...mapState({
+				user: state => state.user.user,
+				
+			})
+			
+		},
+		watch:{
+			title(){
+				if(this.setOpData != this.title){
+					this.rightButtonDisable=false;
+				}
+			},
+			notice(){
+				if(this.setOpData != this.notice){
+					this.rightButtonDisable=false;
+				}
+			},
+			petName(){
+				if(this.setOpData != this.petName){
+					this.rightButtonDisable=false;
+				}
+			},
+		},
+		onLoad(option) {
+			this.groupId = option.id;
+			this.type = option.type;
+			if (option.data == undefined || option.data == 'undefined') {
+				option.data = "";
+			}
+			if(this.type == "title"){
+				this.title = option.data;
+			}else if(this.type == "notice"){
+				this.notice = option.data;
+			}else{
+				this.petName = option.data;
+			}
+			this.setOpData = option.data;
+			this.nabar = option.title;
+			
+			if(this.$store.state.user.groupList.length){
+				this.$store.state.user.groupList.forEach((item)=>{
+					if(item._id == this.sessionId){
+						this.groupInfo = item;
+					}
+				})
+			}
+ 
+			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
+		},
+		methods: {
+			back: function(){
+				uni.navigateBack({
+					delta:1
+				})
+			},
+			submit: function() {
+				var that = this;
+				var data = {};
+				 
+				if(this.type=="title" || this.type=="notice"){
+					if(this.groupInfo.admin_id != this.user._id){
+						uni.showModal({
+						    title: '提示',
+						    content: '仅管理员可修改群名称和群公告'
+						});
+						uni.hideLoading();
+						return;
+					}
+					uni.showLoading();
+					if(this.type == "title"){
+						data[this.type] = this.title;
+					}else{
+						data[this.type] = this.notice;
+					}
+					 
+					uniCloud.callFunction({
+						name: 'user',
+						data: {
+							$url: "updateGroupInfo",
+							token: this.$store.state.user.user_token,
+							data: {
+								group_id:this.groupId,
+								update:data[this.type]
+							}
+						},
+					}).then((res) => {
+						uni.hideLoading();
+						console.log(res)
+						if (res.result.updated === 1) {
+							uni.showToast({
+								title: "修改成功",
+								duration: 2000
+							})
+								
+							that.$store.dispatch('getGroupIds')
+						} else {
+							uni.showToast({
+								title: "修改失败",
+								duration: 2000,
+								icon: 'none'
+							})
+						}
+					}).catch((err) => {
+						uni.hideLoading()
+						uni.showModal({
+							title: '提示',
+							content: err
+						});
+					})
+				}else{
+					uni.showLoading();
+					uniCloud.callFunction({
+						name: 'user',
+						data: {
+							$url: "updateMyPetNameInGroup",
+							token: this.$store.state.user.user_token,
+							data: {
+								group_id:this.groupId,
+								user_id:this.user._id,
+								pet_name:this.petName
+							}
+						},
+					}).then((res) => {
+						uni.hideLoading();
+						console.log(res)
+						if (res.result.updated === 1) {
+							uni.showToast({
+								title: "修改成功",
+								duration: 2000
+							})
+							that.$store.dispatch('getGroupIds')
+						} else {
+							uni.showToast({
+								title: "修改失败",
+								duration: 2000,
+								icon: 'none'
+							})
+						}
+					}).catch((err) => {
+						console.log(err)
+						uni.hideLoading()
+						uni.showModal({
+							title: '提示',
+							content: err
+						});
+					})
+				}
+				
+				 
+			}
+
+		}
+	}
+</script>
+
+<style scoped>
+	
+	.nvue-page-root {
+		padding-bottom: 40rpx;
+	}
+	
+	.page-title {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 35rpx;
+	}
+
+	.page-title__wrapper {
+		padding: 0px 40rpx;
+		border-bottom-color: #D8D8D8;
+		border-bottom-width: 2rpx;
+	}
+
+	.page-title__text {
+		font-size: 32rpx;
+		height: 96rpx;
+		line-height: 96rpx;
+		color: #BEBEBE;
+	}
+
+	.title {
+		padding: 10rpx 26rpx;
+	}
+
+	.uni-form-item__title {
+		font-size: 32rpx;
+		line-height: 48rpx;
+	}
+
+	.uni-input-wrapper {
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		padding: 10rpx 26rpx;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		background-color: #FFFFFF;
+	}
+	.uni-textarea {
+		background-color: #FFFFFF;
+	}
+
+	.uni-input {
+		height: 56px;
+		line-height: 56px;
+		font-size: 34rpx;
+		padding: 0px;
+		flex: 1;
+		background-color: #FFFFFF;
+	}
+
+	.uni-icon {
+		font-family: uniicons;
+		font-size: 48rpx;
+		font-weight: normal;
+		font-style: normal;
+		width: 48rpx;
+		height: 48rpx;
+		line-height: 48rpx;
+		color: #999999;
+	}
+
+	.uni-eye-active {
+		color: #007AFF;
+	}
+
+	.passwordHover:active {
+		background-color: green;
+		opacity: 0.5;
+	}
+
+	.button {
+		margin-top: 40rpx;
+		justify-content: center;
+		align-items: center
+	}
+
+	.submit {
+		width: 700rpx;
+		background-color: #29c160;
+		justify-content: center;
+		align-items: center;
+		border-radius: 10rpx;
+	}
+
+	.submit-text {
+		color: white;
+		padding: 30rpx;
+	}
+
+	.submit:active {
+		background-color: green;
+		opacity: 0.5;
+	}
+</style>

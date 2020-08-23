@@ -1,9 +1,11 @@
 import WebSocket from '@/common/common.js';
+import Utils from '@/common/utils.js';
 export default {
 	state: {
 		url:'ws://127.0.0.1:6621',
 		user: false,
 		webSocket: null,
+		utils: null,
 		sessionList: [],
 		friendApply: [],
 		friendList: [],
@@ -40,6 +42,7 @@ export default {
 			state.webSocket = new WebSocket({
 				url: state.url
 			})
+			state.utils = new Utils()
 			// 获取会话列表
 			dispatch('getSessionList')
 			// 获取好友申请列表
@@ -104,6 +107,8 @@ export default {
 			uni.removeStorageSync('token');
 			uni.removeStorageSync('user');
 			uni.removeStorageSync('uid');
+			uni.removeStorageSync('fridendIds')
+			uni.removeStorageSync('groupList')
 			// 跳转到登录页
 			uni.reLaunch({
 				url: "/pages/index/login"
@@ -125,6 +130,7 @@ export default {
 				state.webSocket = new WebSocket({
 					url: state.url
 				})
+				state.utils = new Utils()
 				// 获取会话列表
 				dispatch('getSessionList')
 				// 获取好友申请列表
@@ -156,7 +162,7 @@ export default {
 				state.sessionList = list
 			})
 		},
-
+ 
 		// 获取申请列表
 		getFriendApply({
 			state
@@ -194,6 +200,7 @@ export default {
 			if(state.webSocket.checkResultData(res)){
 				state.friendIds = res.result.data;
 				let friendIds = [];
+				uni.setStorageSync('friendIds', res.result.data)
 				res.result.data.forEach((item) => {
 					friendIds.push(item.friend_id);
 				})
@@ -211,7 +218,8 @@ export default {
 					if(res.result.data){
 						state.friendList = res.result.data;
 						uni.hideLoading();
-						state.friendListLetterSort = state.webSocket.sortFriendList(res.result.data)
+						state.friendListLetterSort = state.utils.sortFriendList(res.result.data)
+						 
 					}
 				}).catch((err) => {
 					console.log(err);
@@ -238,6 +246,7 @@ export default {
 				},
 			}).then((res) => {
 				 if(res.result.data){
+					uni.setStorageSync('groupList', res.result.data)
 				 	state.groupList = res.result.data
 				 }
 			}).catch((err) => { 

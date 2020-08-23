@@ -12,7 +12,7 @@
 				<view v-else class="uni-list-chat__header" :style="{'width':(avatarWidth+10)+'rpx','height':(avatarWidth+10)+'rpx'}">
 					<view v-for="(item,index) in avatarList" :key="index" class="uni-list-chat__header-box" :class="computedAvatar"
 					 :style="{width:imageWidth+'rpx',height:imageWidth+'rpx'}">
-						<image class="uni-list-chat__header-image" :style="{width:(imageWidth)+'rpx',height:(imageWidth)+'rpx'}" :src="webSocket.getImageCache(item)"
+						<image class="uni-list-chat__header-image" :style="{width:(imageWidth)+'rpx',height:(imageWidth)+'rpx'}" :src="$store.state.user.utils.getImageCache(item)"
 						 mode="aspectFill"></image>
 					</view>
 				</view>
@@ -118,12 +118,11 @@
 				type: Number,
 				default: 90
 			},
-			avatarList: {
-				type: Array,
-				default () {
-					return []
-				}
-			}
+			groupId: {
+				type: String,
+				default: ""
+			},
+			
 		},
 		// inject: ['list'],
 		computed: {
@@ -162,8 +161,9 @@
 			return {
 				isFirstChild: false,
 				border: true,
-				// avatarList: 3,
-				imageWidth: 50
+				avatarList: [],
+				imageWidth: 50,
+				
 			}
 		},
 		mounted() {
@@ -172,7 +172,19 @@
 			// 	this.isFirstChild = true
 			// }
 			//this.border = this.list.border
-
+			 
+		},
+		created() {
+			if(this.groupId){
+				let groups = this.$store.state.user.utils.getGroupById(this.groupId);
+				var avatarList = [];
+				if(groups.group_users){
+					groups.group_users.forEach((item)=>{
+						avatarList.push(item.avatar)
+					})
+					this.avatarList = avatarList;
+				}
+			}
 		},
 		methods: {
 			onClick() {

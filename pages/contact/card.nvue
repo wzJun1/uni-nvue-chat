@@ -1,11 +1,11 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" title=""
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title=""
 		 background-color="white" :rightIconBool="true" rightIcon="more-filled" @clickRight="more"></uni-nav-bar>
 
 		<view class="header">
 			<view class="userinfo">
-				<image class="avatar" :src="webSocket.getImageCache(adduser.avatar)" mode="aspectFill"></image>
+				<image class="avatar" :src="$store.state.user.utils.getImageCache(adduser.avatar)" mode="aspectFill"></image>
 				<view class="userinfo-box">
 					<text class="nickname">{{petName}}</text>
 					<text class="username" v-if="petName != adduser.nickname">昵称：{{adduser.nickname}}</text>
@@ -89,7 +89,7 @@
 					}
 				})
 			}
-			this.petName = this.webSocket.getNickName(this.adduser._id,this.adduser.nickname);
+			this.petName = this.$store.state.user.utils.getNickName(this.adduser._id,this.adduser.nickname);
 			 
 		},
 		computed: {
@@ -112,7 +112,7 @@
 			},
 			more: function(){
 				uni.navigateTo({
-					url:'/pages/contact/more?id='+this.adduser._id+'&nickname='+this.webSocket.getNickName(this.adduser._id,this.adduser.nickname)
+					url:'/pages/contact/more?id='+this.adduser._id+'&nickname='+this.$store.state.user.utils.getNickName(this.adduser._id,this.adduser.nickname)
 				})
 			},
 			sendApply: function() {

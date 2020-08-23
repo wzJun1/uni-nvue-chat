@@ -1,25 +1,40 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title="资料设置" :rightIconBool="true"></uni-nav-bar>
-		 
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title="聊天信息" :rightIconBool="true"></uni-nav-bar>
+		 <view class="person-box">
+			 <view class="persons">
+				<view class="user-li" v-for="item in showUserList" @click="webSocket.showCard(item._id)">
+					<image class="avatar" :src="$store.state.user.utils.getImageCache(item.avatar)" mode="aspectFill"></image>
+					<text class="nickname">{{item.pet_name ? item.pet_name : item.nickname}}</text>
+				</view>
+				<view class="add">
+					<uni-icons class="" style="color: #999999;" size="60" type="plusempty"></uni-icons>
+				</view>
+			 </view>
+			 <view class="person-foot" style="">
+			 	<text style="color: #999;font-size: 32rpx;">查看更多群成员</text>
+			 </view>
+		 </view>
+
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
-				
-				<uni-list-item :textStyle="textStyle" @click="setNickName" title="设置备注昵称" :rightText="petName"
+				<uni-list-item @click="formPage('title',groupInfo.title,'设置群聊名称')" :textStyle="textStyle" title="群聊名称" :rightText="groupInfo.title"
 				 :containerStyle="containerStyle" :rightTextStyle="rightTextStyle" />
 				 
-				<uni-list-item :borderWidth="720" :textStyle="textStyle" title="好友权限" :containerStyle="containerStyle"
+				<uni-list-item @click="formPage('notice',groupInfo.notice,'设置群公告')" :borderWidth="720" :textStyle="textStyle" title="群公告" :rightText="groupInfo.notice" :rightTextStyle="rightTextStyle" :containerStyle="containerStyle"
 				 />
 			</uni-list>
 		</view>
-		
-		<view class="margin-bottom">
+	<!-- 	<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item :textStyle="textStyle" title="推荐给朋友" :containerStyle="containerStyle" />
 			</uni-list>
-		</view>
+		</view> -->
 		
 		<view class="margin-bottom">
+			<uni-list :bounce="false" :border="false">
+				<uni-list-item :textStyle="textStyle" title="消息免打扰" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
+			</uni-list>
 			<uni-list :bounce="false" :border="false">
 				<uni-list-item :textStyle="textStyle" title="设为特别关注" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
 			</uni-list>
@@ -27,42 +42,42 @@
 		
 		<view class="margin-bottom">
 			<uni-list :bounce="false" :border="false">
-				<uni-list-item :textStyle="textStyle" title="拉入黑名单" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
+				<uni-list-item @click="formPage('petName',myPetName,'设置我在本群的昵称')" :borderWidth="720" :textStyle="textStyle" title="我在本群的昵称" :containerStyle="containerStyle" :rightText="myPetName" rightTextStyle="font-size:34rpx;font-weight:400;"
+				 />
+				<uni-list-item :textStyle="textStyle" title="显示群成员昵称" :containerStyle="containerStyle" :show-switch="true" :showArrow="false" />
 			</uni-list>
 		</view>
 		
 		<view>
 			<view class="delete">
 				<view class="button" @click="showPopup()">
-					<text class="button-text">删除</text>
+					<text class="button-text">清空聊天记录</text>
 				</view>
+			</view>
+			<view class="delete">
+				<view class="button" @click="showPopup()">
+					<text class="button-text">删除并退出</text>
+				</view> 
 			</view>
 		</view>
 		
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
-
-
 				<view class="delPanel">
-					<text class="deleted-text">将好友"{{petName ? petName : nickname}}"删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
+					<text class="deleted-text">将群组"{{groupInfo.title}}"删除，并且删除聊天记录</text>
 				</view>
-				
 				<view class="delete">
 					<view class="button" @click="del()">
-						<text class="button-text">删除好友</text>
+						<text class="button-text">删除</text>
 					</view>
 				</view>
-				
 				<view class="line">
-					
 				</view>
-				
 				<view class="delete">
 					<view class="button" @click="hidePopup()">
 						<text class="button-text" style="color: black;">取消</text>
 					</view>
 				</view>
-				
 			</view>
 		</uni-popup>
 
@@ -78,13 +93,17 @@
 		data() {
 			return {
 				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
-				rightTextStyle: 'font-size:34rpx;font-weight:400;',
+				rightTextStyle: 'font-size:34rpx;font-weight:400;lines: 1;overflow: hidden;width:400rpx;text-overflow: ellipsis;',
 				textStyle: 'font-weight:400',
 				systemInfo: getApp().globalData.systemInfo,
 				safeBottom:0,
 				uid:'',
 				nickname:'',
 				petName:'',
+				sessionId:'',
+				groupInfo:[],
+				showUserList:[],
+				myPetName:'',
 			}
 		},
 		computed: {
@@ -93,19 +112,35 @@
 				webSocket: state => state.user.webSocket,
 			})
 		},
-		onLoad() {
+		onLoad(option) {
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom * 2;
-			var cardUser = uni.getStorageSync('cardUser');
-			this.uid = cardUser._id;
-			this.nickname = cardUser.nickname;
-			var petName = this.$store.state.user.utils.getNickName(cardUser._id,cardUser.nickname);
-			if(petName == cardUser.nickname){
-				this.petName = "";
-			}else{
-				this.petName = petName;
+			this.sessionId = option.id;
+			
+			if(this.$store.state.user.groupList.length){
+				this.$store.state.user.groupList.forEach((item)=>{
+					if(item._id == this.sessionId){
+						this.groupInfo = item;
+					}
+				})
 			}
+			if(this.groupInfo.group_users){
+				this.showUserList = this.groupInfo.group_users.slice(0,3);
+				this.groupInfo.group_users.forEach((item)=>{
+					if(item._id == this.user._id){
+						if(item.pet_name){
+							this.myPetName = item.pet_name;
+						}
+					}
+				})
+			}
+			 
 		},
 		methods: {
+			formPage: function(type, data, title) {
+				uni.navigateTo({
+					url: './form?id='+this.groupInfo._id+'&type=' + type + '&data=' + data + '&title=' + title
+				})
+			},
 			setNickName: function(){
 				uni.navigateTo({
 					url: './form?id='+this.uid+'&petName='+(this.petName != this.nickname ? this.petName : "")
@@ -226,5 +261,48 @@
 	.deleted-text{
 		color: gray;
 		font-size: 28rpx;
+	}
+	.person-box{
+		background-color: #ffffff;
+		margin-bottom: 20rpx;
+		padding: 30rpx;
+	}
+	.persons{
+		flex-direction: row;
+	}
+	.user-li{
+		flex-direction: column;
+		margin: 20rpx;
+	}
+	.avatar{
+		width: 100rpx;
+		height: 100rpx;
+		border-radius: 10rpx;
+	}
+	.nickname{
+		padding: 10rpx;
+		color: #999;
+		font-size: 30rpx;
+		lines: 1;
+		overflow: hidden;
+		width: 100rpx;
+		text-overflow: ellipsis;
+		text-align: center;
+	}
+	.add{
+		margin: 20rpx;
+		width: 100rpx;
+		height: 100rpx;
+		border-width: 2rpx;
+		border-style: dashed;
+		border-color: #888888;
+		border-radius: 10rpx;
+		align-items: center;
+		justify-content: center;
+	}
+	.person-foot{
+		justify-content: center;
+		align-items: center;
+		margin:10rpx;
 	}
 </style>

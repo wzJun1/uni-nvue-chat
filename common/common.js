@@ -1,5 +1,4 @@
 import $store from '@/store/index.js';
-import pinyin from './getPingYin.js';
 class common {
 	constructor(arg) {
 		this.timer = null
@@ -112,8 +111,6 @@ class common {
 				that.reconnect();
 			}, 3000);
 		}
-		 
-
 	}
 	// 监听连接错误
 	onError() {
@@ -154,13 +151,15 @@ class common {
 			case 'sendCallback':
 				this.handleSendCallBack(res);
 				break;
+			case 'kickout':
+				this.kickout(res);
+				break;
 			case 'logout':
 
 		}
 	}
 	// 处理消息
 	async handleOnMessage(message, vibrateLong = true) {
-
 		if (message.type == "say") {
 			if(message.chat_type == "user"){
 				this.addChatDetail(message, false)
@@ -220,7 +219,6 @@ class common {
 				console.log(err);
 			
 			});
-			
 		}else{
 			uniCloud.callFunction({
 				name: 'user',
@@ -238,6 +236,10 @@ class common {
 			
 		}
 	}
+	//踢下线
+	kickout(){
+		$store.dispatch("logout")
+	}
 	// 关闭连接
 	close() {
 		if (this.socket) {
@@ -245,9 +247,7 @@ class common {
 		}
 		this.isOpenReconnect = false
 	}
-	
 	initSocketLogin(login){
-		 
 		this.socket.send({
 			data: JSON.stringify(login),
 			success() {
@@ -259,17 +259,14 @@ class common {
 		})
 		this.getUserHistoryMessage();
 		this.getGroupHistoryMessage();
-		
 	}
 	// 创建聊天对象
 	createChatObject(detail) {
 		this.TO = detail
-	 
 	}
 	// 销毁聊天对象
 	destoryChatObject() {
 		this.TO = false
-	 
 	}
 	// 断线重连提示
 	reconnectConfirm() {
@@ -289,7 +286,6 @@ class common {
 	getUserHistoryMessage() {
 		var that = this;
 		var ids = [];
-		 
 		uniCloud.callFunction({
 			name: 'user',
 			data: {
@@ -400,9 +396,7 @@ class common {
 	}
 	// 发送消息
 	send(message, onProgress = false) {
-
 		if(message.chat_type === 'group' && message.group){
-		 
 			uniCloud.callFunction({
 				name: 'user',
 				data: {
@@ -530,21 +524,26 @@ class common {
 	// 获取聊天记录
 	getChatDetail(key = false, id = 0 , page = 1 , limit = 10) {
 		key = key ? key : `chatDetail_${this.user._id}_${id}`;
-		let detail = uni.getStorageSync(key);
-		// try{
-		// 	detail = this.pagination(page,limit,detail);
-		// }catch(e){
-		// 	console.log(e)
-		// }
+		let storageDetail = uni.getStorageSync(key);
+		let detail = [];
+		if(storageDetail){
+			try{
+				storageDetail.reverse();
+				detail = this.pagination(page,limit,storageDetail);
+			}catch(e){
+				console.log(e)
+			}
+		}
+		 
 		return detail;
 	}
 	pagination(pageNo, pageSize, array) {
 		var offset = (pageNo - 1) * pageSize;
-		array.reverse();
-		console.log(array)
+		// array.reverse();
+		// console.log(array)
 		var data = (offset + pageSize >= array.length) ? array.slice(offset, array.length) : array.slice(offset, offset +
 			pageSize);
-		console.log(data)
+		// console.log(data)
 		data.reverse();
 		return data;
 	}
@@ -710,12 +709,13 @@ class common {
 			list[index] = data(list[index])
 		} else {
 			list[index] = data
-		}
-		let key = `chat_sessions_${this.user.id}`
-		this.setStorage(key, list)
-		// 更新会话列表状态
+		}  
+		let key = `chat_sessions_${this.user._id}`
+		uni.setStorageSync(key, list)
+		// 更新会话列表状态 
 		uni.$emit('onUpdateSessionList', list)
 	}
+	
 	// 读取会话
 	async readChatItem(id) {
 		// 获取所有会话列表
@@ -878,7 +878,7 @@ class common {
 			that.send(message);
 			uni.hideLoading();
 			uni.redirectTo({
-			    url: '/pages/chat/chatGroup' + '?id=' + groupId + "&name=" + group.title,
+			    url: '/pages/group/chatGroup' + '?id=' + groupId + "&name=" + group.title,
 			});
 			
 		}).catch((err) => {
@@ -893,113 +893,6 @@ class common {
 			});
 		});
 	}
-	//获取缓存头像
-	getImageCache(url) {
-		 
-		return url;
-		
-	}
-	// getImageCache(url) {
-	// 	let key = `images_cache`;
-	// 	let list = uni.getStorageSync(key);
-	// 	list = list ? list : [];
-	// 	let index = list.findIndex(item => item.url === url)
-		 
-	// 	if (index !== -1) {
-	// 		return list[index]['cache'];
-	// 	} else {
-			
-	// 		if(url.indexOf("cloud://") != -1){
-				
-	// 			uniCloud.getTempFileURL({
-	// 			    fileList: [url],
-	// 			    success(res) {
-	// 					if(res.fileList != undefined && res.fileList[0] != undefined){
-	// 						return res.fileList[0].tempFileURL;
-	// 					}
-	// 				},
-	// 			    fail() {},
-	// 			    complete() {}
-	// 			});
-				
-				
-	// 		}else{
-	// 			var cache = {
-	// 				url: url,
-	// 				cache: url,
-	// 			};
-	// 			uni.downloadFile({
-	// 				url: url,
-	// 				success: (res) => {
-	// 					if (res.statusCode === 200) {
-	// 						cache.cache = res.tempFilePath;
-	// 						list.push(cache);
-	// 						uni.setStorageSync(key, list);
-				
-	// 					}
-	// 				},
-	// 				fail: (e) => {
-				
-	// 				}
-	// 			});
-	// 		}
-			
-			 
-	// 		return cache.cache;
-	// 	}
-	// }
-	
-	getNickName(friend_id,nickname){
-		var friendIds = $store.state.user.friendIds;
-		if(friendIds){
-			friendIds.forEach((item)=>{
-				if(friend_id == item.friend_id){
-					if(item.pet_name != undefined){
-						nickname = item.pet_name;
-					}
-				}
-			})
-			return nickname;
-		}else{
-			return nickname;
-		}
-	}
-	//好友列表按首字母排序
-	sortFriendList(data) {
-		var friendList = data;
-		var letter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-			"U", "V", "W", "X", "Y", "Z" ,"#"
-		];
-		var indexData = [];
-		letter.forEach((letterItem, letterIndex) => {
-			var letterData = {
-				letter: letterItem,
-				data: []
-			}
-			friendList.forEach((friendListItem, friendListIndex) => {
-				var firstLetter = friendListItem.nickname.substr(0, 1);
-				var p = /[a-z]/i;
-				var b = p.test(firstLetter);
-				if(b){
-					var firstWord = firstLetter.toUpperCase();
-				}else{
-					var firstWord = pinyin.initial(firstLetter);
-				}
-				var p2 = /[A-Z]/i;
-				var b2 = p2.test(firstWord);
-				if(!b2 && letterItem === "#"){
-					letterData.data.push(friendListItem);
-				}
-				if (b2 && letterItem === firstWord) {
-					letterData.data.push(friendListItem);
-				}
-			})
-			if (letterData.data.length > 0) {
-				indexData.push(letterData);
-			}
-		})
-		return indexData;
-	}
 	async checkToken(){
 		var that = this;
 		uniCloud.callFunction({
@@ -1012,27 +905,19 @@ class common {
 				}
 			},
 		}).then((res) => {
-			
-			
 			if(this.checkResultData(res)){
 				$store.dispatch('updateUser',res.result.data[0])
 			}else{
-				
 				if(res.result.code === 1){
-					
 					uni.showModal({
 					    title: '提示',
 					    content: res.result.msg,
 					    success: function (res) {
-					        
 							$store.dispatch("logout");
-							
 					    }
 					});
 					
-				} 
-				
-				
+				}
 			}
 		 
 		}).catch((err) => {
@@ -1047,7 +932,7 @@ class common {
 	}
 	chatGroupWindow(sessionId, name) {
 		uni.navigateTo({
-			url: '/pages/chat/chatGroup?id=' + sessionId + "&name=" + name,
+			url: '/pages/group/chatGroup?id=' + sessionId,
 		})
 	}
 	queryUsers() {
@@ -1090,7 +975,6 @@ class common {
 			});
 		})
 	}
-	
 	logout(){
 		uniCloud.callFunction({
 			name: 'login',
@@ -1106,73 +990,6 @@ class common {
 			 
 		})
 	}
-	
-	formatChatTime(time) {
-		time = this.dateFormat("YY-mm-dd HH:MM:SS", new Date(time));
-		var date = time.toString();
-		var year = date.split("-")[0];
-		var month = date.split("-")[1];
-		var day = date.split("-")[2];
-		var d1 = new Date(year + '/' + month + '/' + day.split(" ")[0]);
-		var d3 = new Date(date.replace(/-/g, "/"));
-		var dd = new Date();
-		var y = dd.getFullYear();
-		var m = dd.getMonth() + 1;
-		var d = dd.getDate();
-		var d2 = new Date(y + '/' + m + '/' + d);
-		var iday = parseInt(d2 - d1) / 1000 / 60 / 60 / 24;
-		var hours = d3.getHours();
-		var minutes = d3.getMinutes();
-		if (minutes < 10) {
-			minutes = '0' + minutes;
-		}
-		if (hours < 10) {
-			hours = '0' + hours;
-		}
-		if (iday == 0) {
-			if (hours >= 12) {
-				return "下午 " + hours + ":" + minutes;
-			} else {
-				return "上午 " + hours + ":" + minutes;;
-			}
-		} else if (iday == 1) {
-			var dt = "";
-			if (hours >= 12) {
-				dt = "下午 " + hours + ":" + minutes;
-			} else {
-				dt = "上午 " + hours + ":" + minutes;;
-			}
-			return "昨天 " + dt;
-		} else if (iday == 2) {
-			var dt = "";
-			if (hours >= 12) {
-				dt = "下午 " + hours + ":" + minutes;
-			} else {
-				dt = "上午 " + hours + ":" + minutes;;
-			}
-			return "前天 " + dt;
-		} else {
-			return year + '/' + month + "/" + d1.getDate()
-		}
-	}
-	dateFormat(fmt, date) {
-		let ret;
-		const opt = {
-			"Y+": date.getFullYear().toString(), // 年
-			"m+": (date.getMonth() + 1).toString(), // 月
-			"d+": date.getDate().toString(), // 日
-			"H+": date.getHours().toString(), // 时
-			"M+": date.getMinutes().toString(), // 分
-			"S+": date.getSeconds().toString() // 秒
-		};
-		for (let k in opt) {
-			ret = new RegExp("(" + k + ")").exec(fmt);
-			if (ret) {
-				fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
-			};
-		};
-		return fmt;
-	}
 	// 数组置顶
 	listToFirst(arr, index) {
 		if (index != 0) {
@@ -1180,7 +997,6 @@ class common {
 		}
 		return arr;
 	}
-	
 	checkResultData(res){
 		if(typeof res != 'undefined' && typeof res['result'] != 'undefined' && typeof res['result']['data'] != 'undefined' && typeof res['result']['data'][0] != 'undefined'){
 			return true;

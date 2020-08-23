@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 
-		<uni-nav-bar :leftIconBool="true" @clickLeft="back" left-icon="back" :fixed="true" :status-bar="true" @clickRight="queryUsers"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" @clickRight="queryUsers"
 		 right-text="添加朋友" title="新的朋友" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
 		<uni-list>
 			<!-- #ifdef APP-NVUE -->
@@ -19,7 +19,7 @@
 			</cell>
 			<!-- #endif -->
 			<uni-apply-list-item :disabled="true" v-for="(item,index) in friendApply" :key="index" :showArrow="false" :title="item.from_name"
-			 :thumb="webSocket.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx"
+			 :thumb="$store.state.user.utils.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx"
 			 textStyle="font-weight:400;color:black" :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
 			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
 

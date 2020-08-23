@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar @clickLeft="back" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" rightText="开始" @clickRight="create" title="发起群聊"
+		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" rightText="开始" :rightIconBool="true" @clickRight="create" title="发起群聊"
 		 background-color="#ebebeb" titleStyle="font-size: 17px; font-weight: 500;"></uni-nav-bar>
 		<uni-create-indexed-list :style="top" :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
 	</view>

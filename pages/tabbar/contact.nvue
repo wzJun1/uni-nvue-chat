@@ -19,7 +19,7 @@
 			<uni-list-item :borderWidth="630" :showArrow="false">
 				<view class="user-box">
 					<view class="slot-box">
-						<image class="slot-image" :src="webSocket.getImageCache(user.avatar)" mode="aspectFill"></image>
+						<image class="slot-image" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
 					</view>
 					<text class="slot-text">{{user.nickname}}</text>
 				</view>
@@ -28,9 +28,9 @@
 			<uni-list-item :borderWidth="630" v-for="(item,index) in friendList" :key="index" :showArrow="false" @click="webSocket.showCard(item._id)">
 				<view class="user-box">
 					<view class="slot-box">
-						<image class="slot-image" :src="webSocket.getImageCache(item.avatar)" mode="aspectFill"></image>
+						<image class="slot-image" :src="$store.state.user.utils.getImageCache(item.avatar)" mode="aspectFill"></image>
 					</view>
-					<text class="slot-text">{{webSocket.getNickName(item._id,item.nickname)}}</text>
+					<text class="slot-text">{{$store.state.user.utils.getNickName(item._id,item.nickname)}}</text>
 				</view>
 			</uni-list-item>
 		</uni-list>
@@ -40,7 +40,7 @@
 			</view>
 			<uni-list :border="false" v-if="friendSearchResult.length">
 				<cell v-for="(item,index) in friendSearchResult">
-					<uni-list-chat :arrayIndex="index" :border="true" :title="item.nickname" :avatar="webSocket.getImageCache(item.avatar)" :clickable="true"
+					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)" :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true"
 					 badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
 					</uni-list-chat>
 				</cell>
@@ -50,7 +50,7 @@
 			</view>
 			<uni-list :border="false" v-if="groupSearchResult.length">
 				<cell v-for="(item,index) in groupSearchResult">
-					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="item.avatarList"
+					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id"
 					 :clickable="true" badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
 					</uni-list-chat>
 				</cell>
