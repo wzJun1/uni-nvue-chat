@@ -29,6 +29,14 @@ GitHub：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/
 
 
 
+# 截图
+
+![](https://i.loli.net/2020/08/23/kJgoD3UlOC7FYMN.jpg)
+
+![](https://i.loli.net/2020/08/23/eCzI21TkHcp3XYG.jpg)
+
+
+
  
 
 # 借鉴了一部分好的项目，感谢作者
