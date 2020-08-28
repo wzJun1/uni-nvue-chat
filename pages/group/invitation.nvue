@@ -1,0 +1,130 @@
+<template>
+	<view>
+		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" :rightButton="true" :rightButtonDisable="false" @clickRight="submit" title="邀请好友"
+		 background-color="#ebebeb" titleStyle="font-size: 17px; font-weight: 500;"></uni-nav-bar>
+		<uni-create-indexed-list :style="top" :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex' 
+	export default {
+		data() {
+			return {
+				selected:[],
+				token:'',
+				groupId:'',
+				groupInfo:[]
+			}
+		},
+		computed: {
+			...mapState({
+				webSocket: state => state.user.webSocket,
+				user: state => state.user.user,
+				friendApply: state => state.user.friendApply,
+				friendListLetterSort: state => state.user.friendListLetterSort
+			}),
+			top(){
+				let top = getApp().globalData.systemInfo.statusBarHeight + 44;
+				return "top:"+top+"px;height:100%";
+			}
+		},
+		onLoad(option) {
+			this.groupId = option.id;
+			
+			this.groupInfo = [];
+			if(this.$store.state.user.groupList.length){
+				this.$store.state.user.groupList.forEach((item)=>{
+					if(item._id == this.groupId){
+						this.groupInfo = item;
+					}
+				})
+			}
+			
+			  console.log(this.friendListLetterSort.length)
+			  console.log(this.friendListLetterSort.length)
+			if(this.friendListLetterSort.length && this.groupInfo){
+				 
+				this.friendListLetterSort.forEach((item,findex)=>{
+					 
+					if(item.data.length){
+						 
+						item.data.forEach((ditem,dindex)=>{
+							
+							this.groupInfo.group_users.forEach((uitem)=>{
+								 
+								if(ditem._id == uitem._id){
+									
+									this.friendListLetterSort[findex].data.splice(dindex,1);
+									 
+								} 
+								
+							})
+							
+						})
+					}
+				})
+				
+			}
+		},
+		onShow() {
+			this.token = (new Date()).getTime();
+		},
+		methods: {
+			back:function(){
+				uni.navigateBack({
+					delta:1
+				})
+			},
+			bindClick:function(e){
+				if(e.select != undefined){
+					this.selected = e.select;
+				}
+			},
+			submit:function(){
+				var selected = [];
+				if(this.selected.length < 1){
+					uni.showModal({
+					    title: '提示',
+					    content: "请选择要发起群聊的好友"
+					});
+					return;
+				}
+				this.selected.forEach((item,index)=>{
+					selected.push(item.name)
+				})
+				// var me = {
+				// 	_id:this.user._id,
+				// 	username:this.user.username,
+				// 	nickname:this.user.nickname,
+				// 	avatar:this.user.avatar,
+				// }
+				// selected.push(me);
+				// title = this.selected[0].name + "，" + this.selected[1].name + "等人"
+				if((selected.length + this.groupInfo.group_users.length) > 200){
+					uni.showModal({
+					    title: '提示',
+					    content: "单个群聊人数不能超过200人"
+					});
+					return;
+				}
+				// var group = {
+				// 	admin_id:this.user._id,
+				// 	admin:this.user,
+				// 	create_time:this.token,
+				// 	title:title
+				// };
+				// this.webSocket.addChatGroup(group,users);
+				console.log(selected)
+				this.webSocket.updateGroupUsers(this.groupInfo,selected);
+			}
+		}
+	}
+</script>
+
+<style scoped>
+
+</style>

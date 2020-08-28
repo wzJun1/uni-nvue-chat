@@ -33,7 +33,7 @@ class utils {
 	getGroupById(id){
 		let groups = uni.getStorageSync("groupList");
 		let info = [];
-		if(groups.length){
+		if(groups && groups.length){
 			groups.forEach((item)=>{
 				if(id == item._id){
 					info = item;
@@ -41,6 +41,20 @@ class utils {
 			})
 		}
 		return info;
+	}
+	
+	getGroupAvatarList(id){
+		var avatarList = [];
+		if(id){
+			let groups = this.getGroupById(id);
+			if(groups.group_users != undefined && groups.group_users.length){
+				groups.group_users.forEach((item)=>{
+					avatarList.push(item.avatar)
+				})
+				 
+			}
+		}
+		return avatarList;
 	}
 	
 	getFriendInfoById(id){

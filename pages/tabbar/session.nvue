@@ -25,12 +25,14 @@
 							</view>
 						</uni-list-chat>
 
-						<uni-list-chat :arrayIndex="index" v-else :border="true" :title="item.name" :group-id="item.id" :note="item.data"
+						<uni-list-chat :arrayIndex="index" v-else :border="true" :title="item.name" :avatar-list="$store.state.user.utils.getGroupAvatarList(item.id)" :note="item.data"
 						 :clickable="true" badge-positon="left" :badge-text="item.noreadnum" @click="webSocket.chatGroupWindow(item.id,item.name)">
 							<view class="chat-custom-right">
 								<text class="chat-custom-text">{{$store.state.user.utils.formatChatTime(item.update_time)}}</text>
 							</view>
 						</uni-list-chat>
+						
+						
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 			</cell>
@@ -131,6 +133,11 @@
 				groupList: state => state.user.groupList,
 			})
 		},
+		watch:{
+			sessionList(){
+				this.$forceUpdate();
+			}
+		}, 
 		onLoad() {
 
 		},

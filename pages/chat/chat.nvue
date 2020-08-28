@@ -98,6 +98,7 @@
 				focus: false,
 				refreshing: false,
 				friendInfo:[],
+				ready:false,
 			}
 		},
 		destroyed() {
@@ -129,18 +130,34 @@
 			this.navBarTitle = this.petName;
 			this.webSocket.readChatItem(this.sessionId);
 			this.friendInfo = this.$store.state.user.utils.getFriendInfoById(this.sessionId);
+			
+			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
+			
+			
+			var that = this;
+			if(this.ready){
+				let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
+				if (!msgList) {
+					this.msgList = [];
+				} else {
+					this.msgList = msgList;
+				}
+				this.scrollBottom();
+				this.defaultShowEmoji = true;
+			}
+			this.$nextTick(function(){
+				that.getSession();
+			})
 		},
 		onReady() {
-			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
-			let msgList = this.webSocket.getChatDetail(false, this.sessionId);
-			this.getSession();
-			if (!msgList) {
-				this.msgList = [];
-			} else {
-				this.msgList = msgList;
-			}
-			this.scrollBottom();
-			this.defaultShowEmoji = true;
+			 let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
+			 if (!msgList) {
+			 	this.msgList = [];
+			 } else {
+			 	this.msgList = msgList;
+			 }
+			 this.scrollBottom();
+			 this.ready = true;
 		},
 		onNavigationBarButtonTap(e) {
 			console.log(e)
@@ -199,8 +216,11 @@
 				if ((message.from_id === this.session.id && message.chat_type === 'user') || (message.chat_type === 'group' &&
 						message.to_id === this.session.id)) {
 					if (message.isremove !== 1) {
-						this.msgList.push(message)
-						this.scrollBottom();
+						let index = this.msgList.findIndex(item => item._id === message._id)
+						if (index === -1) {
+							this.msgList.push(message)
+							this.scrollBottom();
+						}
 					}
 				}
 			},
@@ -239,7 +259,7 @@
 				setTimeout(() => {
 					let page = that.page + 1;
 					
-					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page , 10);
+					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page);
 					let oldMsgList = that.msgList;
 					if(msgList.length){
 						that.page = page;
@@ -326,7 +346,7 @@
 							//this.session.username = res.result.data[0].username;
 							this.session.avatar = res.result.data[0].avatar;
 							this.session.chat_type = 'user';
-
+							this.webSocket.createChatObject(this.session);
 
 						} else {
 							uni.showToast({
@@ -347,8 +367,9 @@
 
 				} else {
 					this.session = sessionList[index];
+					this.webSocket.createChatObject(this.session);
 				}
-				this.webSocket.createChatObject(this.session);
+			 
 				this.updateSession();
 			},
 			async updateSession(){

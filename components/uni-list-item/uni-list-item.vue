@@ -297,6 +297,11 @@
 		flex-direction: row;
 		justify-content: flex-end;
 		align-items: center;
+		 
+		 
+		// lines: 1;
+		// overflow: hidden;
+		// text-overflow: ellipsis;
 	}
 
 	.uni-list-item__icon {

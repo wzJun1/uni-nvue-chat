@@ -204,7 +204,10 @@ exports.main = async (event, context) => {
 		ctx.body = await user_chat_group_collection.doc(event.data.group_id).update(event.data.update)
 		await next();
 	});
-	
+	app.router('outGroup', async (ctx, next) => {
+		ctx.body = await user_chat_group_users_collection.where(event.data).remove()
+		await next();
+	});
 	app.router('updateMyPetNameInGroup', async (ctx, next) => {
 		//ctx.body = await collection.limit(10).get();
 		ctx.body = await user_chat_group_users_collection.where({
@@ -378,20 +381,26 @@ exports.main = async (event, context) => {
 
 	app.router('addChatGroup', async (ctx, next) => {
 		ctx.body = await user_chat_group_collection.add(event.data);
-
 		await next();
 	});
 
 	app.router('addChatGroupUsers', async (ctx, next) => {
-		let isExist = await user_chat_group_users_collection.limit(1).where({
-			group_id: event.data.group_id,
-			user_id: event.data.user_id
-		}).get();
-
-		if (!isExist.data[0]) {
+		if(event.data.length){
+			
+			// for (let item of event.data) {
+				
+			// }
+			
+			// let isExist = await user_chat_group_users_collection.limit(1).where({
+			// 	group_id: event.data.group_id,
+			// 	user_id: event.data.user_id
+			// }).get();
+			
+			// if (!isExist.data[0]) {
+			// 	ctx.body = await user_chat_group_users_collection.add(event.data);
+			// }
 			ctx.body = await user_chat_group_users_collection.add(event.data);
 		}
-
 		await next();
 	});
 

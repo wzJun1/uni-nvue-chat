@@ -4,17 +4,19 @@
 		<view :class="{'uni-list--border':border,'uni-list-chat--first':arrayIndex===0}"></view>
 		<view class="uni-list-chat__container">
 			<view class="uni-list-chat__header-warp">
-				<view v-if="avatarCircle || avatarList.length === 0" class="uni-list-chat__header" :class="{'header--circle':avatarCircle}">
+				<view v-if="avatarCircle || avatarList.length == 0" class="uni-list-chat__header" :class="{'header--circle':avatarCircle}">
 					<image class="uni-list-chat__header-image" :style="{'width':(avatarWidth+10)+'rpx','height':(avatarWidth+10)+'rpx'}"
 					 :src="avatar" mode="aspectFill"></image>
 				</view>
 				<!-- 头像组 -->
 				<view v-else class="uni-list-chat__header" :style="{'width':(avatarWidth+10)+'rpx','height':(avatarWidth+10)+'rpx'}">
+					
 					<view v-for="(item,index) in avatarList" :key="index" class="uni-list-chat__header-box" :class="computedAvatar"
 					 :style="{width:imageWidth+'rpx',height:imageWidth+'rpx'}">
 						<image class="uni-list-chat__header-image" :style="{width:(imageWidth)+'rpx',height:(imageWidth)+'rpx'}" :src="$store.state.user.utils.getImageCache(item)"
 						 mode="aspectFill"></image>
 					</view>
+					
 				</view>
 			</view>
 			<view v-if="badgeText&& badgePositon === 'left'" class="uni-list-chat__badge uni-list-chat__badge-pos" :class="[isSingle]"><text
@@ -111,16 +113,20 @@
 				default: false
 			},
 			avatar: {
-				type: String,
-				default: ''
+				type: [String,Boolean],
+				default: false
 			},
 			avatarWidth: {
 				type: Number,
 				default: 90
 			},
+			avatarList: {
+				type: Array,
+				default: []
+			},
 			groupId: {
-				type: String,
-				default: ""
+				type: [String,Boolean],
+				default: false
 			},
 			
 		},
@@ -161,7 +167,7 @@
 			return {
 				isFirstChild: false,
 				border: true,
-				avatarList: [],
+				 
 				imageWidth: 50,
 				
 			}
@@ -174,22 +180,25 @@
 			//this.border = this.list.border
 			 
 		},
+		watch:{
+			 
+		},
 		created() {
-			if(this.groupId){
-				let groups = this.$store.state.user.utils.getGroupById(this.groupId);
-				var avatarList = [];
-				if(groups.group_users){
-					groups.group_users.forEach((item)=>{
-						avatarList.push(item.avatar)
-					})
-					this.avatarList = avatarList;
-				}
-			}
+			// if(this.groupId){
+			// 	let groups = this.$store.state.user.utils.getGroupById(this.groupId);
+			// 	var avatarList = [];
+			// 	if(groups.group_users){
+			// 		groups.group_users.forEach((item)=>{
+			// 			avatarList.push(item.avatar)
+			// 		})
+			// 		this.avatarList = avatarList;
+			// 	}
+			// }
 		},
 		methods: {
 			onClick() {
 				this.$emit("click");
-			},
+			}
 		}
 	}
 </script>

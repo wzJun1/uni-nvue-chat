@@ -14,7 +14,7 @@
 			<uni-list-item @click="toNewFriendPage" :showArrow="false" title="新的朋友" thumb="../../static/images/new_f.png"
 			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" :badgeText="computedApplyCount"
 			 :showBadge="computedApplyCount" badgeType="error" />
-			<uni-list-item @click="toGroupListPage" :borderWidth="630" :showArrow="false" title="我的群聊" thumb="../../static/images/group.png"
+			<uni-list-item @click="toGroupListPage" :borderWidth="630" :showArrow="false" title="我的群聊" thumb="../../static/images/my_group.png"
 			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" />
 			<uni-list-item :borderWidth="630" :showArrow="false">
 				<view class="user-box">

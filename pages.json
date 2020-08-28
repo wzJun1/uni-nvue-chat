@@ -254,7 +254,22 @@
 				
 			} 
 		}
-	],
+	    ,{
+            "path" : "pages/group/invitation",
+            "style": {
+            	"navigationBarTextStyle": "black",
+            	"navigationBarBackgroundColor": "#ededed",
+            	"navigationBarTitleText": "",
+            	"disableScroll": true,
+            	"app-plus": {
+            		"titleNView": false,
+            		"bounce": "none",
+            		"animationType": "slide-in-bottom",
+            		"animationDuration": 300 
+            	}
+            }
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

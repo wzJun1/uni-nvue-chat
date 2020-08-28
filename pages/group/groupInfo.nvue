@@ -7,7 +7,7 @@
 					<image class="avatar" :src="$store.state.user.utils.getImageCache(item.avatar)" mode="aspectFill"></image>
 					<text class="nickname">{{item.pet_name ? item.pet_name : item.nickname}}</text>
 				</view>
-				<view class="add">
+				<view class="add" @click="invitation()">
 					<uni-icons class="" style="color: #999999;" size="60" type="plusempty"></uni-icons>
 				</view>
 			 </view>
@@ -64,11 +64,11 @@
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
 				<view class="delPanel">
-					<text class="deleted-text">将群组"{{groupInfo.title}}"删除，并且删除聊天记录</text>
+					<text class="deleted-text">将退出群组"{{groupInfo.title}}"，并且删除聊天记录</text>
 				</view>
 				<view class="delete">
-					<view class="button" @click="del()">
-						<text class="button-text">删除</text>
+					<view class="button" @click="outGroup()">
+						<text class="button-text">确认退出</text>
 					</view>
 				</view>
 				<view class="line">
@@ -93,11 +93,11 @@
 		data() {
 			return {
 				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
-				rightTextStyle: 'font-size:34rpx;font-weight:400;lines: 1;overflow: hidden;width:400rpx;text-overflow: ellipsis;',
+				rightTextStyle: 'font-size:34rpx;font-weight:400;width:400rpx;lines:3;overflow: hidden;text-overflow: ellipsis;word-break: break-word;text-align:right',
 				textStyle: 'font-weight:400',
-				systemInfo: getApp().globalData.systemInfo,
+				systemInfo: getApp().globalData.systemInfo, 
 				safeBottom:0,
-				uid:'',
+				uid:'', 
 				nickname:'',
 				petName:'',
 				sessionId:'',
@@ -141,9 +141,9 @@
 					url: './form?id='+this.groupInfo._id+'&type=' + type + '&data=' + data + '&title=' + title
 				})
 			},
-			setNickName: function(){
+			invitation: function(){
 				uni.navigateTo({
-					url: './form?id='+this.uid+'&petName='+(this.petName != this.nickname ? this.petName : "")
+					url: './invitation?id='+this.groupInfo._id
 				})
 			},
 			showPopup: function(){
@@ -152,54 +152,66 @@
 			hidePopup: function(){
 				this.$refs.popup.close()
 			},
-			del: function(){
+			outGroup: function(){
 				var that = this;
 				uni.showLoading();
 				uniCloud.callFunction({
 					name: 'user',
 					data: {
-						$url: "deleteFriend",
+						$url: "outGroup",
 						token: this.$store.state.user.user_token,
 						data: {
 							user_id:this.user._id,
-							friend_id:this.uid
+							group_id:this.sessionId
 						}
 						
 					},
 				}).then((res) => {
-					uni.hideLoading();
-					uni.showModal({
-						title: '提示',
-						content: "删除成功"
-					});
-					that.$store.dispatch('getFriendIds')
-					let key = `chat_sessions_${this.user._id}`
-					var chat_sessions = uni.getStorageSync(key);
-					if(chat_sessions){
-						chat_sessions.forEach((item,index)=>{
-							if(item.id == this.uid){
-								chat_sessions.splice(index, 1);
-							}
+					try{
+						
+						let outGroup = {
+							type:'outGroup',
+							uid:this.user._id,
+							groupId:this.sessionId
+						};
+						uni.sendSocketMessage({
+							data: JSON.stringify(outGroup)
 						})
+						that.$store.dispatch('getGroupIds')
+						let key = `chat_sessions_${that.user._id}`
+						var chat_sessions = uni.getStorageSync(key);
+						if(chat_sessions){
+							chat_sessions.forEach((item,index)=>{
+								if(item.id == that.sessionId){
+									chat_sessions.splice(index, 1);
+								}
+							})
+						}
+						uni.setStorageSync(key, chat_sessions);
+						let chatDetailKey = `chatDetail_${that.user._id}_${that.sessionId}`
+						uni.setStorageSync(chatDetailKey, []);
+						that.$store.dispatch('getSessionList')
+						uni.hideLoading();
+						uni.showModal({
+						    title: '提示', 
+						    content: '退出成功',
+						    success: function (res) {
+						        uni.reLaunch({
+						        	url:"/pages/tabbar/session"
+						        })
+						    }
+						});
+						
+					}catch(e){
+						console.log(e)
 					}
-					uni.setStorageSync(key, chat_sessions);
-					let chatDetailKey = `chatDetail_${this.user._id}_${this.uid}`
-					uni.setStorageSync(chatDetailKey, []);
-					this.$store.dispatch('getSessionList')
-					uni.reLaunch({
-						url:"/pages/tabbar/session"
-					})
+					 
 				}).catch((err) => {
 					uni.hideLoading()
 					uni.showModal({
 						title: '提示',
 						content: err
 					});
-				})
-			},
-			back: function(){
-				uni.navigateBack({
-					delta:1
 				})
 			}
 		}

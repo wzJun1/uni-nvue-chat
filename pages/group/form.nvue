@@ -2,7 +2,7 @@
 	<view class="nvue-page-root">
 
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true"
-		 :title="nabar" :rightButton="true" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
+		 :title="nabar" :rightIconBool="!admin" :rightButton="admin" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
 
 		<view class="uni-common-mt">
 
@@ -19,7 +19,14 @@
 				</view>
 
 				<view class="uni-textarea" v-else-if="type=='notice'">
-					<textarea v-model="notice" @confirm="submit" @focus="inputed" :focus="focus" auto-height />
+					
+					<textarea v-if="admin" :show-confirm-bar="false" maxlength="10000" v-model="notice" @confirm="submit" @focus="inputed" :focus="focus" auto-height />
+					
+					<view v-else class="">
+						<text>{{notice}}</text>
+					</view>
+					
+					
 				</view>
 				 
 				  
@@ -47,7 +54,8 @@
 				rightButtonDisable:true,
 				groupId:'',
 				groupInfo:[],
-				setData:[]
+				setData:[],
+				admin:false
 			}
 		},
 		computed: { 
@@ -92,10 +100,13 @@
 			
 			if(this.$store.state.user.groupList.length){
 				this.$store.state.user.groupList.forEach((item)=>{
-					if(item._id == this.sessionId){
+					if(item._id == this.groupId){
 						this.groupInfo = item;
 					}
 				})
+			}
+			if(this.groupInfo.admin_id == this.user._id){
+				this.admin = true;
 			}
  
 			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
@@ -111,6 +122,8 @@
 				var data = {};
 				 
 				if(this.type=="title" || this.type=="notice"){
+					console.log(this.groupInfo)
+					console.log(this.user._id)
 					if(this.groupInfo.admin_id != this.user._id){
 						uni.showModal({
 						    title: '提示',
@@ -125,7 +138,7 @@
 					}else{
 						data[this.type] = this.notice;
 					}
-					 
+					 console.log(data)
 					uniCloud.callFunction({
 						name: 'user',
 						data: {
@@ -133,12 +146,13 @@
 							token: this.$store.state.user.user_token,
 							data: {
 								group_id:this.groupId,
-								update:data[this.type]
+								update:data
 							}
 						},
 					}).then((res) => {
-						uni.hideLoading();
 						console.log(res)
+						uni.hideLoading();
+						 
 						if (res.result.updated === 1) {
 							uni.showToast({
 								title: "修改成功",
@@ -154,11 +168,13 @@
 							})
 						}
 					}).catch((err) => {
+						console.log(err)
 						uni.hideLoading()
 						uni.showModal({
 							title: '提示',
 							content: err
 						});
+						 
 					})
 				}else{
 					uni.showLoading();

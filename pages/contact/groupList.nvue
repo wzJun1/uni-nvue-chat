@@ -15,7 +15,7 @@
 			<!-- #endif -->
 	   
 			<cell v-for="(item,index) in groupList">
-				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id" :clickable="true"
+				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
 				 badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
 					 
 				</uni-list-chat>

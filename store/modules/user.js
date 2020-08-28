@@ -107,8 +107,9 @@ export default {
 			uni.removeStorageSync('token');
 			uni.removeStorageSync('user');
 			uni.removeStorageSync('uid');
-			uni.removeStorageSync('fridendIds')
+			uni.removeStorageSync('friendIds')
 			uni.removeStorageSync('groupList')
+			uni.removeStorageSync('friendList')
 			// 跳转到登录页
 			uni.reLaunch({
 				url: "/pages/index/login"
@@ -126,9 +127,13 @@ export default {
 				// 初始化登录状态
 				state.user = user
 				state.user_token = uni.getStorageSync('token');
+				state.friendList = uni.getStorageSync('friendList') ? uni.getStorageSync('friendList') : [];
+				state.groupList = uni.getStorageSync('groupList') ? uni.getStorageSync('groupList') : [];
+				state.friendIds = uni.getStorageSync('friendIds') ? uni.getStorageSync('friendIds') : [];
+				//state.friendIds = uni.setStorageSync('friendIds') ? uni.getStorageSync('friendIds') : [];
 				// 连接socket
 				state.webSocket = new WebSocket({
-					url: state.url
+					url: state.url 
 				})
 				state.utils = new Utils()
 				// 获取会话列表
@@ -217,6 +222,7 @@ export default {
 				}).then((res) => {
 					if(res.result.data){
 						state.friendList = res.result.data;
+						uni.setStorageSync('friendList', res.result.data)
 						uni.hideLoading();
 						state.friendListLetterSort = state.utils.sortFriendList(res.result.data)
 						 
@@ -235,6 +241,12 @@ export default {
 			state,
 			dispatch
 		}) {
+			
+			// 监听会话列表变化
+			uni.$on('onUpdateGroupList', (list) => {
+				state.groupList = list
+			})
+			
 			uniCloud.callFunction({
 				name: 'user',
 				data: {

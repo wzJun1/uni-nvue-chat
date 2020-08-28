@@ -177,16 +177,94 @@ class common {
 				}
 			}else{
 				if(message.from_id != this.user._id){
-					this.addChatDetail(message, false)
-					this.updateSessionList(message, false)
-					uni.$emit('onMessage', message)
-					if (vibrateLong) {
-						uni.vibrateLong({
-							success: function() {
-								 
+
+					let groups = uni.getStorageSync("groupList");
+					if(groups){
+						var exist = false;
+						if(groups && groups.length){
+							groups.forEach((item)=>{
+								if(message.to_id == item._id){
+									exist = true;
+								}
+							})
+						}
+						if(exist){
+							this.addChatDetail(message, false)
+							this.updateSessionList(message, false)
+							uni.$emit('onMessage', message)
+							if (vibrateLong) {
+								uni.vibrateLong({
+									success: function() {
+										 
+									}
+								});
 							}
-						});
+						}else{
+
+							uniCloud.callFunction({
+								name: 'user',
+								data: {
+									$url: "getGroups",
+									token: this.user_token,
+									data: {
+										id: this.user._id
+									}
+								},
+							}).then((res) => {
+								 if(res.result.data){
+									uni.setStorageSync('groupList', res.result.data)
+									uni.$emit('onUpdateGroupList', res.result.data)
+								 	this.addChatDetail(message, false)
+								 	this.updateSessionList(message, false)
+								 	uni.$emit('onMessage', message)
+								 	if (vibrateLong) {
+								 		uni.vibrateLong({
+								 			success: function() {
+								 				 
+								 			}
+								 		});
+								 	}
+								 }
+							}).catch((err) => { 
+								console.log(err);
+							})
+							
+							
+						}
+						
+						
+					}else{
+						
+						uniCloud.callFunction({
+							name: 'user',
+							data: {
+								$url: "getGroups",
+								token: this.user_token,
+								data: {
+									id: this.user._id
+								}
+							},
+						}).then((res) => {
+							 if(res.result.data){
+								uni.setStorageSync('groupList', res.result.data)
+								uni.$emit('onUpdateGroupList', res.result.data)
+							 	this.addChatDetail(message, false)
+							 	this.updateSessionList(message, false)
+							 	uni.$emit('onMessage', message)
+							 	if (vibrateLong) {
+							 		uni.vibrateLong({
+							 			success: function() {
+							 				 
+							 			}
+							 		});
+							 	}
+							 }
+						}).catch((err) => { 
+							console.log(err);
+						})
+						
 					}
+ 
 				}
 			}
 		} else if (message.type == "addfriend") {
@@ -245,6 +323,7 @@ class common {
 		if (this.socket) {
 			this.socket.close()
 		}
+		this.destoryChatObject();
 		this.isOpenReconnect = false
 	}
 	initSocketLogin(login){
@@ -367,7 +446,7 @@ class common {
 				}
 			},
 		}).then((res) => {
-			console.log(err);
+			console.log(res);
 		}).catch((err) => {
 			console.log(err);
 		});
@@ -387,7 +466,6 @@ class common {
 			type: params.type,
 			socket_type: params.socket_type,
 			data: params.data, // 消息内容
-			group: params.group ? params.group : '' ,
 			//options: params.options ? params.options : {}, // 其他参数
 			create_time: (new Date()).getTime(), // 创建时间
 			isremove: 0, // 是否撤回
@@ -396,7 +474,7 @@ class common {
 	}
 	// 发送消息
 	send(message, onProgress = false) {
-		if(message.chat_type === 'group' && message.group){
+		if(message.chat_type === 'group'){
 			uniCloud.callFunction({
 				name: 'user',
 				data: {
@@ -409,7 +487,11 @@ class common {
 				if (res.result.id !== undefined) {
 					message._id = res.result.id;
 					var detailIds = [];
-					message.group.users.forEach((item,index)=>{
+					
+					var group = $store.state.user.utils.getGroupById(message.to_id);
+					
+					
+					group.group_users.forEach((item,index)=>{
 						
 						var detailId = {
 							messageId:res.result.id,
@@ -510,7 +592,7 @@ class common {
 		// key值：chatDetail_当前用户id_会话类型_接收人/群id
 		let key = `chatDetail_${this.user._id}_${id}`
 		// 获取原来的聊天记录
-		let list = this.getChatDetail(key, id)
+		let list = this.getChatDetail(key, id , false)
 		list = list ? list : [];
 
 		let index = list.findIndex(item => item._id === message._id)
@@ -522,17 +604,19 @@ class common {
 
 	}
 	// 获取聊天记录
-	getChatDetail(key = false, id = 0 , page = 1 , limit = 10) {
+	getChatDetail(key = false, id = 0 , page = 1 , limit = 20) {
 		key = key ? key : `chatDetail_${this.user._id}_${id}`;
 		let storageDetail = uni.getStorageSync(key);
 		let detail = [];
-		if(storageDetail){
+		if(storageDetail && page){
 			try{
 				storageDetail.reverse();
 				detail = this.pagination(page,limit,storageDetail);
 			}catch(e){
 				console.log(e)
 			}
+		}else{
+			detail = storageDetail;
 		}
 		 
 		return detail;
@@ -596,6 +680,7 @@ class common {
 			avatar = isSend ? message.to_avatar : message.from_avatar
 			name = isSend ? message.to_name : message.from_name
 		} else { // 群聊
+			//isCurrentChat = this.TO && (this.TO.id === message.to_id)
 			isCurrentChat = this.TO && (this.TO.id === message.to_id)
 			id = message.to_id
 			avatar = message.to_avatar
@@ -610,6 +695,8 @@ class common {
 		let data = this.formatChatItemData(message, isSend)
 		// 会话不存在，创建会话
 		// 未读数是否 + 1
+ 
+		
 		let noreadnum = (isSend || isCurrentChat) ? 0 : 1;
 		if (index === -1) {
 			let chatItem = {
@@ -627,14 +714,11 @@ class common {
 				strongwarn: false, // 是否开启强提醒
 			}
 			// 群聊
-			if (message.chat_type === 'group' && message.group) {
+			if (message.chat_type === 'group') {
 				chatItem.shownickname = true
 				chatItem.name = message.to_name
 				chatItem = {
-					...chatItem,
-					admin_id: message.group.user_id, // 群管理员id
-					users:message.group.users ,
-					avatarList:message.group.avatarList
+					...chatItem
 				}
 			}
 			list.unshift(chatItem)
@@ -661,10 +745,10 @@ class common {
 			// 置顶会话
 			list = this.listToFirst(list, index)
 		}
+		 
 		list.sort(function(x, y) {
 			return y["update_time"] - x["update_time"];
 		});
-		 
 		// 存储
 		let key = `chat_sessions_${this.user._id}`
 		uni.setStorageSync(key, list)
@@ -813,7 +897,7 @@ class common {
 		return false
 	}
 	//创建群组
-	addChatGroup(group) {
+	addChatGroup(group,users) {
 		uni.showLoading({
 		    title: '创建中...'
 		});
@@ -827,59 +911,65 @@ class common {
 			},
 		}).then((res) => {
 			var groupId = res.result.id;
+			var addUsers = [];
 			if (groupId !== undefined) {
-				group.users.forEach((item, index) => {
+				users.forEach((item, index) => {
+					let addUser = {
+							group_id: groupId,
+							user_id:item._id
+					};
+					addUsers.push(addUser)
+				})
+				
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "addChatGroupUsers",
+						token: this.user_token,
+						data: addUsers
+					},
+				}).then((res) => {
+					
+					let message = that.formatSendData({
+						type: 'say',
+						data: "我发起了群聊，让我们来聊天吧！",
+						to_id: groupId, // 接收人/群 id
+						to_name: group.title, // 接收人/群 名称
+						to_avatar: '', // 接收人/群 头像
+						chat_type: 'group', // 接收类型
+						msg_type: 'text'
+					}) 
+					that.send(message);
+					
 					let joinGroup = {
 						type:'joinGroup',
 						uid:item._id,
 						groupId:groupId
 					};
 					uni.sendSocketMessage({
-						data: JSON.stringify(joinGroup),
-						success: () => {
-							 
-						},
-						fail: () => {
-					
-						}
+						data: JSON.stringify(joinGroup)
 					})
-					uniCloud.callFunction({
-						name: 'user',
-						data: {
-							$url: "addChatGroupUsers",
-							token: this.user_token,
-							data: {
-								group_id: groupId,
-								user_id:item._id
-							}
-						},
-					}).then((res) => {
-					
-					}).catch((err) => {
-						console.log(err);
-					});
-
-				})
+				
+				}).catch((err) => {
+					console.log(err);
+				});
+				
+				uni.hideLoading();
+				uni.redirectTo({
+				    url: '/pages/group/chatGroup' + '?id=' + groupId + "&name=" + group.title,
+				});
+				
+			}else{
+				uni.showModal({
+				    title: '提示',
+				    content: "创建群聊失败",
+				    success: function (res) {
+				       
+				    }
+				});
 			}
-			let message = that.formatSendData({
-				type: 'say',
-				data: "我发起了群聊，让我们来聊天吧！",
-				to_id: groupId, // 接收人/群 id
-				to_name: group.title, // 接收人/群 名称
-				to_avatar: '', // 接收人/群 头像
-				chat_type: 'group', // 接收类型
-				msg_type: 'text',
-				group:{
-					user_id:that.user._id,
-					users:group.users,
-					avatarList:group.avatarList
-				}
-			}) 
-			that.send(message);
-			uni.hideLoading();
-			uni.redirectTo({
-			    url: '/pages/group/chatGroup' + '?id=' + groupId + "&name=" + group.title,
-			});
+			
+			 
 			
 		}).catch((err) => {
 			console.log(err);
@@ -892,6 +982,70 @@ class common {
 			    }
 			});
 		});
+	}
+	updateGroupUsers(group,users){
+		uni.showLoading({
+		    title: '邀请中...'
+		});
+		var that = this;
+		var addUsers = [];
+		users.forEach((item, index) => {
+			let addUser = {
+					group_id: group._id,
+					user_id:item._id
+			};
+			addUsers.push(addUser)
+		})
+		
+		uniCloud.callFunction({
+			name: 'user',
+			data: {
+				$url: "addChatGroupUsers",
+				token: this.user_token,
+				data: addUsers
+			},
+		}).then((res) => {
+			
+			users.forEach((item, index) => {
+				 
+				let addUser = {
+						group_id: group._id,
+						user_id:item._id
+				};
+				
+				// let message = that.formatSendData({
+				// 	type: 'say',
+				// 	data: "",
+				// 	to_id: group._id, // 接收人/群 id
+				// 	to_name: group.title, // 接收人/群 名称
+				// 	to_avatar: '', // 接收人/群 头像
+				// 	chat_type: 'group', // 接收类型
+				// 	msg_type: 'invitation'
+				// }) 
+				// that.send(message);
+				
+				let joinGroup = {
+					type:'joinGroup',
+					uid:item._id,
+					groupId:group._id
+				};
+				uni.sendSocketMessage({
+					data: JSON.stringify(joinGroup)
+				})
+				 
+ 
+			})
+			uni.hideLoading();
+			uni.showToast({
+				title:"邀请成功",
+				duration:2500
+			})
+		
+		}).catch((err) => {
+			console.log(err);
+		});
+		
+		
 	}
 	async checkToken(){
 		var that = this;

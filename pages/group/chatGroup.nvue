@@ -99,6 +99,7 @@
 				page: 1,
 				focus: false,
 				refreshing: false,
+				ready:false,
 			}
 		},
 		destroyed() {
@@ -118,23 +119,35 @@
 			})
 		},
 		onShow() {
+			var that = this;
 			this.onKeyboardHeight();
 			uni.$on('onMessage', this.onMessage)
 			let getSystemInfo = getApp().globalData.systemInfo;
 			this.safeBottom = getSystemInfo.safeAreaInsets.bottom;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.webSocket.readChatItem(this.sessionId);
+			if(this.ready){
+				let msgList = that.webSocket.getChatDetail(false, that.sessionId,1);
+				if (!msgList) {
+					that.msgList = [];
+				} else {
+					that.msgList = msgList;
+				}
+				that.scrollBottom();
+			}
+			this.$nextTick(function(){
+				that.getSession();
+			})
 		},
 		onReady() {
-			let msgList = this.webSocket.getChatDetail(false, this.sessionId);
-			this.getSession();
+			let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
 			if (!msgList) {
 				this.msgList = [];
 			} else {
 				this.msgList = msgList;
 			}
 			this.scrollBottom();
-			this.defaultShowEmoji = true;
+			this.ready = true;
 		},
 		onNavigationBarButtonTap(e) {
 			console.log(e)
@@ -198,12 +211,16 @@
 
 			},
 			onMessage: function(message) {
-				console.log('[群聊页面] 接收到聊天信息', message);
+				//console.log('[群聊页面] 接收到聊天信息', message);
 				if ((message.from_id === this.session.id && message.chat_type === 'user') || (message.chat_type === 'group' &&
 						message.to_id === this.session.id)) {
 					if (message.isremove !== 1) {
-						this.msgList.push(message)
-						this.scrollBottom();
+						let index = this.msgList.findIndex(item => item._id === message._id)
+						if (index === -1) {
+							this.msgList.push(message)
+							this.scrollBottom();
+						}
+						 
 					}
 				}
 			},
@@ -270,7 +287,7 @@
 				setTimeout(() => {
 					let page = that.page + 1;
 
-					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page, 10);
+					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page);
 					let oldMsgList = that.msgList;
 					if (msgList.length) {
 						that.page = page;
@@ -327,12 +344,10 @@
 						if (res.result.data.length) {
 							this.session.id = res.result.data[0]._id;
 							this.session.name = res.result.data[0].title;
-							this.session.avatar = '';
 							this.session.chat_type = 'group';
 							this.session.user_id = res.result.data[0].admin_id;
-							this.session.users = res.result.data[0].users
-							this.session.avatarList = res.result.data[0].avatarList
 							this.navBarTitle = res.result.data[0].title;
+							this.webSocket.createChatObject(this.session);
 						} else {
 							uni.showToast({
 								title: '该群组不存在',
@@ -349,9 +364,10 @@
 					})
 				} else {
 					this.session = sessionList[index];
+					this.webSocket.createChatObject(this.session);
 					
 				}
-				this.webSocket.createChatObject(this.session);
+				 
 				this.updateSession();
 			},
 			async updateSession(){
@@ -743,12 +759,7 @@
 						to_name: this.session.name, // 接收人/群 名称
 						to_avatar: '', // 接收人/群 头像
 						chat_type: 'group', // 接收类型
-						msg_type: 'text',
-						group: {
-							user_id: this.session.admin_id,
-							users: this.session.users,
-							avatarList: this.session.avatarList
-						}
+						msg_type: 'text'
 					})
 					this.webSocket.send(message);
 					message.isSend = true;
@@ -877,12 +888,7 @@
 						to_name: this.session.name, // 接收人/群 名称
 						to_avatar: '', // 接收人/群 头像
 						chat_type: this.session.chat_type, // 接收类型
-						msg_type: 'image',
-						group: {
-							user_id: this.session.admin_id,
-							users: this.session.users,
-							avatarList: this.session.avatarList
-						}
+						msg_type: 'image'
 					})
 					this.webSocket.send(message);
 					message.isSend = true;
@@ -900,12 +906,7 @@
 						to_name: this.session.name, // 接收人/群 名称
 						to_avatar: '', // 接收人/群 头像
 						chat_type: this.session.chat_type, // 接收类型
-						msg_type: 'audio',
-						group: {
-							user_id: this.session.admin_id,
-							users: this.session.users,
-							avatarList: this.session.avatarList
-						}
+						msg_type: 'audio'
 					})
 					this.webSocket.send(message);
 					message.isSend = true;
