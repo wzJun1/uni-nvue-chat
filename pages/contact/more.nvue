@@ -44,7 +44,7 @@
 
 
 				<view class="delPanel">
-					<text class="deleted-text">将好友"{{petName ? petName : nickname}}"删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
+					<text class="deleted-text">将好友{{petName ? petName : nickname}}删除，并且删除该好友的聊天记录，同时在对方的好友列表将删除你</text>
 				</view>
 				
 				<view class="delete">

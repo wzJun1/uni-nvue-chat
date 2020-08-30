@@ -19,14 +19,15 @@
 				</view>
 				<view class="uni-list-item__extra">
 					
-					<!-- <button size="mini" type="warn" style="color: #ffffff !important;background-color: #04BE02;margin-right: 5px;" v-if="applyStatus == 0">同意</button> 
+					<!--  #ifdef  APP-NVUE -->
+					<button @click="onClickApply(1,listIndex)" size="mini" type="default" v-if="applyStatus == 0" style="background-color: #ebebeb;padding-left: 12px;padding-right: 12px;padding-top: 6px;padding-bottom: 6px;border-color: #ebebeb;" ><text style="color:#04BE02;font-size: 14px;">接受</text></button>
+					<!--  #endif -->
 					
-					<button size="mini" type="warn" v-if="applyStatus == 0">拒绝</button> -->
-					  
-					 <button @click="onClickApply(1,listIndex)" size="mini" type="default" v-if="applyStatus == 0" style="background-color: #ebebeb;padding-left: 12px;padding-right: 12px;padding-top: 6px;padding-bottom: 6px;border-color: #ebebeb;" ><text style="color:#04BE02;font-size: 14px;">接受</text></button>
-					       
-					<!-- <button @click="onClickApply(2,userId)" size="mini" type="warn" v-if="applyStatus == 0">拒绝</button>
-					 -->
+					<!--  #ifndef  APP-NVUE -->
+					<button class="wxappButton" @click="onClickApply(1,listIndex)" size="mini" type="default" v-if="applyStatus == 0" style="background-color: #ebebeb;padding-left: 12px;padding-right: 12px;border-color: #ebebeb;" ><text style="color:#04BE02;font-size: 14px;">接受</text></button>
+					<!--  #endif -->
+					
+			 
 					<text v-if="applyStatus == 1" class="uni-list-item__extra-text">已同意</text>
 					<text v-if="applyStatus == 2" class="uni-list-item__extra-text">已拒绝</text>
 					 
@@ -320,5 +321,11 @@
 	.uni-list-item__extra-text {
 		color: $uni-text-color-grey;
 		font-size: $uni-font-size-sm;
+	}
+	
+	.wxappButton::after{
+		/*  #ifndef  APP-PLUS  */
+		border: 0px solid rgba(0,0,0,.2) !important;
+		/*  #endif  */		
 	}
 </style>

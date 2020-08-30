@@ -3,7 +3,7 @@
 		<view class="uni-common-mt" v-if="type != 'password'">
 			<view class="uni-form-item uni-column">
 				<view class="uni-input-wrapper">
-					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" :focus="focus" placeholder="" v-model="formdata[type]" />
+					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" :focus="focus" v-model="formdata[type]" />
 				</view>
 			</view>
 		</view>
@@ -46,7 +46,8 @@
 				passwordConfirmation: '',
 				newPassword: '',
 				oldPassword: '',
-				focus:false
+				focus:false,
+				value:''
 			}
 		},
 		computed: {
@@ -60,6 +61,7 @@
 				option.data = "";
 			}
 			this.formdata[this.type] = option.data ? option.data : '';
+			this.value = this.formdata[this.type]
 			this.setNavigationTitie(option.title);
 			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
 		},

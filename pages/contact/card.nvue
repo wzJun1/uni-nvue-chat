@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title=""
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true"
 		 background-color="white" :rightIconBool="true" rightIcon="more-filled" @clickRight="more"></uni-nav-bar>
 
 		<view class="header">
@@ -101,6 +101,8 @@
 		},
 		methods: {
 			setNickName: function(){
+				
+				if(!this.isFriend){return;}
 				uni.navigateTo({
 					url: './form?id='+this.adduser._id+'&petName='+(this.petName != this.adduser.nickname ? this.petName : "")
 				})

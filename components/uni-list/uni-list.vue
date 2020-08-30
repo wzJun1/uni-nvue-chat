@@ -1,13 +1,13 @@
 <template>
 	<!-- #ifndef APP-NVUE -->
-	<view class="uni-list">
+	<view class="uni-list" :style="{'background-color':background,'border-radius':borderRadius+'rpx'}">
 		<view v-if="border" class="uni-list--border-top"></view>
 			<slot />
 		<view v-if="border" class="uni-list--border-bottom"></view>
 	</view>
 	<!-- #endif -->
 	<!-- #ifdef APP-NVUE -->
-	<list class="uni-list" :class="{'uni-list--border':border}" :enableBackToTop="enableBackToTop" loadmoreoffset="15">
+	<list class="uni-list" :style="{'background-color':background,'border-radius':borderRadius+'rpx'}" :class="{'uni-list--border':border}" :enableBackToTop="enableBackToTop" loadmoreoffset="15">
 		<slot />
 	</list>
 	<!-- #endif -->
@@ -39,7 +39,15 @@
 			border: {
 				type: Boolean,
 				default: true
-			}
+			},
+			background :{
+				type: String,
+				default: "#ffffff"
+			},
+			borderRadius :{
+				type: String,
+				default: "0"
+			},
 		},
 		provide() {
 			return {
@@ -63,7 +71,8 @@
 		/* #ifndef APP-NVUE */
 		display: flex;
 		/* #endif */
-		background-color: $uni-bg-color;
+		
+		// background-color: $uni-bg-color;
 		position: relative;
 		flex-direction: column;
 		// border-bottom-color: $uni-border-color;

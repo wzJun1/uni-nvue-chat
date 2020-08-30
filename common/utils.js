@@ -72,10 +72,12 @@ class utils {
 	
 	//获取缓存头像
 	getImageCache(url) {
+		return url;
 		let key = `images_cache`;
 		let list = uni.getStorageSync(key);
 		list = list ? list : [];
 		let index = list.findIndex(item => item.url === url)
+		 
 		if (index !== -1) {
 			return list[index]['cache'];
 		} else {
@@ -99,6 +101,8 @@ class utils {
 			return cache.cache;
 		}
 	}
+	
+	 
 	
 	//好友列表按首字母排序
 	sortFriendList(data) {

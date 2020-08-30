@@ -1,5 +1,6 @@
+// #ifdef APP-NVUE
 const animation = uni.requireNativePlugin('animation');
-
+// #endif
 export default {
 	data() {
 		return {
@@ -12,6 +13,7 @@ export default {
 		}
 	},
 	created() {
+		// #ifdef APP-NVUE
 		this.systemInfo = getApp().globalData.systemInfo;
 		if(this.systemInfo.screenWidth == 768){
 			this.searchTranslateX = parseInt(this.systemInfo.screenWidth / 2 - 88);
@@ -25,18 +27,22 @@ export default {
 			this.searchTranslateX = parseInt(this.systemInfo.screenWidth / 2 - 50) * 2;
 			  
 		} 
+		// #endif
  
 	}, 
 	mounted() {
+		// #ifdef APP-NVUE
 		var query = uni.createSelectorQuery()
 		query.select('#pagehead').boundingClientRect(data => {
 			this.pageheadHeight = data.height;
 		}).exec(); 
+		// #endif
 	},
 	beforeDestroy() {
 	},
 	methods: {
 		searchInput(originalFriendList,groupList,e) {
+			 
 			var friends = originalFriendList;
 			var groups = groupList;
 			var friendResult = [];
@@ -59,12 +65,13 @@ export default {
 			}
 			this.friendSearchResult = friendResult;
 			this.groupSearchResult = groupResult;
+		 
 		},
-		searchBarClick: function() {
+		searchBarClick() {
 			 
+			// #ifdef APP-NVUE
 			var that = this;
 			this.showSearch = true;
-			
 			setTimeout(function(){
 				uni.hideTabBar();
 				let navbar = that.getEl(that.$refs.navbar);
@@ -85,6 +92,7 @@ export default {
 				}, function() {
 				
 				})
+				
 				animation.transition(searchbar, {
 					styles: {
 						transform: 'translateY(-'+searchbar_move+')',
@@ -132,9 +140,15 @@ export default {
 				})
 				
 			},100)
+			// #endif
+			
+			// #ifndef APP-NVUE
+			this.showSearch = true;
+			uni.hideTabBar();
+			// #endif
 		},
-		searchBarCancel: function() {
-
+		searchBarCancel() {
+			// #ifdef APP-NVUE
 			var that = this;
 			setTimeout(function(){
 				
@@ -142,6 +156,7 @@ export default {
 				let searchbar = that.getEl(that.$refs.searchbar);
 				let pagehead = that.getEl(that.$refs.pagehead);
 				let searchpanel = that.getEl(that.$refs.searchpanel);
+				
 				animation.transition(navbar, {
 					styles: {
 						transform: 'translateY(0)',
@@ -190,22 +205,27 @@ export default {
 						needLayout: false,
 						delay: 0 //ms
 					}, function() { 
-				
+						 
 					})
 				}
 			
 			},100)
+			// #endif
 			
-			
-		 
+			// #ifndef APP-NVUE
+			this.showSearch = false;
+			uni.showTabBar();
+			// #endif
 		},
 		getEl(el) {
+			// #ifdef APP-NVUE
 			if (typeof el === 'string' || typeof el === 'number') return el;
 			if (WXEnvironment) {
 				return el.ref;
 			} else {
 				return el instanceof HTMLElement ? el : el.$el;
 			}
+			// #endif
 		},
 	}
 }

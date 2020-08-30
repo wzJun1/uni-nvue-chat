@@ -1,7 +1,7 @@
 <template>
 	<view class="nvue-page-root">
 
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" title="添加朋友"
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :rightIconBool="true" :fixed="true" :status-bar="true" title="添加朋友"
 		 background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
 
 		<view class="uni-common-mt">

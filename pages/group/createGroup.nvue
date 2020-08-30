@@ -1,9 +1,11 @@
 <template>
 	<view>
 		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" rightText="开始" :rightIconBool="true" @clickRight="create" title="发起群聊"
-		 background-color="#ebebeb" titleStyle="font-size: 17px; font-weight: 500;"></uni-nav-bar>
-		<uni-create-indexed-list :style="top" :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
-	</view>
+		 background-color="#ebebeb" :moveRightBtn="true" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<view :style="{'margin-top':marginTop+'px','height':height+'px','position':'absolute !important','width':'100%'}">
+			<uni-create-indexed-list :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
+		</view>
+	</view> 
 </template>
 
 <script>
@@ -15,7 +17,10 @@
 		data() {
 			return {
 				selected:[],
-				token:''
+				token:'',
+				marginTop:0,
+				statusBarHeight:getApp().globalData.systemInfo.statusBarHeight,
+				height:getApp().globalData.systemInfo.screenHeight - getApp().globalData.systemInfo.statusBarHeight - 44
 			}
 		},
 		computed: {
@@ -32,6 +37,9 @@
 		},
 		onShow() {
 			this.token = (new Date()).getTime();
+			// #ifndef  APP-NVUE
+			this.marginTop = getApp().globalData.systemInfo.statusBarHeight + 44;
+			// #endif
 		},
 		methods: {
 			bindClick:function(e){
@@ -40,6 +48,9 @@
 				}
 			},
 			create:function(){
+			 
+				console.log(this.selected)
+				return;
 				var selected = [];
 				var title = '';
 				if(this.selected.length == 1){
@@ -64,7 +75,7 @@
 					avatar:this.user.avatar,
 				}
 				selected.push(me);
-				title = this.selected[0].name + "，" + this.selected[1].name + "等人"
+				title = this.selected[0].name.nickname + "，" + this.selected[1].name.nickname + "等人"
 				if(selected.length > 200){
 					uni.showModal({
 					    title: '提示',
@@ -79,8 +90,8 @@
 					title:title
 				};
 				this.webSocket.addChatGroup(group,selected);
-				 
-			}
+			},
+			 
 		}
 	}
 </script>

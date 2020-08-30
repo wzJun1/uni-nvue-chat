@@ -1,15 +1,24 @@
 <template>
 	<view class="main">
 
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" @clickRight="queryUsers"
-		 right-text="添加朋友" title="新的朋友" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+
+		<!--  #ifdef  APP-NVUE -->
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
+		 :status-bar="true" @clickRight="queryUsers" right-text="添加朋友" title="新的朋友" :rightIconBool="true" background-color="#ebebeb"
+		 titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<!--  #endif -->
+
+		<!--  #ifndef  APP-NVUE -->
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
+		 :status-bar="true" title="新的朋友" :rightIconBool="true" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+		<!--  #endif -->
 		<uni-list>
 			<!-- #ifdef APP-NVUE -->
 			<cell>
 				<!-- #endif -->
 				<view class="search">
 					<uni-search-bar placeholder="账号/手机号" @confirm="search" @input="input" style=" background-color: #ebebeb; " bgColor="white"></uni-search-bar>
-					<button type="default" @click="clearApplyList">清空申请列表</button>
+					<button type="default" class="clearList" @click="clearApplyList">清空申请列表</button>
 				</view>
 				<!-- #ifdef APP-NVUE -->
 			</cell>
@@ -62,12 +71,12 @@
 				});
 			},
 			clickApply: function(e) {
-				
+
 				var fromUser = this.friendApply[e.listIndex];
 				uni.showLoading({
 					title: '加载中'
 				});
-				
+
 				uniCloud.callFunction({
 					name: 'user',
 					data: {
@@ -265,5 +274,9 @@
 		height: 16rpx;
 		width: 750rpx;
 		background-color: #ebebeb;
+	}
+
+	.clearList {
+		width: 750rpx;
 	}
 </style>

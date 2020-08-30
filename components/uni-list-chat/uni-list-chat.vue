@@ -363,8 +363,9 @@
 	}
 
 	.uni-list-chat__header-image {
-		margin: 2rpx;
+		
 		/* #ifdef APP-NVUE */
+		margin: 2rpx;
 		width: 100rpx;
 		height: 100rpx;
 		/* #endif */
@@ -409,8 +410,9 @@
 		flex-direction: row;
 		flex: 1;
 		overflow: hidden;
+		/* #ifdef APP-NVUE */
 		padding: 6rpx 0;
-
+		/* #endif */
 	}
 
 

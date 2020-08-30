@@ -1,11 +1,11 @@
 <template>
 	<view class="nvue-page-root">
 		
-		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true" title="设置备注昵称" :rightButton="true" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
+		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true" title="设置备注昵称" :rightButton="true" :rightButtonDisable="rightButtonDisable" :moveRightBtn="isWxapp" @clickRight="submit"></uni-nav-bar>
 		<view class="uni-common-mt">
 			<view class="uni-form-item uni-column">
 				<view class="uni-input-wrapper">
-					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus" placeholder="" v-model="petName" />
+					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus" v-model="petName" />
 				</view>
 			</view>
 		</view>
@@ -23,7 +23,8 @@
 				setPetName:'',
 				focus:false,
 				rightButtonDisable:true,
-				friend_id:''
+				friend_id:'',
+				isWxapp:false,
 			}
 		},
 		computed: {
@@ -33,6 +34,9 @@
 			})
 		},
 		onLoad(option) {
+			// #ifndef  APP-NVUE
+			this.isWxapp = true;
+			// #endif
 			this.setPetName = option.petName;
 			this.petName = option.petName;
 			this.friend_id = option.id;

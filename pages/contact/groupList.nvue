@@ -3,7 +3,6 @@
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true" :status-bar="true" @clickRight="addFriend" right-text=""
 		 title="群聊" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
 		<uni-list :border="false">
-		 
 			<!-- #ifdef APP-NVUE -->
 			<cell>
 				<!-- #endif -->
@@ -13,15 +12,13 @@
 				<!-- #ifdef APP-NVUE -->
 			</cell>
 			<!-- #endif -->
-	   
 			<cell v-for="(item,index) in groupList">
 				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
-				 badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
+				 badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
 					 
 				</uni-list-chat>
 			</cell>
 			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
-		
 			</cell>
 		</uni-list>
 	</view>
@@ -51,11 +48,11 @@
 			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom * 2; 
 		},
 		methods: {
-			back: function(){
-				uni.navigateBack({
-					delta:1
+			chatGroupWindow: function(sessionId, name) {
+				uni.navigateTo({
+					url: '/pages/group/chatGroup?id=' + sessionId,
 				})
-			}
+			},
 		}
 	}
 </script>

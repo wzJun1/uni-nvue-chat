@@ -1,24 +1,29 @@
 <template>
 	<view>
-
+ 
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
-		 :status-bar="true" :title="navBarTitle" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled"
+		 :status-bar="true" :title="navBarTitle" :moveRightBtn="isWxapp" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled"
 		 @clickRight="more"></uni-nav-bar>
 
-		<scroll-view ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
+		<scroll-view :animation="scrollAnimationData" ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
 		 :scroll-into-view="scrollIntoID" :scroll-with-animation="false">
+
+			<!--  #ifdef  APP-NVUE -->
 			<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
 				<text class="indicator-text">加载中 ...</text>
 				<loading-indicator class="indicator"></loading-indicator>
 			</refresh>
+			<!--  #endif -->
+
 			<view class="" v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index">
 				<uni-chat-detail :session="session" :list="msgList" :item="item" :index="index"></uni-chat-detail>
 			</view>
 			<text v-if="!webSocket.isOnline" class="system-msg">服务器已断开,尝试重新连接...</text>
 		</scroll-view>
-		
-		<view ref="foot" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
-			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu">
+
+		<view ref="foot" :animation="footAnimationData" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
+
+			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu" :animation="menuAnimationData">
 				<image class="tb-nv" :src="voice?'../../static/images/keyboard.png':'../../static/images/voice.png'" mode="aspectFit"
 				 @click="switchVoice" style="margin-left: 20rpx;margin-right: 20rpx;"></image>
 
@@ -48,8 +53,10 @@
 	</view>
 </template>
 <script>
+	// #ifdef APP-NVUE
 	const BindingX = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
+	// #endif
 
 	import {
 		mapState
@@ -63,6 +70,9 @@
 				toUid: 0,
 				sessionId: '',
 				session: [],
+				footAnimationData: {},
+				scrollAnimationData: {},
+				menuAnimationData: {},
 				nickname: '',
 				petName: '',
 				chatSrcollBottom: 0,
@@ -97,22 +107,22 @@
 				page: 1,
 				focus: false,
 				refreshing: false,
-				friendInfo:[],
-				ready:false,
+				friendInfo: [],
+				ready: false,
+				isWxapp:false,
 			}
 		},
 		destroyed() {
 			this.webSocket.destoryChatObject();
 		},
 		onLoad(option) {
-			this.safeBottom = this.systemInfo.safeAreaInsets.bottom;
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.sessionId = option.id;
 			this.nickname = option.name;
 			this.petName = this.$store.state.user.utils.getNickName(this.sessionId, this.nickname);
 			this.navBarTitle = this.petName;
 			this.chatDetailBoxMaxWidth = this.systemInfo.screenWidth - 110;
-			
 			this.recorderManager.onStart((e) => {
 				this.recordBegin(e);
 			})
@@ -121,22 +131,22 @@
 			})
 		},
 		onShow() {
+			// #ifndef  APP-NVUE
+			this.isWxapp = true;
+			// #endif
 			this.onKeyboardHeight();
 			uni.$on('onMessage', this.onMessage)
-			let getSystemInfo = getApp().globalData.systemInfo;
-			this.safeBottom = getSystemInfo.safeAreaInsets.bottom;
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
+			console.log(this.safeBottom)
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.petName = this.$store.state.user.utils.getNickName(this.sessionId, this.nickname);
 			this.navBarTitle = this.petName;
 			this.webSocket.readChatItem(this.sessionId);
 			this.friendInfo = this.$store.state.user.utils.getFriendInfoById(this.sessionId);
-			
-			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
-			
-			
+			this.srcollHeight = this.systemInfo.screenHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
 			var that = this;
-			if(this.ready){
-				let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
+			if (this.ready) {
+				let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
 				if (!msgList) {
 					this.msgList = [];
 				} else {
@@ -145,22 +155,19 @@
 				this.scrollBottom();
 				this.defaultShowEmoji = true;
 			}
-			this.$nextTick(function(){
+			this.$nextTick(function() {
 				that.getSession();
 			})
 		},
 		onReady() {
-			 let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
-			 if (!msgList) {
-			 	this.msgList = [];
-			 } else {
-			 	this.msgList = msgList;
-			 }
-			 this.scrollBottom();
-			 this.ready = true;
-		},
-		onNavigationBarButtonTap(e) {
-			console.log(e)
+			let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
+			if (!msgList) {
+				this.msgList = [];
+			} else {
+				this.msgList = msgList;
+			}
+			this.scrollBottom();
+			this.ready = true;
 		},
 		computed: {
 			...mapState({
@@ -252,32 +259,57 @@
 				})
 			},
 			onrefresh: function(event) {
-				 
+
 				this.refreshing = true
 				var that = this;
-				 
+
 				setTimeout(() => {
 					let page = that.page + 1;
-					
+
 					let msgList = that.webSocket.getChatDetail(false, that.sessionId, page);
 					let oldMsgList = that.msgList;
-					if(msgList.length){
+					if (msgList.length) {
 						that.page = page;
 						that.msgList.unshift(...msgList)
-						
+
 						that.scrollIntoID = "chatId_" + msgList.length;
 					}
-				    that.refreshing = false
+					that.refreshing = false
 				}, 2000)
-				 
-				 
-			  
+
+
+
 			},
 			onpullingdown: function(event) {
-				 
+
 			},
 			translatePageTop: function(h) {
 
+				// #ifndef  APP-NVUE
+				var scrollAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+				 
+				var footAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+				if(h == 0){
+					scrollAnimation.translateY(-h).step()
+					footAnimation.translateY(-h).step()
+				}else{
+					scrollAnimation.translateY(-h + 34).step()
+					footAnimation.translateY(-h + 34).step()
+				}
+				 
+				
+				this.scrollAnimationData = scrollAnimation.export()
+				this.footAnimationData = footAnimation.export()
+				 
+				// #endif
+
+				// #ifdef  APP-NVUE
 				let foot = this.getEl(this.$refs.foot);
 				let scrollview = this.getEl(this.$refs.scrollview);
 				h = h - this.safeBottom;
@@ -303,6 +335,10 @@
 				}, function() {
 
 				})
+				// #endif
+
+
+
 			},
 			more: function() {
 				uni.hideKeyboard();
@@ -369,10 +405,10 @@
 					this.session = sessionList[index];
 					this.webSocket.createChatObject(this.session);
 				}
-			 
+
 				this.updateSession();
 			},
-			async updateSession(){
+			async updateSession() {
 				let sessionList = this.sessionList;
 				sessionList = sessionList ? sessionList : [];
 				let index = sessionList.findIndex(item => item.id === this.sessionId)
@@ -388,18 +424,17 @@
 							}
 						},
 					}).then((res) => {
-						
+
 						let session = sessionList[index];
 						session.name = res.result.data[0].nickname;
 						session.avatar = res.result.data[0].avatar;
 						let where = {
-							id:that.sessionId,
-							chat_type:'user'
+							id: that.sessionId,
+							chat_type: 'user'
 						};
-						that.webSocket.updateChatItem(where,session)
-						
-					}).catch((err) => {
-					})
+						that.webSocket.updateChatItem(where, session)
+
+					}).catch((err) => {})
 				}
 			},
 			inputScroll: function() {
@@ -541,6 +576,25 @@
 				}
 			},
 			collapse: function() {
+				
+				
+				// #ifndef  APP-NVUE
+				let move = uni.upx2px(180);
+				var menuAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+				if(!this.showMore){
+					menuAnimation.translateX(-move).step()
+				}else{
+					menuAnimation.translateX(0).step()
+				}
+ 
+				this.menuAnimationData = menuAnimation.export()
+				 
+				// #endif
+				
+				// #ifdef  APP-NVUE
 				let moreMenu = this.getEl(this.$refs.moreMenu);
 				let move = uni.upx2px(180);
 				if (!this.showMore) {
@@ -568,6 +622,8 @@
 
 					})
 				}
+				// #endif
+				
 				this.showMore = !this.showMore
 				//this.inputFocus()
 			},
@@ -617,7 +673,26 @@
 			},
 			inputFocus: function() {
 				var that = this;
-				// this.focus = true;
+				
+				// #ifndef  APP-NVUE
+				 
+				
+				if (this.showMore) {
+					let move = uni.upx2px(180);
+					var menuAnimation = uni.createAnimation({
+						duration: 220,
+						timingFunction: 'ease',
+					})
+					menuAnimation.translateX(0).step()
+					 
+					this.menuAnimationData = menuAnimation.export()
+					this.showMore = false;
+				}
+				 
+				// #endif
+				
+				
+				// #ifdef  APP-NVUE
 				if (this.showEmoji) {
 					let main_chatDetail = this.getEl(this.$refs.chatDetail);
 					let main_foot = this.getEl(this.$refs.foot);
@@ -641,7 +716,9 @@
 					})
 					this.showMore = false;
 				}
+				// #endif
 			},
+			 
 			hideEmojiPanel: function() {
 				var that = this;
 				let duration = 400;
@@ -922,7 +999,6 @@
 	.scroll-view {
 		width: 750rpx;
 		background-color: #e3e3e3;
-
 	}
 
 	.record {
@@ -1077,6 +1153,10 @@
 		background-color: #f3f3f3;
 		border-radius: 10rpx;
 		z-index: 9999999;
+		/* #ifndef APP-NVUE */
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+		/* #endif */
 	}
 
 	.safeArea {

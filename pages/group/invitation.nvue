@@ -1,8 +1,10 @@
 <template>
 	<view>
-		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" :rightButton="true" :rightButtonDisable="false" @clickRight="submit" title="邀请好友"
+		<uni-nav-bar @clickLeft="$store.state.user.utils.back()" :leftIconBool="true" left-icon="back" :fixed="true" :status-bar="true" :rightButton="true" :rightButtonDisable="false" :moveRightBtn="true" @clickRight="submit" title="邀请好友"
 		 background-color="#ebebeb" titleStyle="font-size: 17px; font-weight: 500;"></uni-nav-bar>
-		<uni-create-indexed-list :style="top" :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
+		<view :style="{'margin-top':marginTop+'px','height':height+'px','position':'absolute !important','width':'100%'}">
+			<uni-create-indexed-list :options="friendListLetterSort" :showSelect="true" @click="bindClick"></uni-create-indexed-list>
+		</view>
 	</view>
 </template>
 
@@ -17,7 +19,10 @@
 				selected:[],
 				token:'',
 				groupId:'',
-				groupInfo:[]
+				groupInfo:[],
+				marginTop:0,
+				statusBarHeight:getApp().globalData.systemInfo.statusBarHeight,
+				height:getApp().globalData.systemInfo.screenHeight - getApp().globalData.systemInfo.statusBarHeight - 44
 			}
 		},
 		computed: {
@@ -33,8 +38,10 @@
 			}
 		},
 		onLoad(option) {
+			// #ifndef  APP-NVUE
+			this.marginTop = getApp().globalData.systemInfo.statusBarHeight + 44;
+			// #endif
 			this.groupId = option.id;
-			
 			this.groupInfo = [];
 			if(this.$store.state.user.groupList.length){
 				this.$store.state.user.groupList.forEach((item)=>{
@@ -43,9 +50,6 @@
 					}
 				})
 			}
-			
-			  console.log(this.friendListLetterSort.length)
-			  console.log(this.friendListLetterSort.length)
 			if(this.friendListLetterSort.length && this.groupInfo){
 				 
 				this.friendListLetterSort.forEach((item,findex)=>{
@@ -96,14 +100,6 @@
 				this.selected.forEach((item,index)=>{
 					selected.push(item.name)
 				})
-				// var me = {
-				// 	_id:this.user._id,
-				// 	username:this.user.username,
-				// 	nickname:this.user.nickname,
-				// 	avatar:this.user.avatar,
-				// }
-				// selected.push(me);
-				// title = this.selected[0].name + "，" + this.selected[1].name + "等人"
 				if((selected.length + this.groupInfo.group_users.length) > 200){
 					uni.showModal({
 					    title: '提示',
@@ -111,14 +107,6 @@
 					});
 					return;
 				}
-				// var group = {
-				// 	admin_id:this.user._id,
-				// 	admin:this.user,
-				// 	create_time:this.token,
-				// 	title:title
-				// };
-				// this.webSocket.addChatGroup(group,users);
-				console.log(selected)
 				this.webSocket.updateGroupUsers(this.groupInfo,selected);
 			}
 		}

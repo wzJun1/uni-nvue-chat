@@ -11,6 +11,7 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
+				"navigationStyle":"custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
@@ -37,16 +38,17 @@
 				"navigationBarBackgroundColor": "#29c160",
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "",
-				"navigationBarTextStyle": "white",
+				
+				"navigationBarTextStyle": "#FFFFFF",
 				"disableScroll": true
 			}
 		},
 		{
 			"path": "pages/contact/card",
 			"style": {
-				"navigationBarBackgroundColor": "white",
+				"navigationBarBackgroundColor": "#FFFFFF",
 				"backgroundColor": "#ededed",
-
+				"navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
@@ -60,6 +62,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"backgroundColor": "#ededed",
 				"disableScroll": true,
+				"navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
@@ -73,6 +76,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "资料设置",
 				"navigationBarTextStyle": "black",
+				"navigationStyle":"custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false
@@ -87,6 +91,7 @@
 				"navigationBarTitleText": "资料设置",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
+				"navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false,
 					"animationType": "slide-in-bottom",
@@ -101,6 +106,7 @@
 				"navigationBarBackgroundColor": "#e3e3e3",
 				"backgroundColor": "#e3e3e3",
 				"disableScroll": true,
+				"navigationStyle":"custom",
 				"app-plus": {
 					"animationType": "pop-in",
 					"animationDuration": 300,
@@ -116,6 +122,7 @@
 				"navigationBarBackgroundColor": "#e3e3e3",
 				"backgroundColor": "#e3e3e3",
 				"disableScroll": true,
+				"navigationStyle":"custom",
 				"app-plus": {
 					"animationType": "pop-in",
 					"animationDuration": 300,
@@ -131,7 +138,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "群信息",
 				"navigationBarTextStyle": "black",
-				 
+				 "navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -144,7 +151,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "群信息",
 				"navigationBarTextStyle": "black",
-				  
+				"navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false,
 					"animationType": "slide-in-bottom",
@@ -159,6 +166,7 @@
 				"navigationBarBackgroundColor": "#fffffe",
 				"navigationBarTitleText": "账号注册",
 				"backgroundColor": "#fffffe",
+				
 				"app-plus": {
 					"bounce": "none"
 				}
@@ -170,6 +178,7 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
+				"navigationStyle":"custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
@@ -183,6 +192,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"backgroundColor": "#ebebeb",
+				"navigationStyle":"custom",
 				"backgroundColorTop": "#ebebeb",
 				"disableScroll": true,
 				"app-plus": {
@@ -197,6 +207,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"disableScroll": true,
+				"navigationStyle":"custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none",
@@ -211,6 +222,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"backgroundColor": "#ebebeb",
+				"navigationStyle":"custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
@@ -225,6 +237,7 @@
 				"navigationBarTitleText": "个人信息",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
+				 
 				"app-plus": {
 					"titleNView": {
 						"titleSize": "34rpx"
@@ -239,6 +252,7 @@
 				"navigationBarTitleText": "",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
+				 
 				"app-plus": {
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
@@ -250,6 +264,7 @@
 
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
+				"navigationStyle":"custom",
 				"navigationBarTitleText": ""
 				
 			} 
@@ -261,6 +276,7 @@
             	"navigationBarBackgroundColor": "#ededed",
             	"navigationBarTitleText": "",
             	"disableScroll": true,
+				"navigationStyle":"custom",
             	"app-plus": {
             		"titleNView": false,
             		"bounce": "none",
@@ -273,7 +289,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
-		"navigationBarBackgroundColor": "white"
+		"navigationBarBackgroundColor": "#FFFFFF"
 	},
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)

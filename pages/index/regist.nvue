@@ -102,7 +102,17 @@
 						}).then(res => {
 							uni.hideLoading()
 							console.log(res);
-							
+							uni.showModal({
+							    title: '提示',
+							    content: res,
+							    success: function (res) {
+							        if (res.confirm) {
+							            console.log('用户点击确定');
+							        } else if (res.cancel) {
+							            console.log('用户点击取消');
+							        }
+							    }
+							});
 							if(res.fileID.indexOf("cloud://") != -1){
 								uniCloud.getTempFileURL({
 								    fileList: [res.fileID],
@@ -126,12 +136,23 @@
 						}).catch((err) => {
 							uni.hideLoading()
 							console.log(err);
+							uni.showModal({
+							    title: '提示',
+							    content: err,
+							    success: function (res) {
+							        if (res.confirm) {
+							            console.log('用户点击确定');
+							        } else if (res.cancel) {
+							            console.log('用户点击取消');
+							        }
+							    }
+							});
 							if (err.message !== 'Fail_Cancel') {
-								uni.showToast({
-									title: "头像上传失败",
-									icon: 'none',
-									duration: 2000
-								})
+								// uni.showToast({
+								// 	title: "头像上传失败",
+								// 	icon: 'none',
+								// 	duration: 2000
+								// })
 							}
 						})
 					}

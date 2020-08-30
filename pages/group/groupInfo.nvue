@@ -64,7 +64,7 @@
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup" :style="'padding-bottom:'+safeBottom+'rpx'">
 				<view class="delPanel">
-					<text class="deleted-text">将退出群组"{{groupInfo.title}}"，并且删除聊天记录</text>
+					<text class="deleted-text">将退出群组{{groupInfo.title}}，并且删除聊天记录</text>
 				</view>
 				<view class="delete">
 					<view class="button" @click="outGroup()">

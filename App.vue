@@ -8,7 +8,15 @@
 		},
 		onShow: function() {
 			console.log('App Show')
+			
+			// #ifdef APP-PLUS
 			getApp().globalData.systemInfo = uni.getSystemInfoSync();
+			// #endif
+			
+			// #ifndef APP-PLUS
+			this.$scope.globalData.systemInfo = uni.getSystemInfoSync();
+			// #endif
+			 
 			this.$store.dispatch('initLogin')
 		},
 		onHide: function() {
@@ -35,4 +43,10 @@
 		width: 750rpx;
 		background-color: #ededed;
 	}
+	/*  #ifndef  APP-NVUE  */
+		page{
+			background-color: #ededed;
+		}
+	/*  #endif  */
+	 
 </style>

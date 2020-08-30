@@ -5,8 +5,7 @@
 			<text class="chat-time" v-if="showTime(item.create_time,index)">{{showTime(item.create_time,index)}}</text>
 			<view class="padding-top align-center" :class="item.isSend ? 'nv-rowever padding-right' : 'padding-left nv-row'">
 				<image v-if="item.isSend" class="chat-img" :src="$store.state.user.utils.getImageCache(user.avatar)" mode="aspectFill"></image>
-				<image v-else class="chat-img" :src="getFromAvatar(item)" @click="webSocket.showCard(item.from_id)"
-				 mode="aspectFill"></image>
+				<image v-else class="chat-img" :src="getFromAvatar(item)" @click="showCard(item.from_id)" mode="aspectFill"></image>
 
 				<view style="flex-direction: row;justify-content: center;align-items: center;">
 					<view class="nv-chat" style="flex-direction: column;flex-wrap:wrap;">
@@ -17,28 +16,36 @@
 						</view>
 						<view v-else-if="item.msg_type == 'audio'" :class="item.isSend?'margin-right white-bg nv-rowever':'margin-left gr-bg nv-row'"
 						 class="padding-chat" :style="'border-radius: 10rpx;align-items: center;'" @click="playAudio(item.data,index)">
-							<view class="" :class="item.isSend?'nv-rowever':'nv-row'" :style="voiceBoxLength(item.data.duration)">
-								<image :src="voiceImage(index)" style="width: 60rpx;margin: 4rpx;height: 45rpx;">
-								</image>
-								<text v-if="item.isSend" :style="'margin-left:2px;margin-right:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
-								<text v-else :style="'margin-left:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
 
+							<!-- #ifndef APP-PLUS -->
+							<view class="" :class="item.isSend?'nv-rowever':'nv-row'" style="width:220rpx;position: relative;align-items: center;">
+								<!-- #endif -->
+
+								<!-- #ifdef APP-PLUS -->
+								<view class="" :class="item.isSend?'nv-rowever':'nv-row'" v-bind:style="voiceBoxLength(item.data.duration)">
+									<!-- #endif -->
+
+									<image :src="voiceImage(index)" style="width: 60rpx;margin: 4rpx;height: 45rpx;">
+									</image>
+									<text v-if="item.isSend" :style="'margin-left:2px;margin-right:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
+									<text v-else :style="'margin-left:20rpx;font-size: 30rpx;word-wrap: break-word;word-break: break-all;'">{{item.data.duration/1000}}''</text>
+
+								</view>
 							</view>
-						</view>
 
-						<view v-else :class="item.isSend?'margin-right white-bg nv-rowever':'margin-left gr-bg nv-row'" class="padding-chat"
-						 :style="'border-radius: 10rpx;align-items: center;'">
+							<view v-else :class="item.isSend?'margin-right white-bg nv-rowever':'margin-left gr-bg nv-row'" class="padding-chat"
+							 :style="'border-radius: 10rpx;align-items: center;'">
 
-							<text :style="'font-size: 36rpx;word-wrap: break-word;word-break: break-all;max-width:'+chatDetailBoxMaxWidth+'px'">{{item.data}}</text>
+								<text :style="'font-size: 36rpx;word-wrap: break-word;word-break: break-all;max-width:'+chatDetailBoxMaxWidth+'px'">{{item.data}}</text>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
+
+
+
 		</view>
-
-
-
-	</view>
 
 </template>
 
@@ -54,12 +61,12 @@
 				default: 'user'
 			},
 			session: {
-				type: Array,
-				default: []
+				type: Object,
+				default: {}
 			},
 			item: {
-				type: Array,
-				default: []
+				type: Object,
+				default: {}
 			},
 			index: {
 				type: Number,
@@ -83,33 +90,7 @@
 					return r
 				}
 			},
-			voiceBoxLength() {
-				return function(length) {
-					let l = length / 1000;
-					let w = 70;
-					if (parseInt(l) < 2) {
-						w = 70;
-					} else if (parseInt(l) < 3) {
-						w = 75;
-					} else if (parseInt(l) < 5) {
-						w = 85;
-					} else if (parseInt(l) < 7) {
-						w = 95;
-					} else if (parseInt(l) < 10) {
-						w = 110;
-					} else if (parseInt(l) < 15) {
-						w = 130;
-					} else if (parseInt(l) < 20) {
-						w = 150;
-					} else if (parseInt(l) < 30) {
-						w = 180;
-					} else {
-						w = 200;
-					}
-					w = w * 2;
-					return 'width:' + w + 'rpx;position: relative;align-items: center;';
-				}
-			}
+
 
 		},
 		created() {
@@ -119,26 +100,55 @@
 			return {
 				chatDetailBoxMaxWidth: 0,
 				safeBottom: 0,
-				systemInfo: getApp().globalData.systemInfo
+				systemInfo: getApp().globalData.systemInfo,
+				innerAudioContext: uni.createInnerAudioContext(),
+				playVoiceAnimationIndex: '',
+				onPlay: false,
+
 			};
 		},
 		methods: {
-			getFromAvatar: function(item){
+			getFromAvatar: function(item) {
 				let avatar = "";
-				if(this.type == 'user'){
-					// let info = this.$store.state.user.utils.getFriendInfoById(item.from_id);
+				if (this.type == 'user') {
+					 
 					avatar = this.session.avatar;
-				}else{
+				} else {
 					avatar = this.$store.state.user.utils.getImageCache(item.from_avatar)
 				}
 				return avatar;
+			},
+			voiceBoxLength: function(length) {
+				let l = length / 1000;
+				let w = 70;
+				if (parseInt(l) < 2) {
+					w = 70;
+				} else if (parseInt(l) < 3) {
+					w = 75;
+				} else if (parseInt(l) < 5) {
+					w = 85;
+				} else if (parseInt(l) < 7) {
+					w = 95;
+				} else if (parseInt(l) < 10) {
+					w = 110;
+				} else if (parseInt(l) < 15) {
+					w = 130;
+				} else if (parseInt(l) < 20) {
+					w = 150;
+				} else if (parseInt(l) < 30) {
+					w = 180;
+				} else {
+					w = 200;
+				}
+				w = w * 2;
+				return 'width:' + w + 'rpx;position: relative;align-items: center;';
 			},
 			hide: function() {
 				uni.hideKeyboard()
 			},
 			showTime: function(time, index) {
 				var last_index = index - 1;
-
+ 
 				if (last_index >= 0) {
 					var last_time = this.list[last_index]['create_time'];
 					var difference = parseInt(time.toString().slice(0, -3)) - parseInt(last_time.toString().slice(0, -3));
@@ -151,6 +161,83 @@
 				} else {
 					return this.$store.state.user.utils.formatChatTime(time)
 				}
+			},
+			playAudio: function(data, index) {
+				this.playVoiceAnimationIndex = "";
+				this.innerAudioContext.src = "";
+				try {
+					var that = this;
+					let mp3Url = data.file;
+					if (that.onPlay) {
+						that.innerAudioContext.stop();
+						that.onPlay = false;
+						that.playVoiceAnimationIndex = "";
+					} else {
+						that.innerAudioContext.src = mp3Url;
+						that.innerAudioContext.play();
+						that.innerAudioContext.onPlay(() => {
+							console.log('开始播放');
+							that.onPlay = true;
+							that.playVoiceAnimationIndex = index;
+						});
+						that.innerAudioContext.onEnded(() => {
+							console.log('自然播放结束');
+							that.onPlay = false;
+							that.playVoiceAnimationIndex = "";
+						});
+						that.innerAudioContext.onStop(() => {
+							console.log('onStop');
+							that.onPlay = false;
+							that.playVoiceAnimationIndex = "";
+						});
+						that.innerAudioContext.onError((res) => {
+							console.log(res.errMsg);
+							console.log(res.errCode);
+							that.onPlay = false;
+							that.playVoiceAnimationIndex = "";
+						});
+					}
+				} catch (err) {
+					console.log(err)
+					that.onPlay = false;
+					that.playVoiceAnimationIndex = "";
+				}
+			},
+			showCard: function(uid,type = 'search') {
+				uni.showLoading();
+				var that = this;
+				console.log(uid)
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "getUserByUid",
+						token: this.$store.state.user.user_token,
+						data: {
+							uid: uid
+						}
+					},
+				}).then((res) => {
+					uni.hideLoading();
+					if (this.webSocket.checkResultData(res)) {
+						uni.setStorageSync("cardUser", res.result.data[0]);
+						uni.navigateTo({
+							url:'/pages/contact/card?type='+type
+						})
+					} else {
+						uni.showToast({
+							title: '该用户不存在',
+							duration: 2000,
+							icon: 'none'
+						});
+					}
+				}).catch((err) => {
+					console.log(err)
+					uni.hideLoading()
+					uni.showModal({
+						title: '提示',
+						content: err
+					});
+				})
 			},
 		}
 	}

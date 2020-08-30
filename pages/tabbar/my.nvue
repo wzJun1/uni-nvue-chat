@@ -7,7 +7,7 @@
 					<text class="nickname">{{user.nickname}}</text>
 					<view class="qrcode-box" @click="previewImage()">
 						<text class="username">账号：{{user.username}}</text>
-						<uni-icons type="scan" class="scan" size="32"></uni-icons>
+						<uni-icons type="scan" color="#ffffff" size="32"></uni-icons>
 					</view>
 				</view>
 			</view>
@@ -167,8 +167,14 @@
 	}
 
 	.scan {
-		color: white;
+		color: #ffffff !important;
 	}
+	
+	/*  #ifndef  APP-NVUE  */
+		.scan text{
+			color: #ffffff !important;
+		}
+	/*  #endif  */
 
 	.margin-bottom {
 		margin-bottom: 10px;

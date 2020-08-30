@@ -194,13 +194,16 @@ export default {
 					}
 				},
 			}).then((res) => {
+				console.log(res)
 				dispatch('getFriendListByIds',res)
 			}).catch((err) => {
 				console.log(err);
 			})
 		},
 		getFriendListByIds({
-			state
+			state,
+			dispatch
+			
 		}, res) {
 			if(state.webSocket.checkResultData(res)){
 				state.friendIds = res.result.data;
@@ -232,6 +235,22 @@ export default {
 					uni.hideLoading();
 				})
 			}else{
+				uni.showModal({
+				    title: '提示',
+				    content: res.result.msg,
+				    success: function () {
+				        
+						if(res.result.code == 30201){
+							
+							dispatch('logout')
+							
+						}
+						
+				    }
+				});
+				 
+			 
+				 
 				uni.hideLoading();
 			}
 			 

@@ -14,7 +14,7 @@
 
 				<uni-list-item @click="previewImage()" :borderWidth="720" :textStyle="textStyle" title="二维码" :containerStyle="containerStyle">
 					<template slot="right">
-						<uni-icons type="scan" size="32" style="color:#999"></uni-icons>
+						<uni-icons type="scan" size="32" color="#999" style="color:#999"></uni-icons>
 					</template>
 				</uni-list-item>
 				<uni-list-item @click="formPage('autograph',user.autograph,'设置签名')" :borderWidth="720" :textStyle="textStyle" title="个性签名"

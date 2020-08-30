@@ -1,39 +1,24 @@
 <template>
 	<view class="nvue-page-root">
-
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" leftText="取消" :fixed="true" :status-bar="true"
-		 :title="nabar" :rightIconBool="!admin" :rightButton="admin" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
-
+		 :title="nabar" :rightIconBool="!admin" :rightButton="admin" :moveRightBtn="isWxapp" :rightButtonDisable="rightButtonDisable" @clickRight="submit"></uni-nav-bar>
 		<view class="uni-common-mt">
-
 			<view class="uni-form-item uni-column">
-
 				<view class="uni-input-wrapper" v-if="type=='title'">
 					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus"
-					 placeholder="" v-model="title" />
+					  v-model="title" />
 				</view>
-				
 				<view class="uni-input-wrapper" v-else-if="type=='petName'">
 					<input class="uni-input" type="text" confirm-type="done" @confirm="submit" @focus="inputed" :focus="focus"
-					 placeholder="" v-model="petName" />
+					  v-model="petName" />
 				</view>
-
 				<view class="uni-textarea" v-else-if="type=='notice'">
-					
 					<textarea v-if="admin" :show-confirm-bar="false" maxlength="10000" v-model="notice" @confirm="submit" @focus="inputed" :focus="focus" auto-height />
-					
 					<view v-else class="">
 						<text>{{notice}}</text>
 					</view>
-					
-					
 				</view>
-				 
-				  
-				
 			</view>
-			
-			
 		</view>
 	</view>
 </template>
@@ -55,7 +40,8 @@
 				groupId:'',
 				groupInfo:[],
 				setData:[],
-				admin:false
+				admin:false,
+				isWxapp:false,
 			}
 		},
 		computed: { 
@@ -83,6 +69,9 @@
 			},
 		},
 		onLoad(option) {
+			// #ifndef  APP-NVUE
+			this.isWxapp = true;
+			// #endif
 			this.groupId = option.id;
 			this.type = option.type;
 			if (option.data == undefined || option.data == 'undefined') {

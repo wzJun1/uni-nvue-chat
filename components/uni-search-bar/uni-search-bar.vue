@@ -11,7 +11,7 @@
 				<uni-icons color="#a8a8a8" class="uni-searchbar__box-icon-search" size="36" type="search" />
 			</view>
 			<!-- #endif -->
-			<input :focus="showSync" @click="searchClick" @input="searchInput" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"  ref="inputRef"
+			<input :focus="showSync" @focus="searchClick" @click="searchClick" @input="searchInput" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"  ref="inputRef"
 			 confirm-type="search" type="text" v-model="searchVal" />
 			  
 			<view v-if="show && (clearButton==='always'||clearButton==='auto'&&searchVal!=='')" class="uni-searchbar__box-icon-clear" @click="clear">
@@ -26,8 +26,11 @@
 
 <script>
 	import uniIcons from "../uni-icons/uni-icons.vue";
-	const Binding = uni.requireNativePlugin('bindingx'); //动画相关
+	// #ifdef APP-PLUS
+	const Binding = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
+	// #endif
+	 
 	export default {
 		name: "UniSearchBar",
 		components: {
@@ -85,7 +88,7 @@
 	 
 		methods: {
 			searchClick() {
-				
+			 
 				if (this.show) {
 					return
 				}
@@ -95,14 +98,11 @@
 				this.$nextTick(() => {
 					this.showSync = true;
 				})
-				
-				
 				this.$emit("searchBarClick");
+				// #ifdef APP-PLUS
 				let inputRef = this.getEl(this.$refs.inputRef);
 				let iconRef = this.getEl(this.$refs.iconRef);
-				
 				let searchTranslateX = uni.upx2px(this.searchTranslateX);
-				
 				animation.transition(inputRef, {
 				    styles: {
 				        transform: 'translateX(-'+searchTranslateX+')',
@@ -126,14 +126,31 @@
 				}, function () {
 				      
 				})
+				// #endif
+				
+				
 			},
 			getEl(el) {
 				if (typeof el === 'string' || typeof el === 'number') return el;
+				// #ifndef APP-PLUS
+				// let WXEnvironment = false;
+				// let HTMLElement = false;
+				// if (WXEnvironment) {
+				// 	return el.ref;
+				// } else {
+				// 	return el instanceof HTMLElement ? el : el.$el;
+				// }
+				// #endif
+				
+				// #ifdef APP-PLUS
+				 
 				if (WXEnvironment) {
 					return el.ref;
 				} else {
 					return el instanceof HTMLElement ? el : el.$el;
 				}
+				// #endif
+				 
 			},
 			clear() {
 				console.log("cla")
@@ -153,8 +170,11 @@
 				// #ifdef APP-PLUS
 				plus.key.hideSoftKeybord()
 				// #endif
+				 
+				// #ifdef APP-PLUS
 				let inputRef = this.getEl(this.$refs.inputRef);
 				let iconRef = this.getEl(this.$refs.iconRef);
+				
 				animation.transition(inputRef, {
 				    styles: {
 				        transform: 'translateX(0)',
@@ -178,6 +198,7 @@
 				}, function () {
 				      
 				})
+				// #endif
 			},
 			confirm() {
 				// #ifndef APP-PLUS
@@ -211,7 +232,7 @@
 		flex-direction: row;
 		position: relative;
 		padding: $uni-spacing-col-base;
-		background-color: $uni-bg-color;
+		background-color: #EDEDED;
 	}
 
 	.uni-searchbar__box {

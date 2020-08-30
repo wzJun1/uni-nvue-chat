@@ -1,26 +1,23 @@
 <template>
 	<view>
-
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
-		 :status-bar="true" :title="session.name" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled" @clickRight="groupInfo"></uni-nav-bar>
-
-		<scroll-view ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
-		 :scroll-into-view="scrollIntoID" :scroll-with-animation="false">
-
+		 :status-bar="true" :title="navBarTitle" :moveRightBtn="isWxapp" background-color="#e3e3e3" :rightIconBool="true"
+		 rightIcon="more-filled" @clickRight="groupInfo"></uni-nav-bar>
+		<scroll-view :animation="scrollAnimationData" ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view"
+		 :style="chatBodyBottom" :scroll-into-view="scrollIntoID" :scroll-with-animation="false">
+			<!--  #ifdef  APP-NVUE -->
 			<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
 				<text class="indicator-text">加载中 ...</text>
 				<loading-indicator class="indicator"></loading-indicator>
 			</refresh>
-
+			<!--  #endif -->
 			<view class="" v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index">
 				<uni-chat-detail type="group" :list="msgList" :item="item" :index="index"></uni-chat-detail>
 			</view>
-
 			<text v-if="!webSocket.isOnline" class="system-msg">服务器已断开,尝试重新连接...</text>
-
 		</scroll-view>
-		<view ref="foot" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
-			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu">
+		<view ref="foot" :animation="footAnimationData" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
+			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu" :animation="menuAnimationData">
 				<image class="tb-nv" :src="voice?'../../static/images/keyboard.png':'../../static/images/voice.png'" mode="aspectFit"
 				 @click="switchVoice" style="margin-left: 20rpx;margin-right: 20rpx;"></image>
 
@@ -37,7 +34,6 @@
 				</view>
 			</view>
 		</view>
-
 		<view class="record" v-if="recording">
 			<view class="ing">
 				<image src="../../static/images/recording.gif" class="recording" mode="aspectFit"></image>
@@ -46,13 +42,13 @@
 		</view>
 		<view class="safeArea" :style="{ height: safeBottom + 'px'}">
 		</view>
-
 	</view>
 </template>
 <script>
+	// #ifdef APP-NVUE
 	const BindingX = uni.requireNativePlugin('bindingx');
 	const animation = uni.requireNativePlugin('animation');
-
+	// #endif
 	import {
 		mapState
 	} from 'vuex'
@@ -65,6 +61,9 @@
 				toUid: 0,
 				sessionId: '',
 				session: [],
+				footAnimationData: {},
+				scrollAnimationData: {},
+				menuAnimationData: {},
 				nickname: '',
 				petName: '',
 				chatSrcollBottom: 0,
@@ -99,18 +98,20 @@
 				page: 1,
 				focus: false,
 				refreshing: false,
-				ready:false,
+				ready: false,
+				isWxapp:false,
+				 
 			}
 		},
 		destroyed() {
 			this.webSocket.destoryChatObject();
 		},
 		onLoad(option) {
-			this.safeBottom = this.systemInfo.safeAreaInsets.bottom;
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.sessionId = option.id;
 			this.chatDetailBoxMaxWidth = this.systemInfo.screenWidth - 110;
-			this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
+			//this.srcollHeight = this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
 			this.recorderManager.onStart((e) => {
 				this.recordBegin(e);
 			})
@@ -119,15 +120,19 @@
 			})
 		},
 		onShow() {
+			// #ifndef  APP-NVUE
+			this.isWxapp = true;
+			// #endif
 			var that = this;
 			this.onKeyboardHeight();
 			uni.$on('onMessage', this.onMessage)
 			let getSystemInfo = getApp().globalData.systemInfo;
-			this.safeBottom = getSystemInfo.safeAreaInsets.bottom;
+			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.webSocket.readChatItem(this.sessionId);
-			if(this.ready){
-				let msgList = that.webSocket.getChatDetail(false, that.sessionId,1);
+			this.srcollHeight = this.systemInfo.screenHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
+			if (this.ready) {
+				let msgList = that.webSocket.getChatDetail(false, that.sessionId, 1);
 				if (!msgList) {
 					that.msgList = [];
 				} else {
@@ -135,12 +140,12 @@
 				}
 				that.scrollBottom();
 			}
-			this.$nextTick(function(){
+			this.$nextTick(function() {
 				that.getSession();
 			})
 		},
 		onReady() {
-			let msgList = this.webSocket.getChatDetail(false, this.sessionId,1);
+			let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
 			if (!msgList) {
 				this.msgList = [];
 			} else {
@@ -220,7 +225,7 @@
 							this.msgList.push(message)
 							this.scrollBottom();
 						}
-						 
+
 					}
 				}
 			},
@@ -253,6 +258,31 @@
 			},
 			translatePageTop: function(h) {
 
+				// #ifndef  APP-NVUE
+				var scrollAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+
+				var footAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+				if (h == 0) {
+					scrollAnimation.translateY(-h).step()
+					footAnimation.translateY(-h).step()
+				} else {
+					scrollAnimation.translateY(-h + 34).step()
+					footAnimation.translateY(-h + 34).step()
+				}
+
+
+				this.scrollAnimationData = scrollAnimation.export()
+				this.footAnimationData = footAnimation.export()
+
+				// #endif
+
+				// #ifdef  APP-NVUE
 				let foot = this.getEl(this.$refs.foot);
 				let scrollview = this.getEl(this.$refs.scrollview);
 				h = h - this.safeBottom;
@@ -278,6 +308,8 @@
 				}, function() {
 
 				})
+				// #endif
+
 			},
 			onrefresh: function(event) {
 
@@ -342,12 +374,13 @@
 						},
 					}).then((res) => {
 						if (res.result.data.length) {
-							this.session.id = res.result.data[0]._id;
-							this.session.name = res.result.data[0].title;
-							this.session.chat_type = 'group';
-							this.session.user_id = res.result.data[0].admin_id;
-							this.navBarTitle = res.result.data[0].title;
-							this.webSocket.createChatObject(this.session);
+							that.session.id = res.result.data[0]._id;
+							that.session.name = res.result.data[0].title;
+							that.session.chat_type = 'group';
+							that.session.user_id = res.result.data[0].admin_id;
+							that.navBarTitle = res.result.data[0].title;
+							that.webSocket.createChatObject(that.session);
+							 
 						} else {
 							uni.showToast({
 								title: '该群组不存在',
@@ -361,16 +394,18 @@
 							title: '提示',
 							content: err
 						});
+						console.log(err)
 					})
 				} else {
 					this.session = sessionList[index];
+					this.navBarTitle = this.session.name;
 					this.webSocket.createChatObject(this.session);
-					
+
 				}
 				 
 				this.updateSession();
 			},
-			async updateSession(){
+			async updateSession() {
 				let sessionList = this.sessionList;
 				sessionList = sessionList ? sessionList : [];
 				let index = sessionList.findIndex(item => item.id === this.sessionId)
@@ -395,19 +430,18 @@
 							session.users = res.result.data[0].users
 							session.avatarList = res.result.data[0].avatarList
 							let where = {
-								id:that.sessionId,
-								chat_type:'group'
+								id: that.sessionId,
+								chat_type: 'group'
 							};
-							that.webSocket.updateChatItem(where,session)
-						} else {
-						}
+							that.webSocket.updateChatItem(where, session)
+						} else {}
 					}).catch((err) => {
 						console.log(err)
 					})
 				}
-				
-				
-				 
+
+
+
 			},
 			inputScroll: function() {
 				let foot = this.getEl(this.$refs.foot);
@@ -548,6 +582,24 @@
 				}
 			},
 			collapse: function() {
+				
+				// #ifndef  APP-NVUE
+				let move = uni.upx2px(180);
+				var menuAnimation = uni.createAnimation({
+					duration: 220,
+					timingFunction: 'ease',
+				})
+				if(!this.showMore){
+					menuAnimation.translateX(-move).step()
+				}else{
+					menuAnimation.translateX(0).step()
+				}
+				 
+				this.menuAnimationData = menuAnimation.export()
+				 
+				// #endif
+				
+				// #ifdef  APP-NVUE
 				let moreMenu = this.getEl(this.$refs.moreMenu);
 				let move = uni.upx2px(180);
 				if (!this.showMore) {
@@ -560,7 +612,7 @@
 						needLayout: false,
 						delay: 0 //ms
 					}, function() {
-
+				
 					})
 				} else {
 					animation.transition(moreMenu, {
@@ -572,11 +624,12 @@
 						needLayout: false,
 						delay: 0 //ms
 					}, function() {
-
+				
 					})
 				}
+				// #endif
+				
 				this.showMore = !this.showMore
-				//this.inputFocus()
 			},
 			showEmojiClick: function() {
 
@@ -624,7 +677,26 @@
 			},
 			inputFocus: function() {
 				var that = this;
-				// this.focus = true;
+				
+				// #ifndef  APP-NVUE
+				 
+				
+				if (this.showMore) {
+					let move = uni.upx2px(180);
+					var menuAnimation = uni.createAnimation({
+						duration: 220,
+						timingFunction: 'ease',
+					})
+					menuAnimation.translateX(0).step()
+					 
+					this.menuAnimationData = menuAnimation.export()
+					this.showMore = false;
+				}
+				 
+				// #endif
+				
+				
+				// #ifdef  APP-NVUE
 				if (this.showEmoji) {
 					let main_chatDetail = this.getEl(this.$refs.chatDetail);
 					let main_foot = this.getEl(this.$refs.foot);
@@ -648,6 +720,7 @@
 					})
 					this.showMore = false;
 				}
+				// #endif
 			},
 			hideEmojiPanel: function() {
 				var that = this;
@@ -1078,6 +1151,10 @@
 		background-color: #f3f3f3;
 		border-radius: 10rpx;
 		z-index: 9999999;
+		/* #ifndef APP-NVUE */
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+		/* #endif */
 	}
 
 	.safeArea {

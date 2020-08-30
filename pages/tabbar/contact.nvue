@@ -2,8 +2,14 @@
 	<view class="">
 		<view class="nvue-page-head" ref="pagehead" id="pagehead">
 			<view class="navbar" ref="navbar">
+				<!--  #ifdef  APP-NVUE -->
 				<uni-nav-bar :fixed="false" :rightIconBool="true" :status-bar="true" right-icon="plus" @clickRight="webSocket.queryUsers"
 				 title="好友列表" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+				<!--  #endif -->
+				<!--  #ifndef  APP-NVUE -->
+				<uni-nav-bar :fixed="false" :rightIconBool="true" :leftIconBool="true" :status-bar="true" left-icon="plus"
+				 @clickLeft="webSocket.queryUsers" title="好友列表" background-color="#ebebeb" titleStyle="font-size: 34rpx; font-weight: 500;"></uni-nav-bar>
+				<!--  #endif -->
 			</view>
 			<view class="navbar" ref="searchbar">
 				<uni-search-bar @input="searchInput(friendList,groupList,$event)" :searchTranslateX="searchTranslateX" :radius="6"
@@ -25,7 +31,7 @@
 				</view>
 			</uni-list-item>
 			<cell class="line"></cell>
-			<uni-list-item :borderWidth="630" v-for="(item,index) in friendList" :key="index" :showArrow="false" @click="webSocket.showCard(item._id)">
+			<uni-list-item :borderWidth="630" v-for="(item,index) in friendList" :key="index" :showArrow="false" @click="showCard(item._id)">
 				<view class="user-box">
 					<view class="slot-box">
 						<image class="slot-image" :src="$store.state.user.utils.getImageCache(item.avatar)" mode="aspectFill"></image>
@@ -40,8 +46,8 @@
 			</view>
 			<uni-list :border="false" v-if="friendSearchResult.length">
 				<cell v-for="(item,index) in friendSearchResult">
-					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)" :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true"
-					 badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
+					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)"
+					 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true" badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
 					</uni-list-chat>
 				</cell>
 			</uni-list>
@@ -56,7 +62,6 @@
 				</cell>
 			</uni-list>
 		</view>
-
 	</view>
 </template>
 
@@ -82,7 +87,7 @@
 				friendList: state => state.user.friendList,
 				groupList: state => state.user.groupList,
 			}),
-			computedApplyCount(){
+			computedApplyCount() {
 				let applyCount = 0;
 				this.friendApply.forEach((item, index) => {
 					if (item.status === 0) {
@@ -93,13 +98,13 @@
 			}
 		},
 		onLoad() {
-		 
+
 		},
 		onShow() {
 			uni.hideTabBarRedDot({
 				index: 1
 			});
-			
+
 		},
 		onReady() {
 			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
@@ -117,6 +122,42 @@
 			toGroupListPage: function() {
 				uni.navigateTo({
 					url: '/pages/contact/groupList',
+				})
+			},
+			showCard: function(uid,type = 'search') {
+				uni.showLoading();
+				var that = this;
+				console.log(uid)
+				uniCloud.callFunction({
+					name: 'user',
+					data: {
+						$url: "getUserByUid",
+						token: this.$store.state.user.user_token,
+						data: {
+							uid: uid
+						}
+					},
+				}).then((res) => {
+					uni.hideLoading();
+					if (this.webSocket.checkResultData(res)) {
+						uni.setStorageSync("cardUser", res.result.data[0]);
+						uni.navigateTo({
+							url:'/pages/contact/card?type='+type
+						})
+					} else {
+						uni.showToast({
+							title: '该用户不存在',
+							duration: 2000,
+							icon: 'none'
+						});
+					}
+				}).catch((err) => {
+					console.log(err)
+					uni.hideLoading()
+					uni.showModal({
+						title: '提示',
+						content: err
+					});
 				})
 			}
 		}
