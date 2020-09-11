@@ -80,7 +80,7 @@
 				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
 				rightTextStyle: 'font-size:34rpx;font-weight:400;',
 				textStyle: 'font-weight:400',
-				systemInfo: getApp().globalData.systemInfo,
+				systemInfo: uni.getSystemInfoSync(),
 				safeBottom:0,
 				uid:'',
 				nickname:'',

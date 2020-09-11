@@ -24,8 +24,14 @@
 		<view ref="foot" :animation="footAnimationData" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
 
 			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu" :animation="menuAnimationData">
+				 
+				
+				<!--  #ifndef  H5 -->
 				<image class="tb-nv" :src="voice?'../../static/images/keyboard.png':'../../static/images/voice.png'" mode="aspectFit"
 				 @click="switchVoice" style="margin-left: 20rpx;margin-right: 20rpx;"></image>
+				<!--  #endif -->
+
+
 
 				<input v-model="msg" :focus="focus" @focus="inputFocus" :confirm-hold="true" :adjust-position="false" class="dh-input"
 				 type="text" @confirm="sendMsg" confirm-type="send" style="margin-right: 20rpx;" v-if="!voice" />
@@ -64,7 +70,7 @@
 	export default {
 		data() {
 			return {
-				systemInfo: getApp().globalData.systemInfo,
+				systemInfo: uni.getSystemInfoSync(),
 				navBarTitle: '',
 				scrollIntoID: 'chatID_0',
 				toUid: 0,
@@ -143,7 +149,12 @@
 			this.navBarTitle = this.petName;
 			this.webSocket.readChatItem(this.sessionId);
 			this.friendInfo = this.$store.state.user.utils.getFriendInfoById(this.sessionId);
+			// #ifdef H5
+			this.srcollHeight = this.systemInfo.windowHeight - 45 - 55;
+			// #endif
+			// #ifndef H5
 			this.srcollHeight = this.systemInfo.screenHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
+			// #endif
 			var that = this;
 			if (this.ready) {
 				let msgList = this.webSocket.getChatDetail(false, this.sessionId, 1);
@@ -1097,11 +1108,22 @@
 
 	.dh-input {
 		font-size: 30rpx;
+		/* #ifdef H5 */
+		width: 610rpx;
+		/* #endif */
+		/* #ifndef H5 */
 		width: 560rpx;
+		/* #endif */
 		height: 70rpx;
 		border-radius: 10rpx;
 		padding-left: 15rpx;
 		background-color: #FFFFFF;
+		/* #ifdef H5 */
+		margin-left: 40rpx;
+		/* #endif */
+		
+		
+		
 	}
 
 	.voice-nv {

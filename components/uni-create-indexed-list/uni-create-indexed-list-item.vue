@@ -66,7 +66,7 @@
 			androidStyle() {
 				let style = "";
 			 
-				if (getApp().globalData.systemInfo.platform == "android") {
+				if (uni.getSystemInfoSync().platform == "android") {
 					style = "margin-left:10px;";
 				}
 				return "padding:5px;" + style;

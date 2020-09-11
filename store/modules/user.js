@@ -4,6 +4,7 @@ export default {
 	state: {
 		url:'ws://127.0.0.1:6621',
 		user: false,
+		systemInfo:[],
 		webSocket: null,
 		utils: null,
 		sessionList: [],
@@ -147,6 +148,7 @@ export default {
 				// 初始化总未读数角标
 				dispatch('updateBadge')
 				state.webSocket.checkToken();
+ 
 				
 			}  
 		},
@@ -194,7 +196,6 @@ export default {
 					}
 				},
 			}).then((res) => {
-				console.log(res)
 				dispatch('getFriendListByIds',res)
 			}).catch((err) => {
 				console.log(err);

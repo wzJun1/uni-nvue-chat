@@ -30,7 +30,12 @@
 					<text class="slot-text">{{user.nickname}}</text>
 				</view>
 			</uni-list-item>
+			<!--  #ifdef  APP-PLUS -->
 			<cell class="line"></cell>
+			<!--  #endif -->
+			<!--  #ifndef  APP-PLUS -->
+			<view class="line"></view>
+			<!--  #endif -->
 			<uni-list-item :borderWidth="630" v-for="(item,index) in friendList" :key="index" :showArrow="false" @click="showCard(item._id)">
 				<view class="user-box">
 					<view class="slot-box">
@@ -45,23 +50,44 @@
 				<text class="search-label-text">好友</text>
 			</view>
 			<uni-list :border="false" v-if="friendSearchResult.length">
+				<!--  #ifdef  APP-PLUS -->
 				<cell v-for="(item,index) in friendSearchResult">
-					<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)"
-					 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true" badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
-					</uni-list-chat>
+					<!--  #endif -->
+					<!--  #ifndef  APP-PLUS -->
+					<view v-for="(item,index) in friendSearchResult">
+						<!--  #endif -->
+						<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)"
+						 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true" badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
+						</uni-list-chat>
+
+						<!--  #ifdef  APP-PLUS -->
 				</cell>
-			</uni-list>
-			<view class="search-label" v-if="groupSearchResult.length">
-				<text class="search-label-text">群聊</text>
-			</view>
-			<uni-list :border="false" v-if="groupSearchResult.length">
-				<cell v-for="(item,index) in groupSearchResult">
+				<!--  #endif -->
+				<!--  #ifndef  APP-PLUS -->
+		</view>
+		<!--  #endif -->
+		</uni-list>
+		<view class="search-label" v-if="groupSearchResult.length">
+			<text class="search-label-text">群聊</text>
+		</view>
+		<uni-list :border="false" v-if="groupSearchResult.length">
+			<!--  #ifdef  APP-PLUS -->
+			<cell v-for="(item,index) in groupSearchResult">
+				<!--  #endif -->
+				<!--  #ifndef  APP-PLUS -->
+				<view v-for="(item,index) in groupSearchResult">
+					<!--  #endif -->
 					<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :group-id="item._id"
 					 :clickable="true" badge-positon="left" @click="webSocket.chatGroupWindow(item._id,item.title)">
 					</uni-list-chat>
-				</cell>
-			</uni-list>
-		</view>
+					<!--  #ifdef  APP-PLUS -->
+			</cell>
+			<!--  #endif -->
+			<!--  #ifndef  APP-PLUS -->
+	</view>
+	<!--  #endif -->
+	</uni-list>
+	</view>
 	</view>
 </template>
 
@@ -124,7 +150,7 @@
 					url: '/pages/contact/groupList',
 				})
 			},
-			showCard: function(uid,type = 'search') {
+			showCard: function(uid, type = 'search') {
 				uni.showLoading();
 				var that = this;
 				console.log(uid)
@@ -142,7 +168,7 @@
 					if (this.webSocket.checkResultData(res)) {
 						uni.setStorageSync("cardUser", res.result.data[0]);
 						uni.navigateTo({
-							url:'/pages/contact/card?type='+type
+							url: '/pages/contact/card?type=' + type
 						})
 					} else {
 						uni.showToast({

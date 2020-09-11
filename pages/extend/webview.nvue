@@ -20,7 +20,7 @@
 		},
 		onLoad(option) {
 			this.url = option.url;
-			this.height = getApp().globalData.systemInfo.windowHeight * 2;
+			this.height = uni.getSystemInfoSync().windowHeight * 2;
 		},
 		onReady() {
 			uni.request({

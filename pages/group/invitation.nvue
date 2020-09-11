@@ -21,8 +21,8 @@
 				groupId:'',
 				groupInfo:[],
 				marginTop:0,
-				statusBarHeight:getApp().globalData.systemInfo.statusBarHeight,
-				height:getApp().globalData.systemInfo.screenHeight - getApp().globalData.systemInfo.statusBarHeight - 44
+				statusBarHeight:uni.getSystemInfoSync().statusBarHeight,
+				height:uni.getSystemInfoSync().screenHeight - uni.getSystemInfoSync().statusBarHeight - 44
 			}
 		},
 		computed: {
@@ -33,13 +33,13 @@
 				friendListLetterSort: state => state.user.friendListLetterSort
 			}),
 			top(){
-				let top = getApp().globalData.systemInfo.statusBarHeight + 44;
+				let top = uni.getSystemInfoSync().statusBarHeight + 44;
 				return "top:"+top+"px;height:100%";
 			}
 		},
 		onLoad(option) {
 			// #ifndef  APP-NVUE
-			this.marginTop = getApp().globalData.systemInfo.statusBarHeight + 44;
+			this.marginTop = uni.getSystemInfoSync().statusBarHeight + 44;
 			// #endif
 			this.groupId = option.id;
 			this.groupInfo = [];

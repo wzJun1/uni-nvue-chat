@@ -289,6 +289,6 @@
 		color: $uni-text-color;
 	}
 	.input-placeholder{
-		margin-left: 200rpx;
+		margin-left: 264rpx;
 	}
 </style>

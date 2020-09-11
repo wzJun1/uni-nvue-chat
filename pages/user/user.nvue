@@ -160,7 +160,7 @@
 					longPressActions: {
 						itemList: ['发送给朋友', '保存图片', '收藏'],
 						success: function(data) {
-							var device = getApp().globalData.systemInfo.platform;
+							var device = uni.getSystemInfoSync().platform;
 							if (data.tapIndex == 1) {
 								var downLoader = plus.downloader.createDownload(qrcode, {
 									method: 'GET',

@@ -14,7 +14,7 @@ export default {
 	},
 	created() {
 		// #ifdef APP-NVUE
-		this.systemInfo = getApp().globalData.systemInfo;
+		this.systemInfo = uni.getSystemInfoSync();
 		if(this.systemInfo.screenWidth == 768){
 			this.searchTranslateX = parseInt(this.systemInfo.screenWidth / 2 - 88);
 		}else if(this.systemInfo.screenWidth == 834){
@@ -25,8 +25,8 @@ export default {
 			this.searchTranslateX = parseInt(this.systemInfo.screenWidth / 2 - 100);
 		}else{
 			this.searchTranslateX = parseInt(this.systemInfo.screenWidth / 2 - 50) * 2;
-			  
-		} 
+		}
+	 
 		// #endif
  
 	}, 

@@ -57,7 +57,7 @@
 			})
 		},
 		onShow() {
-			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom + 15;
+			this.tabbarHeight = uni.getSystemInfoSync().windowBottom + 15;
 		},
 		methods: {
 			userinfo: function() {

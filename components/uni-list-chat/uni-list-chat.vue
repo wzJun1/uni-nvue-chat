@@ -122,7 +122,7 @@
 			},
 			avatarList: {
 				type: Array,
-				default: []
+				default: () => []
 			},
 			groupId: {
 				type: [String,Boolean],
@@ -184,16 +184,7 @@
 			 
 		},
 		created() {
-			// if(this.groupId){
-			// 	let groups = this.$store.state.user.utils.getGroupById(this.groupId);
-			// 	var avatarList = [];
-			// 	if(groups.group_users){
-			// 		groups.group_users.forEach((item)=>{
-			// 			avatarList.push(item.avatar)
-			// 		})
-			// 		this.avatarList = avatarList;
-			// 	}
-			// }
+ 
 		},
 		methods: {
 			onClick() {

@@ -98,7 +98,7 @@
 				this.admin = true;
 			}
  
-			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
+			if(uni.getSystemInfoSync().platform == "ios"){this.focus = true}
 		},
 		methods: {
 			back: function(){

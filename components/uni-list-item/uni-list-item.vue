@@ -160,7 +160,7 @@
 			},
 			borderWidth: {
 				// 是否显示扩展图标
-				type: [String],
+				type: [String,Number],
 				default: "650"
 			},
 			extraIcon: {

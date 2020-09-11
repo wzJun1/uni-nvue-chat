@@ -54,7 +54,7 @@
 			})
 		},
 		onReady() {
-			this.tabbarHeight = getApp().globalData.systemInfo.windowBottom * 2;
+			this.tabbarHeight = uni.getSystemInfoSync().windowBottom * 2;
 		},
 		created() {
 

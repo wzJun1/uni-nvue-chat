@@ -42,15 +42,20 @@
 						<!-- #endif -->
 
 
-						<text class="uni-nav-bar-text" :style="titleStyle">{{ title }}</text>
+						<text class="uni-nav-bar-text" :style="titleStyle" v-if="moveRightBtn" @click="onClickRight">{{ title }}</text>
+						<text class="uni-nav-bar-text" :style="titleStyle" v-else>{{ title }}</text>
+						
+						
 					</view>
 					<!-- 标题插槽 -->
 					<slot />
 				</view>
-
-
-				<view :style="{'margin-right': moveRightBtn ? '80pt' : ''}" v-if="rightIconBool" :class="title.length ? 'uni-navbar__header-btns-right' : ''"
+				 
+				 
+				<view :style="{'margin-right': moveRightBtn ? '0pt' : ''}" v-if="rightIconBool" :class="title.length ? 'uni-navbar__header-btns-right' : ''"
 				 class="uni-navbar__header-btns uni-navbar__content_view">
+				 
+				 <!--  #ifndef  MP-WEIXIN -->
 					<view class="uni-navbar__content_view" v-if="rightIcon.length">
 						<uni-icons @click="onClickRight" :color="color" :type="rightIcon" size="48" />
 					</view>
@@ -59,25 +64,18 @@
 						<text @click="onClickRight" class="uni-nav-bar-right-text">{{ rightText }}</text>
 					</view>
 					<slot name="right" />
+					
+					<!--  #endif -->
 				</view>
-
-				<!-- <view v-else @click="onClickRight" :class="title.length ? 'uni-navbar__header-btns-right' : ''" class="uni-navbar__header-btns uni-navbar__content_view">
-					<view class="uni-navbar__content_view" v-if="rightIcon.length">
-						<uni-icons :color="color" :type="rightIcon" size="48" />
-					</view>
-				 
-					<view class="uni-navbar-btn-text uni-navbar__content_view" v-if="rightText.length && !rightIcon.length">
-						<text class="uni-nav-bar-right-text">{{ rightText }}</text>
-					</view>
-					<slot name="right" /> 
-				</view> -->
-
-
+				
 				<view v-if="rightButton" class="uni-navbar__header-right-utton" :style="{'margin-right': moveRightBtn ? '80pt' : ''}">
 					<view class="rightButton" @click="onClickRight" :style="rightButtonDisable ? 'background-color: #d8d8d8;' : 'background-color: #29c160;'">
 						<text class="rightButton-text" :style="rightButtonDisable ? 'color: #b3b2b2;' : 'color: white;'">完成</text>
 					</view>
 				</view>
+				
+				 
+				 
 
 
 
@@ -219,14 +217,14 @@
 		font-size: 34rpx;
 		/* #endif */
 		
-		/* #ifndef APP-PLUS */
+		/* #ifdef MP-WEIXIN */
 		width: 200rpx;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		/* #endif */
 		
-		/* #ifdef APP-PLUS */
+		/* #ifndef MP-WEIXIN */
 		lines: 1;
 		overflow: hidden;
 		white-space: nowrap;

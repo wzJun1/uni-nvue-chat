@@ -7,7 +7,6 @@
 	"pages": [{
 			"path": "pages/tabbar/session",
 			"style": {
-
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
@@ -39,7 +38,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				
-				"navigationBarTextStyle": "#FFFFFF",
+				// "navigationBarTextStyle": "#FFFFFF",
 				"disableScroll": true
 			}
 		},

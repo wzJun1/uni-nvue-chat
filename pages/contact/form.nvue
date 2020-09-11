@@ -40,7 +40,7 @@
 			this.setPetName = option.petName;
 			this.petName = option.petName;
 			this.friend_id = option.id;
-			if(getApp().globalData.systemInfo.platform == "ios"){this.focus = true}
+			if(uni.getSystemInfoSync().platform == "ios"){this.focus = true}
 		},
 		watch:{
 			petName(){

@@ -60,10 +60,7 @@
 				type: String,
 				default: 'user'
 			},
-			session: {
-				type: Object,
-				default: {}
-			},
+			session: {},
 			item: {
 				type: Object,
 				default: {}
@@ -100,7 +97,7 @@
 			return {
 				chatDetailBoxMaxWidth: 0,
 				safeBottom: 0,
-				systemInfo: getApp().globalData.systemInfo,
+				systemInfo: uni.getSystemInfoSync(),
 				innerAudioContext: uni.createInnerAudioContext(),
 				playVoiceAnimationIndex: '',
 				onPlay: false,

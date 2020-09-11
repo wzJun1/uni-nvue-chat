@@ -1,28 +1,26 @@
 <script>
 	export default {
-		globalData: {  
-            systemInfo:[]
-        },
 		onLaunch: function() {
 			console.log('App Launch')
+			// #ifdef  H5
+			let path = "/paths" + window.location.href.split("/pages")[1];
+			let user = uni.getStorageSync('user');
+			if(!user){
+				if(path != "/pages/index/login" || path != "/pages/index/regist"){
+					uni.reLaunch({
+						url: "/pages/index/login"
+					})
+				}
+			}
+			// #endif
 		},
 		onShow: function() {
 			console.log('App Show')
-			
-			// #ifdef APP-PLUS
-			getApp().globalData.systemInfo = uni.getSystemInfoSync();
-			// #endif
-			
-			// #ifndef APP-PLUS
-			this.$scope.globalData.systemInfo = uni.getSystemInfoSync();
-			// #endif
-			 
 			this.$store.dispatch('initLogin')
 		},
 		onHide: function() {
 			console.log('App Hide')
 			this.$store.dispatch('closeWebSocket')
-			
 		},
 		onUnload:function(){
 			console.log('App onUnload')

@@ -55,7 +55,7 @@
 	export default {
 		data() {
 			return {
-				systemInfo: getApp().globalData.systemInfo,
+				systemInfo: uni.getSystemInfoSync(),
 				navBarTitle: '',
 				scrollIntoID: 'chatID_0',
 				toUid: 0,
@@ -130,7 +130,12 @@
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.webSocket.readChatItem(this.sessionId);
+			// #ifdef H5
+			this.srcollHeight = this.systemInfo.windowHeight - 45 - 55;
+			// #endif
+			// #ifndef H5
 			this.srcollHeight = this.systemInfo.screenHeight - this.systemInfo.statusBarHeight - 45 - this.safeBottom - 55;
+			// #endif
 			if (this.ready) {
 				let msgList = that.webSocket.getChatDetail(false, that.sessionId, 1);
 				if (!msgList) {
