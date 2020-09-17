@@ -78,6 +78,12 @@ GitHub：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/
 
 
 
+# 交流群
+
+<img src="/Users/mac/Library/Application Support/typora-user-images/image-20200917224112183.png" alt="image-20200917224112183" style="zoom:20%;" />
+
+
+
 # 截图
 
 ![](https://i.loli.net/2020/08/23/kJgoD3UlOC7FYMN.jpg)
