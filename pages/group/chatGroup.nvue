@@ -99,14 +99,15 @@
 				focus: false,
 				refreshing: false,
 				ready: false,
-				isWxapp:false,
-				 
+				isWxapp: false,
+
 			}
 		},
 		destroyed() {
 			this.webSocket.destoryChatObject();
 		},
 		onLoad(option) {
+			this.systemInfo = uni.getSystemInfoSync();
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.sessionId = option.id;
@@ -385,7 +386,7 @@
 							that.session.user_id = res.result.data[0].admin_id;
 							that.navBarTitle = res.result.data[0].title;
 							that.webSocket.createChatObject(that.session);
-							 
+
 						} else {
 							uni.showToast({
 								title: '该群组不存在',
@@ -407,7 +408,7 @@
 					this.webSocket.createChatObject(this.session);
 
 				}
-				 
+
 				this.updateSession();
 			},
 			async updateSession() {
@@ -587,23 +588,23 @@
 				}
 			},
 			collapse: function() {
-				
+
 				// #ifndef  APP-NVUE
 				let move = uni.upx2px(180);
 				var menuAnimation = uni.createAnimation({
 					duration: 220,
 					timingFunction: 'ease',
 				})
-				if(!this.showMore){
+				if (!this.showMore) {
 					menuAnimation.translateX(-move).step()
-				}else{
+				} else {
 					menuAnimation.translateX(0).step()
 				}
-				 
+
 				this.menuAnimationData = menuAnimation.export()
-				 
+
 				// #endif
-				
+
 				// #ifdef  APP-NVUE
 				let moreMenu = this.getEl(this.$refs.moreMenu);
 				let move = uni.upx2px(180);
@@ -617,7 +618,7 @@
 						needLayout: false,
 						delay: 0 //ms
 					}, function() {
-				
+
 					})
 				} else {
 					animation.transition(moreMenu, {
@@ -629,11 +630,11 @@
 						needLayout: false,
 						delay: 0 //ms
 					}, function() {
-				
+
 					})
 				}
 				// #endif
-				
+
 				this.showMore = !this.showMore
 			},
 			showEmojiClick: function() {
@@ -682,10 +683,10 @@
 			},
 			inputFocus: function() {
 				var that = this;
-				
+
 				// #ifndef  APP-NVUE
-				 
-				
+
+
 				if (this.showMore) {
 					let move = uni.upx2px(180);
 					var menuAnimation = uni.createAnimation({
@@ -693,14 +694,14 @@
 						timingFunction: 'ease',
 					})
 					menuAnimation.translateX(0).step()
-					 
+
 					this.menuAnimationData = menuAnimation.export()
 					this.showMore = false;
 				}
-				 
+
 				// #endif
-				
-				
+
+
 				// #ifdef  APP-NVUE
 				if (this.showEmoji) {
 					let main_chatDetail = this.getEl(this.$refs.chatDetail);

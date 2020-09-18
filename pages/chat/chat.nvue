@@ -1,20 +1,16 @@
 <template>
 	<view>
- 
 		<uni-nav-bar :leftIconBool="true" @clickLeft="$store.state.user.utils.back()" left-icon="back" :fixed="true"
 		 :status-bar="true" :title="navBarTitle" :moveRightBtn="isWxapp" background-color="#e3e3e3" :rightIconBool="true" rightIcon="more-filled"
 		 @clickRight="more"></uni-nav-bar>
-
 		<scroll-view :animation="scrollAnimationData" ref="scrollview" @click="hideKey" scroll-y="true" class="scroll-view" :style="chatBodyBottom"
 		 :scroll-into-view="scrollIntoID" :scroll-with-animation="false">
-
 			<!--  #ifdef  APP-NVUE -->
 			<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
 				<text class="indicator-text">加载中 ...</text>
 				<loading-indicator class="indicator"></loading-indicator>
 			</refresh>
 			<!--  #endif -->
-
 			<view class="" v-for="(item,index) in msgList" :key="index" :id="'chatId_'+index">
 				<uni-chat-detail :session="session" :list="msgList" :item="item" :index="index"></uni-chat-detail>
 			</view>
@@ -24,18 +20,12 @@
 		<view ref="foot" :animation="footAnimationData" class="flex-column-center" :style="'bottom:'+ KeyboardHeight +'rpx;'">
 
 			<view id="bottomfoot" class="bottom-foot-char flex-row-around" style="font-size: 55rpx;" ref="moreMenu" :animation="menuAnimationData">
-				 
-				
 				<!--  #ifndef  H5 -->
 				<image class="tb-nv" :src="voice?'../../static/images/keyboard.png':'../../static/images/voice.png'" mode="aspectFit"
 				 @click="switchVoice" style="margin-left: 20rpx;margin-right: 20rpx;"></image>
 				<!--  #endif -->
-
-
-
 				<input v-model="msg" :focus="focus" @focus="inputFocus" :confirm-hold="true" :adjust-position="false" class="dh-input"
 				 type="text" @confirm="sendMsg" confirm-type="send" style="margin-right: 20rpx;" v-if="!voice" />
-
 				<text style="margin-right: 20rpx;" @touchstart="voiceBegin" @touchmove.stop.prevent="voiceIng" @touchend="voiceEnd"
 				 @touchcancel="voiceCancel" v-if="voice" class="voice-nv">{{voiceTis}}
 				</text>
@@ -46,7 +36,6 @@
 				</view>
 			</view>
 		</view>
-
 		<view class="record" v-if="recording">
 			<view class="ing">
 				<image src="../../static/images/recording.gif" class="recording" mode="aspectFit"></image>
@@ -55,7 +44,6 @@
 		</view>
 		<view class="safeArea" :style="{ height: safeBottom + 'px'}">
 		</view>
-
 	</view>
 </template>
 <script>

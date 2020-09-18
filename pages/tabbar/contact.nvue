@@ -17,10 +17,10 @@
 			</view>
 		</view>
 		<uni-list v-if="!showSearch" :border="false" :style="{'margin-bottom':tabbarHeight+'rpx'}">
-			<uni-list-item @click="toNewFriendPage" :showArrow="false" title="新的朋友" thumb="../../static/images/new_f.png"
+			<uni-list-item @click="applyListPage" :showArrow="false" title="新的朋友" thumb="../../static/images/new_f.png"
 			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" :badgeText="computedApplyCount"
 			 :showBadge="computedApplyCount" badgeType="error" />
-			<uni-list-item @click="toGroupListPage" :borderWidth="630" :showArrow="false" title="我的群聊" thumb="../../static/images/my_group.png"
+			<uni-list-item @click="groupListPage" :borderWidth="630" :showArrow="false" title="我的群聊" thumb="../../static/images/my_group.png"
 			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" />
 			<uni-list-item :borderWidth="630" :showArrow="false">
 				<view class="user-box">
@@ -59,7 +59,6 @@
 						<uni-list-chat :arrayIndex="index" :border="true" :title="$store.state.user.utils.getNickName(item._id,item.nickname)"
 						 :avatar="$store.state.user.utils.getImageCache(item.avatar)" :clickable="true" badge-positon="left" @click="webSocket.chatWindow(item._id,item.nickname)">
 						</uni-list-chat>
-
 						<!--  #ifdef  APP-PLUS -->
 				</cell>
 				<!--  #endif -->
@@ -140,12 +139,12 @@
 			uni.hideKeyboard();
 		},
 		methods: {
-			toNewFriendPage: function() {
+			applyListPage: function() {
 				uni.navigateTo({
 					url: '/pages/contact/applyList',
 				})
 			},
-			toGroupListPage: function() {
+			groupListPage: function() {
 				uni.navigateTo({
 					url: '/pages/contact/groupList',
 				})
@@ -191,6 +190,7 @@
 </script>
 
 <style scoped>
+	
 	.fixedView {
 		position: fixed;
 		width: 750rpx;

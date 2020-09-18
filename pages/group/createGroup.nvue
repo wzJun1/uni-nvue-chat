@@ -108,7 +108,6 @@
 <style scoped>
 	.button {
 		margin-top: 10rpx;
-		display: flex;
 		justify-content: flex-start;
 		align-items: flex-start
 	}

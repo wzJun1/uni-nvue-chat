@@ -6,7 +6,6 @@
 				<uni-nav-bar :fixed="false" :status-bar="true" @clickRight="showMenu" :loading="!webSocket.loadFinish"
 				 :rightIconBool="true" right-icon="plus" :title="webSocket.loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
 				<!--  #endif -->
-				
 				<!--  #ifdef  MP-WEIXIN -->
 				<uni-nav-bar :fixed="false" :leftIconBool="true" left-icon="plus" :status-bar="true" @clickLeft="showMenu" :loading="!webSocket.loadFinish"
 				 :rightIconBool="true" :title="webSocket.loadFinish ? '聊天' : '加载中'"></uni-nav-bar>
@@ -44,9 +43,8 @@
 			<!--  #ifdef  APP-PLUS -->
 			</cell>
 			<!--  #endif -->
-		 
 		</uni-list>
-		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchPanelH +'rpx;background-color:#ededed;'">
+		<view v-if="showSearch" class="nvue-page-search" ref="searchBox" :style="'height: '+ searchBoxH +'rpx;background-color:#ededed;'">
 			<view class="search-label" v-if="friendSearchResult.length">
 				<text class="search-label-text">好友</text>
 			</view>
@@ -99,7 +97,6 @@
 					size: '44',
 					type: 'personadd-filled'
 				},
-
 				extraIconScan: {
 					color: 'white',
 					size: '44',
@@ -121,7 +118,7 @@
 				uid: "",
 				safeBottom: '',
 				tabbarHeight: '',
-				searchPanelH: '',
+				searchBoxH: '',
 				// #ifdef H5
 				dropdownlist:'padding:10rpx;padding-left: 40rpx;',
 				// #endif
@@ -165,7 +162,7 @@
 			this.loading = true;
 		},
 		onReady() {
-			this.searchPanelH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
+			this.searchBoxH = (this.systemInfo.windowHeight - this.systemInfo.statusBarHeight - 36 - 12) * 2;
 			this.tabbarHeight = this.systemInfo.windowBottom * 2;
 			if (this.systemInfo.platform == "android") {
 				this.preloadPage()
@@ -179,7 +176,6 @@
 					uni.scanCode({
 						success: function(res) {
 							var content = res.result;
-							console.log(content)
 							if (content.indexOf("uniChat-uid") != -1) {
 								content = content.split("-");
 								if (content[2] != undefined) {
@@ -218,7 +214,6 @@
 				}
 			},
 			swipeClick: function(e, index) {
-
 				if (e.index === 1) {
 					try {
 						let key = `chat_sessions_${this.user._id}`
@@ -276,7 +271,6 @@
 						});
 					}
 				}).catch((err) => {
-
 					uni.hideLoading()
 					uni.showModal({
 						title: '提示',

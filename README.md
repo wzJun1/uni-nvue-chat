@@ -80,7 +80,7 @@ GitHub：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/
 
 # 交流群
 
-<img src="https://i.loli.net/2020/09/17/bEi7f4mBNjwMLpq.jpg" style="zoom: 25%;" />
+QQ群：1029339929
 
 
 

@@ -16,7 +16,6 @@
 				<view class="title"><text class="uni-form-item__title">账号</text></view>
 				<view class="uni-input-wrapper">
 					<input class="uni-input" type="text" confirm-type="done" v-model="username" placeholder="请输入您的登录账号" />
-
 				</view>
 			</view>
 			<view class="uni-form-item uni-column border">
@@ -148,6 +147,7 @@
 </script>
 
 <style scoped lang="scss">
+	
 	.nvue-page-root {
 		background-color: #fffffe;
 		padding-bottom: 40rpx;

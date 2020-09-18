@@ -10,12 +10,12 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none",
-					"background":"#ffffff"
+					"background": "#ffffff"
 				}
 			}
 		},
@@ -37,8 +37,6 @@
 				"navigationBarBackgroundColor": "#29c160",
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "",
-				
-				// "navigationBarTextStyle": "#FFFFFF",
 				"disableScroll": true
 			}
 		},
@@ -47,7 +45,7 @@
 			"style": {
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"backgroundColor": "#ededed",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
@@ -61,7 +59,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"backgroundColor": "#ededed",
 				"disableScroll": true,
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none"
@@ -75,7 +73,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "资料设置",
 				"navigationBarTextStyle": "black",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false
@@ -90,7 +88,7 @@
 				"navigationBarTitleText": "资料设置",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"animationType": "slide-in-bottom",
@@ -105,12 +103,11 @@
 				"navigationBarBackgroundColor": "#e3e3e3",
 				"backgroundColor": "#e3e3e3",
 				"disableScroll": true,
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"animationType": "pop-in",
 					"animationDuration": 300,
 					"titleNView": false
-					 
 				}
 			}
 		},
@@ -121,12 +118,11 @@
 				"navigationBarBackgroundColor": "#e3e3e3",
 				"backgroundColor": "#e3e3e3",
 				"disableScroll": true,
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"animationType": "pop-in",
 					"animationDuration": 300,
 					"titleNView": false
-					 
 				}
 			}
 		},
@@ -137,7 +133,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "群信息",
 				"navigationBarTextStyle": "black",
-				 "navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -150,7 +146,7 @@
 				"backgroundColor": "#ededed",
 				"navigationBarTitleText": "群信息",
 				"navigationBarTextStyle": "black",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"animationType": "slide-in-bottom",
@@ -165,7 +161,6 @@
 				"navigationBarBackgroundColor": "#fffffe",
 				"navigationBarTitleText": "账号注册",
 				"backgroundColor": "#fffffe",
-				
 				"app-plus": {
 					"bounce": "none"
 				}
@@ -177,7 +172,7 @@
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
@@ -191,7 +186,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"backgroundColor": "#ebebeb",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"backgroundColorTop": "#ebebeb",
 				"disableScroll": true,
 				"app-plus": {
@@ -206,7 +201,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"disableScroll": true,
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none",
@@ -221,7 +216,7 @@
 				"navigationBarBackgroundColor": "#ededed",
 				"navigationBarTitleText": "",
 				"backgroundColor": "#ebebeb",
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"disableScroll": true,
 				"app-plus": {
 					"titleNView": false,
@@ -236,7 +231,6 @@
 				"navigationBarTitleText": "个人信息",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
-				 
 				"app-plus": {
 					"titleNView": {
 						"titleSize": "34rpx"
@@ -251,7 +245,6 @@
 				"navigationBarTitleText": "",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true,
-				 
 				"app-plus": {
 					"animationType": "slide-in-bottom",
 					"animationDuration": 300
@@ -260,31 +253,33 @@
 		}, {
 			"path": "pages/extend/webview",
 			"style": {
-
 				"navigationBarTextStyle": "black",
 				"navigationBarBackgroundColor": "#ededed",
-				"navigationStyle":"custom",
-				"navigationBarTitleText": ""
-				
-			} 
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "",
+				"popGesture": "none",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none"
+				}
+			}
+		}, {
+			"path": "pages/group/invitation",
+			"style": {
+				"navigationBarTextStyle": "black",
+				"navigationBarBackgroundColor": "#ededed",
+				"navigationBarTitleText": "",
+				"disableScroll": true,
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"animationType": "slide-in-bottom",
+					"animationDuration": 300
+				}
+			}
 		}
-	    ,{
-            "path" : "pages/group/invitation",
-            "style": {
-            	"navigationBarTextStyle": "black",
-            	"navigationBarBackgroundColor": "#ededed",
-            	"navigationBarTitleText": "",
-            	"disableScroll": true,
-				"navigationStyle":"custom",
-            	"app-plus": {
-            		"titleNView": false,
-            		"bounce": "none",
-            		"animationType": "slide-in-bottom",
-            		"animationDuration": 300 
-            	}
-            }
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

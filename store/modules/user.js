@@ -54,7 +54,6 @@ export default {
 			dispatch('getGroupIds')
 			// 初始化总未读数角标
 			dispatch('updateBadge')
-			 
 		},
 		updateUser({
 			state,
@@ -65,7 +64,6 @@ export default {
 			// 存储到本地存储中
 			uni.setStorageSync('user', res)
 			uni.setStorageSync('uid', res._id)
-			
 		},
 		getUserInfo({
 			state,
@@ -87,7 +85,6 @@ export default {
 			}).catch((err) => {
 				 
 			}); 
-			
 		},
 		logout({
 			state,
@@ -115,9 +112,7 @@ export default {
 			uni.reLaunch({
 				url: "/pages/index/login"
 			})
-
 		},
-		
 		initLogin({
 			state,
 			dispatch
@@ -148,8 +143,6 @@ export default {
 				// 初始化总未读数角标
 				dispatch('updateBadge')
 				state.webSocket.checkToken();
- 
-				
 			}  
 		},
 		
@@ -158,7 +151,7 @@ export default {
 				state.webSocket.close();
 			}
 		},
-
+		
 		// 获取会话列表
 		getSessionList({
 			state
@@ -229,7 +222,6 @@ export default {
 						uni.setStorageSync('friendList', res.result.data)
 						uni.hideLoading();
 						state.friendListLetterSort = state.utils.sortFriendList(res.result.data)
-						 
 					}
 				}).catch((err) => {
 					console.log(err);
@@ -240,33 +232,23 @@ export default {
 				    title: '提示',
 				    content: res.result.msg,
 				    success: function () {
-				        
 						if(res.result.code == 30201){
-							
 							dispatch('logout')
-							
 						}
-						
 				    }
 				});
-				 
-			 
-				 
 				uni.hideLoading();
 			}
-			 
 		},
 		
 		getGroupIds({
 			state,
 			dispatch
 		}) {
-			
 			// 监听会话列表变化
 			uni.$on('onUpdateGroupList', (list) => {
 				state.groupList = list
 			})
-			
 			uniCloud.callFunction({
 				name: 'user',
 				data: {
