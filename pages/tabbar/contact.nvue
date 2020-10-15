@@ -14,8 +14,10 @@
 			<view class="navbar" ref="searchbar">
 				<uni-search-bar @input="searchInput(friendList,groupList,$event)" :searchTranslateX="searchTranslateX" :radius="6"
 				 placeholder="搜索" class="navbar" bgColor="white" @searchBarClick="searchBarClick" @cancel="searchBarCancel"></uni-search-bar>
+				 
 			</view>
-		</view>
+		</view> 
+		
 		<uni-list v-if="!showSearch" :border="false" :style="{'margin-bottom':tabbarHeight+'rpx'}">
 			<uni-list-item @click="applyListPage" :showArrow="false" title="新的朋友" thumb="../../static/images/new_f.png"
 			 thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx" textStyle="font-weight:400;color:black" :badgeText="computedApplyCount"
@@ -45,6 +47,9 @@
 				</view>
 			</uni-list-item>
 		</uni-list>
+		
+		
+		
 		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchPanelH +'rpx;background-color:#ededed;'">
 			<view class="search-label" v-if="friendSearchResult.length">
 				<text class="search-label-text">好友</text>

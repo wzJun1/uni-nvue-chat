@@ -228,15 +228,21 @@ export default {
 					uni.hideLoading();
 				})
 			}else{
-				uni.showModal({
-				    title: '提示',
-				    content: res.result.msg,
-				    success: function () {
-						if(res.result.code == 30201){
-							dispatch('logout')
-						}
-				    }
-				});
+				if(res.result.data.length == 0){
+					state.friendList = [];
+					uni.setStorageSync('friendList', [])
+					state.friendListLetterSort = [];
+				}
+				// console.log(res)
+				// uni.showModal({
+				//     title: '提示',
+				//     content: res.result.msg,
+				//     success: function () {
+				// 		if(res.result.code == 30201){
+				// 			dispatch('logout')
+				// 		}
+				//     }
+				// });
 				uni.hideLoading();
 			}
 		},

@@ -26,7 +26,7 @@ exports.main = async (event, context) => {
 	};
 	if (event.token) {
 		const payload = await uniID.checkToken(event.token)
-		console.log(payload)
+		 
 		if (payload.code === 0) {
 			auth.code = 0;
 			auth.msg = "登录验证成功";

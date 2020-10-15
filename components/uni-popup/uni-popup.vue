@@ -208,9 +208,8 @@
 <style lang="scss" scoped>
 	.uni-popup {
 		position: fixed;
-		/* #ifndef APP-NVUE */
-		z-index: 99;
-		/* #endif */
+		 
+		z-index: 1001;
 	}
 
 	.uni-popup__mask {
@@ -221,6 +220,7 @@
 		right: 0;
 		background-color: $uni-bg-color-mask;
 		opacity: 0;
+		z-index: 1000;
 	}
 
 	.mask-ani {

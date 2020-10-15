@@ -30,19 +30,18 @@
 		</view>
 
 		<view v-if="!me">
-			<view @click="sendApply" v-if="!isFriend" class="addfriend">
-				<view class="button">
+			<view v-if="!isFriend" class="addfriend">
+				<view class="button" @click="sendApply">
 					<text class="button-text">添加到通讯录</text>
 				</view>
 			</view>
-			<view @click="webSocket.chatWindow(adduser._id,adduser.nickname)" v-if="isFriend" class="send">
-				<view class="button">
+			<view v-if="isFriend" class="send">
+				<view class="button" @click="chatWindow(adduser._id,adduser.nickname)">
 					<text class="button-text">发消息</text>
 				</view>
 			</view>
-			<view @click="webSocket.chatWindow(adduser._id,adduser.nickname)" v-if="isFriend" class="audio">
-
-				<view class="button">
+			<view v-if="isFriend" class="audio">
+				<view class="button" @click="chatWindow(adduser._id,adduser.nickname)">
 					<text class="button-text">音视频通话</text>
 				</view>
 			</view>
@@ -139,6 +138,17 @@
 						icon: 'none'
 					});
 				}
+			},
+			chatWindow: function(sessionId, name) {
+				console.log(sessionId)
+				uni.navigateTo({
+					url: '/pages/chat/chat?id=' + sessionId + "&name=" + name,
+				})
+			},
+			chatGroupWindow: function(sessionId, name) {
+				uni.navigateTo({
+					url: '/pages/group/chatGroup?id=' + sessionId,
+				})
 			},
 			 
 		}

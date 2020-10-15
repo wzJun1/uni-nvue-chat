@@ -44,7 +44,8 @@
 			</cell>
 			<!--  #endif -->
 		</uni-list>
-		<view v-if="showSearch" class="nvue-page-search" ref="searchBox" :style="'height: '+ searchBoxH +'rpx;background-color:#ededed;'">
+		
+		<view v-if="showSearch" class="nvue-page-search" ref="searchpanel" :style="'height: '+ searchBoxH +'rpx;background-color:#ededed;'">
 			<view class="search-label" v-if="friendSearchResult.length">
 				<text class="search-label-text">好友</text>
 			</view>

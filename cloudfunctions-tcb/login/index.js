@@ -20,7 +20,7 @@ exports.main = async (event, context) => {
 	app.router('login', async (ctx, next) => {
 		ctx.body = await uniID.login(event.data)
 		await next();
-	});
+	});  
 	/*用户退出*/
 	app.router('logout', async (ctx, next) => {
 		ctx.body = await uniID.logout(event.data.token)

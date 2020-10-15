@@ -11,9 +11,9 @@
 				<uni-icons color="#a8a8a8" class="uni-searchbar__box-icon-search" size="36" type="search" />
 			</view>
 			<!-- #endif -->
-			<input :focus="showSync" @focus="searchClick" @click="searchClick" @input="searchInput" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"  ref="inputRef"
-			 confirm-type="search" type="text" v-model="searchVal" />
-			  
+			<input :disabled="disabled" :focus="showSync" @blur="blur" @focus="searchClick" @click="searchClick" @input="searchInput" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input" ref="inputRef" confirm-type="search" type="text" v-model="searchVal" />
+		 
+			 
 			<view v-if="show && (clearButton==='always'||clearButton==='auto'&&searchVal!=='')" class="uni-searchbar__box-icon-clear" @click="clear">
 				<uni-icons @click="clear" color="#a8a8a8" class="" size="48" type="clear" />
 			</view>
@@ -74,6 +74,7 @@
 			return {
 				show: false,
 				showSync: false,
+				disabled:true,
 				searchVal: "",
 				center:'text-align:center',
 			}
@@ -96,6 +97,7 @@
 				this.searchVal = ""
 				this.show = true;
 				this.$nextTick(() => {
+					this.disabled = false;
 					this.showSync = true;
 				})
 				this.$emit("searchBarClick");
@@ -129,6 +131,9 @@
 				// #endif
 				
 				
+			},
+			blur(){
+				this.disabled = true;
 			},
 			getEl(el) {
 				if (typeof el === 'string' || typeof el === 'number') return el;
