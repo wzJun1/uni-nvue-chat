@@ -75,27 +75,26 @@
 # 如何使用
 
 > 此APP需搭配WebSocket端使用
+> 
 > WebSocket端 Github：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/wzJun1/uni-nvue-chat-websocket)
 
 
 ----------
 > **1. 下载上方WebSocket端源码**
-
-> **2. 在服务器上运行WebSocket端，运行方法在Github有说明，也可以百度查一下workerman的启动运行方式，运行成功后再看下一步 (注意防火墙问题)**
-
-> **3. 运行后得到socket地址，例如：你的ip:端口 [123.123.123.123:6621]**
-
-> **4. 下载本项目，导入HbuilderX，在store/user.js中修改WebSocket地址为你搭建好的地址**
-
-> **5. 绑定本项目的UniCloud云空间，如没有请按上面方法新建后绑定，本默认腾讯云空间，如需阿里云需要将文件夹名称 cloudfunctions-tcb 改成 cloudfunctions-aliyun**
-
-> **6. 初始化UniCloud数据库，右键 db_init.json 初始化**
-
-> **7. 上传云函数及公共函数**
-
-> **8. 编译使用**
-
-
+>
+>**2. 在服务器上运行WebSocket端，运行方法在Github有说明，也可以百度查一下workerman的启动运行方式，运行成功后再看下一步 (注意防火墙问题)**
+>
+>**3. 运行后得到socket地址，例如：你的ip:端口 [123.123.123.123:6621]**
+>
+>**4. 下载本项目，导入HbuilderX，在store/user.js中修改WebSocket地址为你搭建好的地址**
+>
+>**5. 绑定本项目的UniCloud云空间，如没有请按上面方法新建后绑定，本默认腾讯云空间，如需阿里云需要将文件夹名称 cloudfunctions-tcb 改成 cloudfunctions-aliyun**
+>
+>**6. 初始化UniCloud数据库，右键 db_init.json 初始化**
+>
+>**7. 上传云函数及公共函数**
+>
+>**8. 编译使用**
 
 
 # 交流群
