@@ -12,6 +12,8 @@
 				<!-- #ifdef APP-NVUE -->
 			</cell>
 			<!-- #endif -->
+			
+			<!-- #ifdef APP-NVUE -->
 			<cell v-for="(item,index) in groupList">
 				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
 				 badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
@@ -20,6 +22,19 @@
 			</cell>
 			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
 			</cell>
+			<!-- #endif -->
+			
+			<!-- #ifndef APP-NVUE -->
+			<view v-for="(item,index) in groupList">
+				<uni-list-chat :arrayIndex="index" :avatarWidth="80" :border="true" :title="item.title" :avatar-list="$store.state.user.utils.getGroupAvatarList(item._id)" :clickable="true"
+				 badge-positon="left" @click="chatGroupWindow(item._id,item.title)">
+					 
+				</uni-list-chat>
+			</view>
+			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
+			</view>
+			<!-- #endif -->
+			 
 		</uni-list>
 	</view>
 </template>
@@ -31,7 +46,7 @@
 	export default {
 		data() {
 			return {
-				
+				tabbarHeight:0,
 			}
 		},
 		computed: {

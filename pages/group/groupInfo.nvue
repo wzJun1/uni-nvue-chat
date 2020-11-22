@@ -95,7 +95,7 @@
 				containerStyle: 'margin-top:6px;margin-bottom:6px;margin-left:4px',
 				rightTextStyle: 'font-size:34rpx;font-weight:400;width:400rpx;lines:3;overflow: hidden;text-overflow: ellipsis;word-break: break-word;text-align:right',
 				textStyle: 'font-weight:400',
-				systemInfo: getApp().globalData.systemInfo, 
+				systemInfo: uni.getSystemInfoSync(), 
 				safeBottom:0,
 				uid:'', 
 				nickname:'',
@@ -113,9 +113,10 @@
 			})
 		},
 		onLoad(option) {
+		 	console.log(this.systemInfo)
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom * 2;
 			this.sessionId = option.id;
-			
+			 
 			if(this.$store.state.user.groupList.length){
 				this.$store.state.user.groupList.forEach((item)=>{
 					if(item._id == this.sessionId){

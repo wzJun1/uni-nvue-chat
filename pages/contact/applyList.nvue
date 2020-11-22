@@ -30,9 +30,17 @@
 			<uni-apply-list-item :disabled="true" v-for="(item,index) in friendApply" :key="index" :showArrow="false" :title="item.from_name"
 			 :thumb="$store.state.user.utils.getImageCache(item.from_avatar)" thumbStyle="width:80rpx;height:80rpx;border-radius:10rpx"
 			 textStyle="font-weight:400;color:black" :applyStatus="item.status" :listIndex="index" @clickApply="clickApply" />
+			 
+			<!-- #ifdef APP-NVUE -->
 			<cell class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
-
+			
 			</cell>
+			<!-- #endif -->
+			<!-- #ifndef APP-NVUE -->
+			<view class="fixedView" :style="{ bottom : tabbarHeight + 'rpx'}">
+			</view>
+			<!-- #endif -->
+			 
 		</uni-list>
 	</view>
 </template>

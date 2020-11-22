@@ -266,6 +266,7 @@ export default {
 				},
 			}).then((res) => {
 				 if(res.result.data){
+				
 					uni.setStorageSync('groupList', res.result.data)
 				 	state.groupList = res.result.data
 				 }

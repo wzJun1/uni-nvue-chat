@@ -157,7 +157,6 @@
 			showCard: function(uid, type = 'search') {
 				uni.showLoading();
 				var that = this;
-				console.log(uid)
 				uniCloud.callFunction({
 					name: 'user',
 					data: {

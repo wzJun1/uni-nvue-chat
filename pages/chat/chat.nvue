@@ -131,7 +131,6 @@
 			this.onKeyboardHeight();
 			uni.$on('onMessage', this.onMessage)
 			this.safeBottom = this.systemInfo.safeAreaInsets.bottom > 0 ? this.systemInfo.safeAreaInsets.bottom : 0;
-			console.log(this.safeBottom)
 			this.KeyboardHeight = this.safeBottom * 2;
 			this.petName = this.$store.state.user.utils.getNickName(this.sessionId, this.nickname);
 			this.navBarTitle = this.petName;

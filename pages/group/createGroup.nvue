@@ -57,9 +57,6 @@
 				}
 			},
 			create: function() {
-
-				console.log(this.selected)
-				return;
 				var selected = [];
 				var title = '';
 				if (this.selected.length == 1) {
