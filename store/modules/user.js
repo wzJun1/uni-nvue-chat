@@ -2,7 +2,7 @@ import WebSocket from '@/common/common.js';
 import Utils from '@/common/utils.js';
 export default {
 	state: {
-		url:'ws://127.0.0.1:6621',
+		url:'ws://127.0.0.1:32255',
 		user: false,
 		systemInfo:[],
 		webSocket: null,

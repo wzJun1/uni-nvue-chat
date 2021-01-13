@@ -26,10 +26,11 @@
 					top: uni.getSystemInfoSync().statusBarHeight + 44,
 					height: uni.getSystemInfoSync().windowHeight - 44,
 				});
+				ws.setStyle({scalable:true})  
 				w.show();
 				w.onloaded = function() {
 					that.title = w.getTitle();
-				};
+				}; 
 				uni.hideLoading();
 			}, 100)
 		},
