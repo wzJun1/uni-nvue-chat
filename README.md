@@ -1,3 +1,16 @@
+<p align="center">
+    <a target="_blank" href="https://gitee.com/wzJun1/uni-nvue-chat/blob/master/LICENSE">
+        <img src="https://img.shields.io/badge/license-GPL3.0-blue" />
+    </a>  
+   <a target="_blank" href='https://gitee.com/wzJun1/uni-nvue-chat'>
+        <img src="https://gitee.com/wzJun1/uni-nvue-chat/badge/star.svg?theme=dark" alt="gitee stars"/>
+   </a>
+   <a target="_blank" href='https://gitee.com/wzJun1/uni-nvue-chat'>
+        <img src="https://gitee.com/wzJun1/uni-nvue-chat/badge/fork.svg?theme=dark" alt="gitee fork"/>
+   </a> 
+</p>
+<br/>
+
 # 更新日志
 
 <details>
@@ -76,9 +89,8 @@
 
 
 # 如何使用
-
+> 克隆本项目到本地 国内地址：https://gitee.com/wzJun1/uni-nvue-chat
 > 此APP需搭配WebSocket端使用
-> 
 > WebSocket端 Github：[https://github.com/wzJun1/uni-nvue-chat-websocket](https://github.com/wzJun1/uni-nvue-chat-websocket)
 
 
