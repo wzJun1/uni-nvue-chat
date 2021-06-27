@@ -1,3 +1,5 @@
+<br/>
+<br/>
 <p align="center">
     <a target="_blank" href="https://gitee.com/wzJun1/uni-nvue-chat/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-GPL3.0-blue" />
