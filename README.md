@@ -20,6 +20,17 @@
 
 <details>
   <summary>展开伸缩</summary>
+<h2>1.1.1（2021-11-19）</h2>
+<ol>
+<li>修复部分已知bug</li>
+<li>新版本IM预告,超多变现: </li>
+<li>1: 增值VIP,等级制,朋友圈,H5游戏付费.</li>
+<li>2: 等级制,朋友圈,H5游戏付费.</li>
+<li>3: 朋友圈,H5游戏付费.</li>
+<li>4: H5游戏付费.</li>
+<li>5: 小视频.</li>
+<li>更好的体验: 音视频通话,多界面使用Android iOS原生代码重写,非vue nvue</li>
+</ol>
 <h2>1.1.0（2020-11-22）</h2>
 <ol>
 <li>修复部分已知bug</li>
@@ -117,9 +128,15 @@
 >**8. 编译使用**
 
 
-# 交流群
+# 微信交流群(2022-08-12日前扫码有效)
 
-QQ群：1029339929
+<img src="https://s2.loli.net/2022/08/05/yhxDbEkNSU1847P.jpg" width = "300" height = "630" />
+
+## 如果过期了可以加我微信进群: Sentinel-110
+
+## 程序开发接单中...原生 Android iOS App，中后台开发、移动端H5、小程序开发，可开公司发票
+
+<img src="https://i.loli.net/2021/12/02/HgvQcBVUIAh8JbY.jpg" width = "200" height = "200" />
 
 
 
