@@ -128,9 +128,9 @@
 >**8. 编译使用**
 
 
-# 微信交流群(2022-09-17日前扫码有效)
+# 微信交流群(2022-10-11日前扫码有效)
 
-<img src="https://s1.ax1x.com/2022/09/10/vLT56A.jpg" width = "300" height = "430" />
+<img src="https://s1.ax1x.com/2022/10/04/xQjHT1.jpg" width = "300" height = "430" />
 
 ## 如果过期了可以加我微信进群: Sentinel-110
 
