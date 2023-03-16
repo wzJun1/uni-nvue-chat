@@ -1,3 +1,12 @@
+# Archived
+本仓库已经停止维护，你仍然继续阅读源码及创建分叉，但本仓库不会继续更新，也不会回答任何 issue。
+
+推荐uni-app项目使用开源IMSDK：[YeIM-Uni-SDK](https://github.com/wzJun1/YeIM-Uni-SDK)
+
+This repo has stopped maintenance, you can still continue to read the source code and create forks, but this repo will not continue to be updated, nor will it answer any issues.
+
+It is recommended to use the open source IMSDK: [YeIM-Uni-SDK](https://github.com/wzJun1/YeIM-Uni-SDK) for uni-app projects.
+
 <p></p>
 <p></p>
 <br/>
