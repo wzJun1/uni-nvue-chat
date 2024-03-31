@@ -7,12 +7,14 @@ This repo has stopped maintenance, you can still continue to read the source cod
 
 It is recommended to use the open source IMSDK: [YeIM-Uni-SDK](https://github.com/wzJun1/YeIM-Uni-SDK) for uni-app projects.
 
-<p></p>
-<p></p>
-<br/>
-<br/>
-<br/>
 ![微信公众号.png](https://s2.loli.net/2024/03/31/MHE1CD3WtP2nUOQ.jpg)
+
+<p></p>
+<p></p>
+<br/>
+<br/>
+<br/>
+
 <p align="center">
     <a target="_blank" href="https://gitee.com/wzJun1/uni-nvue-chat/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-GPL3.0-blue" />
