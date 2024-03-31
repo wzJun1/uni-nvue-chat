@@ -12,6 +12,7 @@ It is recommended to use the open source IMSDK: [YeIM-Uni-SDK](https://github.co
 <br/>
 <br/>
 <br/>
+![微信公众号.png](https://s2.loli.net/2024/03/31/MHE1CD3WtP2nUOQ.jpg)
 <p align="center">
     <a target="_blank" href="https://gitee.com/wzJun1/uni-nvue-chat/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-GPL3.0-blue" />
