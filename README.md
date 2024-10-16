@@ -1,5 +1,5 @@
 # Archived
-本仓库已经停止维护，你仍然继续阅读源码及创建分叉，但本仓库不会继续更新，也不会回答任何 issue。
+本仓库已经停止维护，你仍然继续阅读源码，但本仓库不会继续更新，也不会回答任何 issue。
 
 推荐uni-app项目使用开源IMSDK：[YeIM-Uni-SDK](https://github.com/wzJun1/YeIM-Uni-SDK)
 
@@ -139,12 +139,6 @@ It is recommended to use the open source IMSDK: [YeIM-Uni-SDK](https://github.co
 >
 >**8. 编译使用**
 
-
-# 微信交流群(2022-10-11日前扫码有效)
-
-<img src="https://s1.ax1x.com/2022/10/04/xQjHT1.jpg" width = "300" height = "430" />
-
-## 如果过期了可以加我微信进群: Sentinel-110
 
 ## 程序开发接单中...原生 Android iOS App，中后台开发、移动端H5、小程序开发，可开公司发票
 
